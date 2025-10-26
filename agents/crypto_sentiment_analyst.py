@@ -42,7 +42,7 @@ class ContrarianSignal(Enum):
 
     STRONG_BUY = "strong_buy"  # Extreme fear = opportunity
     BUY = "buy"  # Fear = accumulation
-    NEUTRAL = "neutral"  # Balanced sentiment, no clear signal
+    HOLD = "hold"  # Balanced sentiment, no clear signal
     SELL = "sell"  # Greed = distribution
     STRONG_SELL = "strong_sell"  # Extreme greed = top signal
 
@@ -125,7 +125,7 @@ class CryptoSentimentAnalyst:
             "interpretation": "Market in GREED regime (F&G: 68). Positive sentiment balance "
             "with elevated social volume indicates retail FOMO building. Approaching "
             "overbought territory where contrarian selling signals may emerge.",
-            "contrarian_signal": ContrarianSignal.NEUTRAL.value,
+            "contrarian_signal": ContrarianSignal.HOLD.value,
             "reasoning": "Greed level of 68 not yet extreme (needs >75 for strong sell signal). "
             "However, rising social volume and positive sentiment suggest caution. "
             "NEUTRAL stance - monitor for extreme greed (>75) which would trigger SELL signal. "
@@ -367,7 +367,7 @@ class CryptoSentimentAnalyst:
 
         return {
             "asset": asset,
-            "signal": ContrarianSignal.NEUTRAL.value,
+            "signal": ContrarianSignal.HOLD.value,
             "confidence": 0.72,
             "entry_timing": "wait_for_extreme_fear",
             "exit_timing": "wait_for_extreme_greed",
@@ -385,7 +385,7 @@ class CryptoSentimentAnalyst:
             "reasoning": f"Current Fear & Greed at {crowd['fear_greed_index']} ({crowd['sentiment_regime']}) - "
             f"above average but not extreme. Best contrarian opportunities emerge at extremes: "
             f"<25 (extreme fear = BUY) or >75 (extreme greed = SELL). "
-            f"Current signal: {ContrarianSignal.NEUTRAL.value}. "
+            f"Current signal: {ContrarianSignal.HOLD.value}. "
             f"Entry timing: Wait for extreme fear (<25) to deploy capital. "
             f"Exit timing: Wait for extreme greed (>75) to take profits. "
             f"No whale divergence detected - whales and retail aligned {whales['whale_sentiment']}.",

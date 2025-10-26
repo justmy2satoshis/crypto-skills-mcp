@@ -40,8 +40,7 @@ class ThesisType(Enum):
 
     STRONG_BUY = "strong_buy"  # All signals aligned bullish
     BUY = "buy"  # Majority bullish, some caution
-    NEUTRAL = "neutral"  # Mixed signals, no clear direction
-    HOLD = "hold"  # Majority cautious, maintain positions
+    HOLD = "hold"  # Mixed signals or majority cautious, maintain positions
     SELL = "sell"  # Majority bearish, reduce exposure
     STRONG_SELL = "strong_sell"  # All signals aligned bearish
 
@@ -51,8 +50,8 @@ class ConflictType(Enum):
 
     RECOMMENDATION_DIVERGENCE = "recommendation_divergence"  # Agents recommend different actions
     CONFIDENCE_MISMATCH = "confidence_mismatch"  # High confidence from one agent, low from others
-    TIMING_DIVERGENCE = "timing_divergence"  # Conflicting entry/exit timing signals
-    NO_CONFLICT = "no_conflict"  # All Agents aligned
+    TIMING_DISAGREEMENT = "timing_disagreement"  # Conflicting entry/exit timing signals
+    RISK_ASSESSMENT_GAP = "risk_assessment_gap"  # Different risk assessments
 
 
 class ThesisSynthesizer:
@@ -224,9 +223,9 @@ class ThesisSynthesizer:
         elif macro_norm == "bearish" and fundamental_norm == "bullish":
             return ConflictType.RECOMMENDATION_DIVERGENCE
         elif sentiment_norm != "neutral" and macro_norm != sentiment_norm:
-            return ConflictType.TIMING_DIVERGENCE
+            return ConflictType.TIMING_DISAGREEMENT
         else:
-            return ConflictType.NO_CONFLICT
+            return ConflictType.RISK_ASSESSMENT_GAP
 
     def _normalize_signal(self, signal: str) -> str:
         """Normalize different signal formats to bullish/bearish/neutral"""
@@ -279,7 +278,7 @@ class ThesisSynthesizer:
         elif bearish_count == 2:
             return ThesisType.SELL
         else:
-            return ThesisType.NEUTRAL
+            return ThesisType.HOLD
 
     def _calculate_confidence(self, macro: Dict, fundamental: Dict, sentiment: Dict) -> float:
         """Calculate overall confidence score from Agent confidences"""
@@ -329,7 +328,7 @@ class ThesisSynthesizer:
                 "Majority bullish signals with manageable risks. "
                 "Some caution warranted but overall positive outlook."
             )
-        elif thesis_type == ThesisType.NEUTRAL:
+        elif thesis_type == ThesisType.HOLD:
             action = "HOLD"
             allocation = target_allocation * 0.7
             reasoning = (
@@ -367,7 +366,7 @@ class ThesisSynthesizer:
                 return "Enter immediately - contrarian opportunity at sentiment extreme"
             else:
                 return "Dollar-cost average over 2-4 weeks"
-        elif thesis_type == ThesisType.NEUTRAL:
+        elif thesis_type == ThesisType.HOLD:
             return "Wait for clearer signals or accumulate on dips"
         else:  # Bearish
             return "Avoid new entries - wait for regime change"
@@ -379,7 +378,7 @@ class ThesisSynthesizer:
                 return "Long-term hold (5+ years) with -30% trailing stop from ATH"
             else:
                 return "Medium-term hold (1-2 years) with -25% trailing stop"
-        elif thesis_type == ThesisType.NEUTRAL:
+        elif thesis_type == ThesisType.HOLD:
             return "Maintain trailing stop at -20%, exit if thesis deteriorates"
         else:  # Bearish
             return "Exit within 2 weeks or on next rally"

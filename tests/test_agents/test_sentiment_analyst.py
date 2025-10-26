@@ -559,7 +559,7 @@ class TestContrarianSignalEnum:
         """Test ContrarianSignal enum has expected values"""
         assert ContrarianSignal.STRONG_BUY.value == "strong_buy"
         assert ContrarianSignal.BUY.value == "buy"
-        assert ContrarianSignal.NEUTRAL.value == "neutral"
+        assert ContrarianSignal.HOLD.value == "hold"
         assert ContrarianSignal.SELL.value == "sell"
         assert ContrarianSignal.STRONG_SELL.value == "strong_sell"
 
@@ -568,7 +568,7 @@ class TestContrarianSignalEnum:
         signals = [signal.value for signal in ContrarianSignal]
         assert "strong_buy" in signals
         assert "buy" in signals
-        assert "neutral" in signals
+        assert "hold" in signals
         assert "sell" in signals
         assert "strong_sell" in signals
         assert len(signals) == 5

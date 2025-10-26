@@ -1,0 +1,99 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: Check code formatting with Black
+      run: |
+        black --check .
+
+    - name: Lint with Ruff
+      run: |
+        ruff check .
+
+    - name: Type check with Mypy
+      run: |
+        mypy agents/ mcp_client.py --ignore-missing-imports
+      continue-on-error: true  # Don't fail on type errors initially
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit[toml] safety
+
+    - name: Run Bandit security linter
+      run: |
+        bandit -r agents/ mcp_client.py -f json -o bandit-report.json
+      continue-on-error: true
+
+    - name: Check dependencies for known vulnerabilities
+      run: |
+        safety check --json
+      continue-on-error: true
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Check README exists and is valid
+      run: |
+        test -f README.md
+        test -s README.md
+
+    - name: Check all Python files have docstrings
+      run: |
+        python -c "
+        import ast
+        import sys
+        from pathlib import Path
+
+        failed = []
+        for py_file in Path('agents').rglob('*.py'):
+            if py_file.name == '__init__.py':
+                continue
+            with open(py_file) as f:
+                tree = ast.parse(f.read())
+            if not ast.get_docstring(tree):
+                failed.append(str(py_file))
+
+        if failed:
+            print(f'Files missing module docstrings: {failed}')
+            sys.exit(1)
+        "
+      continue-on-error: true

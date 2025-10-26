@@ -433,6 +433,7 @@ class ThesisSynthesizer:
             "thesis_type": synthesis["thesis_type"],
             "executive_summary": exec_summary,
             "recommendation": synthesis["recommendation"],
+            "confidence": synthesis.get("confidence", 0.5),  # Expose confidence at top level
             "synthesis": synthesis,  # Include full synthesis for test compatibility
             "supporting_analysis": {
                 "macro_regime": macro.get("regime", "neutral"),

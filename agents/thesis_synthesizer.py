@@ -533,54 +533,6 @@ class ThesisSynthesizer:
 
         return conflicts
 
-    async def synthesize_signals(
-        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
-    ) -> Dict[str, Any]:
-        """
-        Public API: Synthesize signals from multiple agents
-
-        Args:
-            macro_analysis: Macro analyst output
-            fundamental_analysis: Fundamental analyst output
-            sentiment_analysis: Sentiment analyst output
-
-        Returns:
-            Synthesized recommendation with confidence
-        """
-        # Extract signals
-        macro_signal = macro_analysis.get("recommendation", "neutral")
-        fundamental_signal = fundamental_analysis.get("recommendation", {})
-        if isinstance(fundamental_signal, dict):
-            fundamental_signal = fundamental_signal.get("action", "neutral")
-        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
-
-        # Calculate thesis type
-        thesis_type = self._calculate_thesis_type(macro_signal, fundamental_signal, sentiment_signal)
-
-        # Calculate confidence as average of individual confidences
-        confidences = [
-            macro_analysis.get("confidence", 0.5),
-            fundamental_analysis.get("confidence", 0.5),
-            sentiment_analysis.get("confidence", 0.5),
-        ]
-        avg_confidence = sum(confidences) / len(confidences)
-
-        # Map thesis type to investment action
-        action_map = {
-            "neutral": "HOLD",
-            "bullish": "BUY",
-            "strong_bullish": "STRONG_BUY",
-            "bearish": "SELL",
-            "strong_bearish": "STRONG_SELL",
-        }
-        action = action_map.get(thesis_type.value, "HOLD")
-
-        return {
-            "recommendation": action,
-            "confidence": avg_confidence,
-            "thesis_type": thesis_type.value,
-        }
-
     def get_capabilities(self) -> Dict[str, Any]:
         """
         Get Agent capabilities and metadata

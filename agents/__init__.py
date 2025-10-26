@@ -54,18 +54,19 @@ Usage Examples:
 
 MCP Server Requirements:
 -------------------------
-Required MCP Servers:
-- crypto-sentiment-mcp: Social sentiment metrics
-- crypto-feargreed-mcp: Fear & Greed Index
-- cryptopanic-mcp-server: News sentiment
-- grok-search-mcp: News and economic data
-- etf-flow-mcp: ETF flow tracking
-- ccxt-mcp: Exchange volume data
-- crypto-projects-mcp: Project fundamentals
-- crypto-indicators-mcp: Technical indicators
+Core MCP Servers (Required):
+- ccxt-mcp: Exchange data (price, OHLCV, order books, volume)
+- crypto-indicators-mcp: Technical indicators (RSI, MACD, Bollinger Bands)
+- crypto-sentiment-mcp: Social sentiment metrics (Reddit, Telegram, Discord)
+- crypto-feargreed-mcp: Crypto Fear & Greed Index (0-100 scale)
+- crypto-projects-mcp: Project fundamentals via Mobula API
+- cryptopanic-mcp-server: Cryptocurrency news aggregation
 
-Optional MCP Servers:
-- perplexity: Economic research and analysis
+Enhanced MCP Servers (Optional):
+- etf-flow-mcp: Bitcoin/Ethereum ETF flow data from CoinGlass
+- grok-search-mcp: Web/news search with AI sentiment analysis
+- tokenmetrics-mcp: AI trading signals and price predictions
+- perplexity-mcp: Economic research and analysis
 
 Version: 1.0.0
 """
@@ -139,8 +140,8 @@ AGENT_METADATA = {
                 "risk_sentiment_analysis",
                 "macro_synthesis",
             ],
-            "required_mcps": ["grok-search-mcp", "etf-flow-mcp", "ccxt-mcp"],
-            "optional_mcps": ["perplexity"],
+            "required_mcps": ["ccxt-mcp"],
+            "optional_mcps": ["grok-search-mcp", "etf-flow-mcp", "tokenmetrics-mcp", "perplexity-mcp"],
         },
         "crypto_vc_analyst": {
             "class": CryptoVCAnalyst,
@@ -159,7 +160,7 @@ AGENT_METADATA = {
                 "ccxt-mcp",
                 "crypto-indicators-mcp",
             ],
-            "optional_mcps": [],
+            "optional_mcps": ["tokenmetrics-mcp"],
         },
         "crypto_sentiment_analyst": {
             "class": CryptoSentimentAnalyst,

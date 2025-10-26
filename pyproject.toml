@@ -1,7 +1,7 @@
 [project]
 name = "crypto-skills-mcp"
 version = "1.0.0"
-description = "Hybrid Claude Skills + Agents crypto analysis package with 60-65% token reduction"
+description = "Multi-Agent cryptocurrency investment analysis system with MCP integration"
 authors = [{name = "Crypto Skills Team", email = "team@crypto-skills.dev"}]
 license = {text = "MIT"}
 requires-python = ">=3.10"
@@ -51,10 +51,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["skills*", "agents*", "core*", "config*", "workflows*"]
-
-[project.scripts]
-crypto-skills = "core.cli:main"
+include = ["agents*"]
 
 [tool.black]
 line-length = 100

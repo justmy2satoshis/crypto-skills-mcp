@@ -8,7 +8,6 @@ Handles tool calls, error handling, caching, and response parsing.
 import asyncio
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
-import json
 
 
 class MCPClientWrapper:
@@ -457,6 +456,227 @@ class MCPClientWrapper:
         )
 
         self._store_in_cache(cache_key, result, ttl_seconds=600)
+        return result
+
+    # ========================
+    # TokenMetrics MCP
+    # ========================
+
+    async def get_token_price(self, symbol: str) -> Dict[str, Any]:
+        """
+        Get real-time token price and market data from TokenMetrics.
+
+        Args:
+            symbol: Token symbol (e.g., 'BTC', 'ETH')
+
+        Returns:
+            Price data with market metrics
+        """
+        cache_key = f"tokenmetrics_price_{symbol}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=60)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "symbol": symbol,
+                "price": 0.0,
+                "market_cap": 0,
+                "volume_24h": 0,
+                "change_24h": 0.0,
+            }
+
+        result = await self._call_mcp_tool(
+            "mcp__tokenmetrics__get_token_price", {"symbol": symbol}
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=60)
+        return result
+
+    async def get_trading_signals(self, symbol: str) -> Dict[str, Any]:
+        """
+        Get AI-generated trading signals from TokenMetrics.
+
+        Args:
+            symbol: Token symbol (e.g., 'BTC', 'ETH')
+
+        Returns:
+            Trading signals with recommendations
+        """
+        cache_key = f"tokenmetrics_signals_{symbol}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=300)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "symbol": symbol,
+                "signal": "HOLD",
+                "confidence": 0.5,
+                "timeframe": "short-term",
+            }
+
+        result = await self._call_mcp_tool(
+            "mcp__tokenmetrics__get_trading_signals", {"symbol": symbol}
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=300)
+        return result
+
+    async def get_price_prediction(self, symbol: str) -> Dict[str, Any]:
+        """
+        Get price predictions and forecasting from TokenMetrics.
+
+        Args:
+            symbol: Token symbol (e.g., 'BTC', 'ETH')
+
+        Returns:
+            Price predictions with confidence intervals
+        """
+        cache_key = f"tokenmetrics_prediction_{symbol}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=3600)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "symbol": symbol,
+                "prediction_7d": 0.0,
+                "prediction_30d": 0.0,
+                "confidence": 0.5,
+            }
+
+        result = await self._call_mcp_tool(
+            "mcp__tokenmetrics__get_price_prediction", {"symbol": symbol}
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=3600)
+        return result
+
+    # ========================
+    # ETF Flow MCP
+    # ========================
+
+    async def get_etf_flow(self, coin: str = "BTC") -> Dict[str, Any]:
+        """
+        Get Bitcoin or Ethereum ETF flow data from CoinGlass.
+
+        Args:
+            coin: 'BTC' or 'ETH'
+
+        Returns:
+            Historical ETF flow data in markdown table format
+        """
+        cache_key = f"etf_flow_{coin}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=3600)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "coin": coin,
+                "flow_data": "Mock ETF flow data",
+                "total_inflow": 0,
+                "total_outflow": 0,
+            }
+
+        result = await self._call_mcp_tool(
+            "mcp__etf-flow-mcp__get_etf_flow", {"coin": coin}
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=3600)
+        return result
+
+    # ========================
+    # Grok Search MCP
+    # ========================
+
+    async def grok_search(
+        self,
+        query: str,
+        search_type: str = "web",
+        analysis_mode: str = "basic",
+        max_results: int = 10,
+    ) -> Dict[str, Any]:
+        """
+        Search using Grok AI with comprehensive analysis.
+
+        Args:
+            query: Search query
+            search_type: 'web', 'news', or 'general'
+            analysis_mode: 'basic' or 'comprehensive'
+            max_results: Number of results (1-20)
+
+        Returns:
+            Search results with optional analysis
+        """
+        cache_key = f"grok_search_{search_type}_{query}_{max_results}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=300)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "query": query,
+                "results": [],
+                "analysis": "Mock search results",
+            }
+
+        result = await self._call_mcp_tool(
+            "mcp__grok-search-mcp__grok_search",
+            {
+                "query": query,
+                "search_type": search_type,
+                "analysis_mode": analysis_mode,
+                "max_results": max_results,
+            },
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=300)
+        return result
+
+    async def grok_news_search(
+        self,
+        query: str,
+        max_results: int = 10,
+        from_date: str = None,
+        to_date: str = None,
+    ) -> Dict[str, Any]:
+        """
+        Search for recent news using Grok with optional date filtering.
+
+        Args:
+            query: News search query
+            max_results: Number of results (1-20)
+            from_date: Start date in ISO8601 format (YYYY-MM-DD)
+            to_date: End date in ISO8601 format (YYYY-MM-DD)
+
+        Returns:
+            News search results with timeline analysis
+        """
+        cache_key = f"grok_news_{query}_{max_results}"
+        cached = self._get_from_cache(cache_key, ttl_seconds=300)
+        if cached:
+            return cached
+
+        if not self.mcp_client:
+            return {
+                "query": query,
+                "results": [],
+                "published_at": datetime.now().isoformat(),
+            }
+
+        params = {"query": query, "max_results": max_results}
+        if from_date:
+            params["from_date"] = from_date
+        if to_date:
+            params["to_date"] = to_date
+
+        result = await self._call_mcp_tool(
+            "mcp__grok-search-mcp__grok_news_search", params
+        )
+
+        self._store_in_cache(cache_key, result, ttl_seconds=300)
         return result
 
     # ========================

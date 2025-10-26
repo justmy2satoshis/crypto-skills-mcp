@@ -30,7 +30,7 @@ This package implements a specialized multi-agent architecture for comprehensive
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/crypto-skills-mcp.git
+git clone https://github.com/justmy2satoshis/crypto-skills-mcp.git
 cd crypto-skills-mcp
 
 # Install with all dependencies
@@ -199,18 +199,21 @@ asyncio.run(compare_assets())
 
 ## MCP Integration
 
-This package integrates with your existing [Crypto-MCP-Suite](../mcp-servers/Crypto%20MCPs/Crypto-MCP-Suite/) (41 production MCPs).
+This package integrates with the following cryptocurrency MCP servers currently configured in your environment.
 
-### Required MCPs (Tier 1)
-- **ccxt-mcp**: Exchange data across 24+ exchanges
-- **crypto-indicators-mcp**: Technical indicators (RSI, MACD, Bollinger Bands)
-- **crypto-sentiment-mcp**: Social sentiment (Reddit, Telegram, Discord)
-- **crypto-feargreed-mcp**: Fear & Greed Index (0-100)
+### Core MCP Servers (Required)
+- **ccxt-mcp**: Exchange data (price, OHLCV, order books) across 24+ exchanges
+- **crypto-indicators-mcp**: Technical indicators (RSI, MACD, Bollinger Bands, 70+ indicators)
+- **crypto-sentiment-mcp**: Social sentiment metrics (Reddit, Telegram, Discord)
+- **crypto-feargreed-mcp**: Crypto Fear & Greed Index (0-100 scale)
+- **crypto-projects-mcp**: Project fundamentals via Mobula API (6,000+ tokens)
+- **cryptopanic-mcp-server**: Cryptocurrency news aggregation and sentiment
 
-### Enhanced MCPs (Tier 2)
-- **crypto-projects-mcp**: Project fundamentals via Mobula API
-- **cryptopanic-mcp**: News sentiment
-- **etf-flow-mcp**: Institutional flow data
+### Enhanced MCP Servers (Optional)
+- **etf-flow-mcp**: Bitcoin/Ethereum ETF flow data from CoinGlass API
+- **grok-search-mcp**: Web/news search with AI-powered sentiment analysis (xAI Grok)
+- **tokenmetrics-mcp**: AI trading signals and price predictions (5,000 free calls/month)
+- **perplexity-mcp**: Research and information synthesis
 
 ## Performance
 
@@ -304,5 +307,5 @@ Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ## Support
 
 - Documentation: [docs/](docs/)
-- Issues: [GitHub Issues](https://github.com/yourusername/crypto-skills-mcp/issues)
-- Discord: [Community Server](https://discord.gg/crypto-skills)
+- Issues: [GitHub Issues](https://github.com/justmy2satoshis/crypto-skills-mcp/issues)
+- Discussions: [GitHub Discussions](https://github.com/justmy2satoshis/crypto-skills-mcp/discussions)

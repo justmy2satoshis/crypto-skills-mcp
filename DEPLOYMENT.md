@@ -91,13 +91,21 @@ Multi-Agent cryptocurrency investment analysis system with MCP integration for C
 - **ThesisSynthesizer**: Investment thesis generation with conflict resolution
 
 ### MCP Integration
-Connects to 6+ MCP servers for comprehensive cryptocurrency data:
-- ccxt-mcp (price data, OHLCV, order books)
-- crypto-indicators-mcp (RSI, MACD, technical indicators)
-- crypto-feargreed-mcp (Fear & Greed Index)
-- crypto-sentiment-mcp (social metrics, sentiment balance)
-- crypto-projects-mcp (project fundamentals)
-- cryptopanic-mcp-server (news aggregation)
+Connects to 10 MCP servers for comprehensive cryptocurrency data:
+
+**Core MCP Servers (Required)**:
+- ccxt-mcp: Exchange data (price, OHLCV, order books)
+- crypto-indicators-mcp: Technical indicators (RSI, MACD, 70+ indicators)
+- crypto-feargreed-mcp: Crypto Fear & Greed Index
+- crypto-sentiment-mcp: Social metrics and sentiment analysis
+- crypto-projects-mcp: Project fundamentals (6,000+ tokens)
+- cryptopanic-mcp-server: Cryptocurrency news aggregation
+
+**Enhanced MCP Servers (Optional)**:
+- etf-flow-mcp: Bitcoin/Ethereum ETF flow data
+- grok-search-mcp: Web/news search with AI sentiment analysis
+- tokenmetrics-mcp: AI trading signals and price predictions
+- perplexity-mcp: Economic research and analysis
 
 ### Performance
 - **70% cache hit rate** - reduces redundant MCP calls

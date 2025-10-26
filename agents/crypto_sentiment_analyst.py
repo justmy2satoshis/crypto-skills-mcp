@@ -23,9 +23,8 @@ Strategic Value:
 - Tracks narrative shifts and FUD/FOMO cycles
 """
 
-from typing import Dict, List, Optional, Any
+from typing import Dict, Any
 from enum import Enum
-import json
 
 
 class SentimentRegime(Enum):
@@ -343,7 +342,7 @@ class CryptoSentimentAnalyst:
             "exit_timing": "wait_for_extreme_greed",
             "rationale": {
                 "crowd_sentiment": f"{crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']})",
-                "sentiment_extreme": False,  # Not at <25 or >75
+                "sentiment_extreme": extremes["is_extreme"],
                 "whale_divergence": whales["divergence_detected"],
                 "news_sentiment": news["news_sentiment"],
             },
@@ -410,7 +409,7 @@ class CryptoSentimentAnalyst:
                 f"Fear & Greed at {crowd['fear_greed_index']} - elevated but not extreme",
                 f"Whales {whales['accumulation_distribution']} - aligned with retail",
                 f"News sentiment {news['news_sentiment']} with {news['sentiment_score']:.2f} score",
-                f"Best opportunities emerge at F&G <25 (extreme fear) or >75 (extreme greed)",
+                "Best opportunities emerge at F&G <25 (extreme fear) or >75 (extreme greed)",
             ],
             "monitoring_triggers": {
                 "buy_trigger": "Fear & Greed drops below 25 (extreme fear)",

@@ -22,21 +22,16 @@ Strategic Value:
 - Orchestrates complex multi-step analytical workflows
 """
 
-from typing import Dict, List, Optional, Any
+from typing import Dict, Any
 from enum import Enum
-import json
 
 # Import specialized Agents
-from .crypto_macro_analyst import CryptoMacroAnalyst, MacroRegime
+from .crypto_macro_analyst import CryptoMacroAnalyst
 from .crypto_vc_analyst import (
     CryptoVCAnalyst,
-    RiskLevel,
-    InvestmentRecommendation,
 )
 from .crypto_sentiment_analyst import (
     CryptoSentimentAnalyst,
-    SentimentRegime,
-    ContrarianSignal,
 )
 
 
@@ -320,8 +315,8 @@ class ThesisSynthesizer:
             action = "BUY"
             allocation = target_allocation
             reasoning = (
-                f"Majority bullish signals with manageable risks. "
-                f"Some caution warranted but overall positive outlook."
+                "Majority bullish signals with manageable risks. "
+                "Some caution warranted but overall positive outlook."
             )
         elif thesis_type == ThesisType.NEUTRAL:
             action = "HOLD"

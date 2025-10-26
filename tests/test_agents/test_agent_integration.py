@@ -29,13 +29,8 @@ class TestMultiAgentOrchestration:
     @pytest.mark.asyncio
     async def test_full_analysis_pipeline(self):
         """Test complete end-to-end analysis pipeline"""
-        # Initialize all agents
-        macro = CryptoMacroAnalyst()
-        vc = CryptoVCAnalyst()
-        sentiment = CryptoSentimentAnalyst()
-        synthesizer = ThesisSynthesizer(
-            macro_analyst=macro, vc_analyst=vc, sentiment_analyst=sentiment
-        )
+        # Initialize synthesizer (creates agents internally)
+        synthesizer = ThesisSynthesizer()
 
         # Run complete analysis
         result = await synthesizer.generate_investment_thesis("BTC")
@@ -409,18 +404,10 @@ class TestPerformanceAndConcurrency:
 
     @pytest.mark.asyncio
     async def test_agent_reusability(self):
-        """Test that agents can be reused across multiple analyses"""
-        macro = CryptoMacroAnalyst()
-        vc = CryptoVCAnalyst()
-        sentiment = CryptoSentimentAnalyst()
-
-        # Use same agents for multiple assets
-        synthesizer1 = ThesisSynthesizer(
-            macro_analyst=macro, vc_analyst=vc, sentiment_analyst=sentiment
-        )
-        synthesizer2 = ThesisSynthesizer(
-            macro_analyst=macro, vc_analyst=vc, sentiment_analyst=sentiment
-        )
+        """Test that synthesizer instances can be reused across multiple analyses"""
+        # Create two synthesizer instances
+        synthesizer1 = ThesisSynthesizer()
+        synthesizer2 = ThesisSynthesizer()
 
         # Both should work
         result1 = await synthesizer1.generate_investment_thesis("BTC")

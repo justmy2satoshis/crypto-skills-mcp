@@ -84,7 +84,7 @@ class TestAnalyzeCrowdSentiment:
         assert isinstance(social["sentiment_balance"], (int, float))
 
         # Verify contrarian signal is valid
-        assert result["contrarian_signal"] in ["buy", "sell", "neutral"]
+        assert result["contrarian_signal"] in ["strong_buy", "buy", "hold", "sell", "strong_sell"]
 
         # Verify interpretation is non-empty
         assert isinstance(result["interpretation"], str)

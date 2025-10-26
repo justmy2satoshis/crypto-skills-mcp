@@ -48,7 +48,8 @@ class TestCryptoVCAnalystInit:
     def test_optional_servers(self):
         """Test optional MCP servers list"""
         analyst = CryptoVCAnalyst()
-        assert len(analyst.optional_servers) == 0
+        assert len(analyst.optional_servers) == 1  # github-manager is optional
+        assert "github-manager" in analyst.optional_servers
 
 
 class TestAnalyzeTokenomics:
@@ -603,3 +604,4 @@ class TestAsyncPatterns:
 
         # Verify overall score is calculated from sub-scores
         assert result["overall_score"] > 0
+ 

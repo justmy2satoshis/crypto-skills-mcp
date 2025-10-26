@@ -466,6 +466,7 @@ class CryptoVCAnalyst:
                 "risk_scoring",
                 "red_flag_identification",
                 "due_diligence_reporting",
+                "development_activity_tracking",
             ],
             "required_mcps": self.required_servers,
             "optional_mcps": self.optional_servers,
@@ -519,3 +520,4 @@ async def analyze_crypto_project(
             f"Invalid analysis_type '{analysis_type}'. "
             f"Valid types: tokenomics, technical, liquidity, risk, flags, full"
         )
+ 

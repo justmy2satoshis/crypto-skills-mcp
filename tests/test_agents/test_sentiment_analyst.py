@@ -526,9 +526,7 @@ class TestConvenienceFunction:
     @pytest.mark.asyncio
     async def test_analyze_crypto_sentiment_with_kwargs(self):
         """Test convenience function with additional kwargs"""
-        result = await analyze_crypto_sentiment(
-            "ethereum", "extremes", lookback_days=180
-        )
+        result = await analyze_crypto_sentiment("ethereum", "extremes", lookback_days=180)
         assert "current_percentile" in result
 
 

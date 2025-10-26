@@ -75,8 +75,7 @@ class TestMultiAgentOrchestration:
 
         # Check for sentiment indicators
         has_sentiment = any(
-            word in synthesis
-            for word in ["sentiment", "fear", "greed", "crowd", "contrarian"]
+            word in synthesis for word in ["sentiment", "fear", "greed", "crowd", "contrarian"]
         )
 
         # At least two of three should be mentioned
@@ -188,9 +187,7 @@ class TestDataFlowBetweenAgents:
                 if crowd["fear_greed_index"] <= 25:
                     # Should mention fear or contrarian in synthesis
                     synthesis_lower = thesis["synthesis"].lower()
-                    assert (
-                        "fear" in synthesis_lower or "contrarian" in synthesis_lower
-                    )
+                    assert "fear" in synthesis_lower or "contrarian" in synthesis_lower
 
     @pytest.mark.asyncio
     async def test_orchestration_data_completeness(self):
@@ -303,9 +300,7 @@ class TestConflictDetectionInPractice:
         # If conflicts were detected, they should be resolved
         if len(thesis["conflicts_detected"]) > 0:
             # Resolution count should match or be less than detection count
-            assert len(thesis["conflicts_resolved"]) <= len(
-                thesis["conflicts_detected"]
-            )
+            assert len(thesis["conflicts_resolved"]) <= len(thesis["conflicts_detected"])
 
 
 class TestEndToEndInvestmentPipeline:
@@ -672,12 +667,9 @@ class TestThesisQualityMetrics:
             [
                 any(word in synthesis_lower for word in ["macro", "regime", "fed"]),
                 any(
-                    word in synthesis_lower
-                    for word in ["fundamental", "tokenomics", "development"]
+                    word in synthesis_lower for word in ["fundamental", "tokenomics", "development"]
                 ),
-                any(
-                    word in synthesis_lower for word in ["sentiment", "fear", "greed"]
-                ),
+                any(word in synthesis_lower for word in ["sentiment", "fear", "greed"]),
                 "risk" in synthesis_lower,
                 any(word in synthesis_lower for word in ["buy", "sell", "hold"]),
             ]

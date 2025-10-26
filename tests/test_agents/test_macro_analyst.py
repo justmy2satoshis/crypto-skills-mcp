@@ -417,7 +417,7 @@ class TestAsyncPatterns:
         results = await asyncio.gather(
             analyst.analyze_macro_regime(),
             analyst.track_institutional_flows(),
-            analyst.assess_risk_sentiment()
+            analyst.assess_risk_sentiment(),
         )
 
         assert len(results) == 3

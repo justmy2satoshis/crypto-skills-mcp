@@ -120,9 +120,7 @@ class MCPClientWrapper:
         self._store_in_cache(cache_key, result, ttl_seconds=60)
         return result
 
-    async def fetch_order_book(
-        self, exchange: str, symbol: str, limit: int = 20
-    ) -> Dict[str, Any]:
+    async def fetch_order_book(self, exchange: str, symbol: str, limit: int = 20) -> Dict[str, Any]:
         """
         Fetch order book (market depth).
 
@@ -262,9 +260,7 @@ class MCPClientWrapper:
                 "timestamp": int(datetime.now().timestamp()),
             }
 
-        result = await self._call_mcp_tool(
-            "mcp__crypto-feargreed-mcp__get_current_fng_tool", {}
-        )
+        result = await self._call_mcp_tool("mcp__crypto-feargreed-mcp__get_current_fng_tool", {})
 
         self._store_in_cache(cache_key, result, ttl_seconds=300)
         return result
@@ -423,9 +419,7 @@ class MCPClientWrapper:
     # CryptoPanic MCP
     # ========================
 
-    async def get_crypto_news(
-        self, kind: str = "news", num_pages: int = 1
-    ) -> List[Dict[str, Any]]:
+    async def get_crypto_news(self, kind: str = "news", num_pages: int = 1) -> List[Dict[str, Any]]:
         """
         Get cryptocurrency news from CryptoPanic.
 
@@ -486,9 +480,7 @@ class MCPClientWrapper:
                 "change_24h": 0.0,
             }
 
-        result = await self._call_mcp_tool(
-            "mcp__tokenmetrics__get_token_price", {"symbol": symbol}
-        )
+        result = await self._call_mcp_tool("mcp__tokenmetrics__get_token_price", {"symbol": symbol})
 
         self._store_in_cache(cache_key, result, ttl_seconds=60)
         return result
@@ -580,9 +572,7 @@ class MCPClientWrapper:
                 "total_outflow": 0,
             }
 
-        result = await self._call_mcp_tool(
-            "mcp__etf-flow-mcp__get_etf_flow", {"coin": coin}
-        )
+        result = await self._call_mcp_tool("mcp__etf-flow-mcp__get_etf_flow", {"coin": coin})
 
         self._store_in_cache(cache_key, result, ttl_seconds=3600)
         return result
@@ -672,9 +662,7 @@ class MCPClientWrapper:
         if to_date:
             params["to_date"] = to_date
 
-        result = await self._call_mcp_tool(
-            "mcp__grok-search-mcp__grok_news_search", params
-        )
+        result = await self._call_mcp_tool("mcp__grok-search-mcp__grok_news_search", params)
 
         self._store_in_cache(cache_key, result, ttl_seconds=300)
         return result
@@ -683,9 +671,7 @@ class MCPClientWrapper:
     # Helper Methods
     # ========================
 
-    async def _call_mcp_tool(
-        self, tool_name: str, parameters: Dict[str, Any]
-    ) -> Any:
+    async def _call_mcp_tool(self, tool_name: str, parameters: Dict[str, Any]) -> Any:
         """
         Call an MCP tool with retry logic.
 
@@ -713,9 +699,7 @@ class MCPClientWrapper:
                         f"MCP tool call failed after {self.max_retries} attempts: {str(e)}"
                     )
 
-    def _get_from_cache(
-        self, key: str, ttl_seconds: Optional[int] = None
-    ) -> Optional[Any]:
+    def _get_from_cache(self, key: str, ttl_seconds: Optional[int] = None) -> Optional[Any]:
         """
         Get value from cache if not expired.
 
@@ -738,9 +722,7 @@ class MCPClientWrapper:
 
         return cache_entry["value"]
 
-    def _store_in_cache(
-        self, key: str, value: Any, ttl_seconds: Optional[int] = None
-    ) -> None:
+    def _store_in_cache(self, key: str, value: Any, ttl_seconds: Optional[int] = None) -> None:
         """
         Store value in cache.
 
@@ -776,13 +758,9 @@ class MCPClientWrapper:
             "total_entries": len(self.cache),
             "cache_keys": list(self.cache.keys()),
             "oldest_entry": (
-                min(entry["timestamp"] for entry in self.cache.values())
-                if self.cache
-                else None
+                min(entry["timestamp"] for entry in self.cache.values()) if self.cache else None
             ),
             "newest_entry": (
-                max(entry["timestamp"] for entry in self.cache.values())
-                if self.cache
-                else None
+                max(entry["timestamp"] for entry in self.cache.values()) if self.cache else None
             ),
         }

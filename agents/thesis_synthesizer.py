@@ -126,12 +126,8 @@ class ThesisSynthesizer:
             asset_slug = "ethereum"
 
         # Orchestrate all Agents in parallel
-        macro_analysis = await self.macro_analyst.synthesize_macro_outlook(
-            asset, horizon_days
-        )
-        fundamental_analysis = await self.vc_analyst.generate_due_diligence_report(
-            asset
-        )
+        macro_analysis = await self.macro_analyst.synthesize_macro_outlook(asset, horizon_days)
+        fundamental_analysis = await self.vc_analyst.generate_due_diligence_report(asset)
         sentiment_analysis = await self.sentiment_analyst.synthesize_sentiment_outlook(
             asset_slug, horizon_days
         )
@@ -180,9 +176,7 @@ class ThesisSynthesizer:
         )
 
         # Generate recommendation
-        recommendation = self._generate_recommendation(
-            thesis_type, macro, fundamental, sentiment
-        )
+        recommendation = self._generate_recommendation(thesis_type, macro, fundamental, sentiment)
 
         return {
             "thesis_type": thesis_type.value,
@@ -268,9 +262,7 @@ class ThesisSynthesizer:
         else:
             return ThesisType.NEUTRAL
 
-    def _calculate_confidence(
-        self, macro: Dict, fundamental: Dict, sentiment: Dict
-    ) -> float:
+    def _calculate_confidence(self, macro: Dict, fundamental: Dict, sentiment: Dict) -> float:
         """Calculate overall confidence score from Agent confidences"""
         # Extract confidence scores from each Agent
         macro_conf = macro.get("confidence", 0.75)
@@ -348,9 +340,7 @@ class ThesisSynthesizer:
             "reasoning": reasoning,
         }
 
-    def _generate_entry_strategy(
-        self, thesis_type: ThesisType, sentiment: Dict
-    ) -> str:
+    def _generate_entry_strategy(self, thesis_type: ThesisType, sentiment: Dict) -> str:
         """Generate entry timing strategy"""
         if thesis_type in [ThesisType.STRONG_BULLISH, ThesisType.BULLISH]:
             # Check sentiment for optimal entry
@@ -434,9 +424,9 @@ class ThesisSynthesizer:
             f"Sentiment: {sentiment['sentiment_assessment']}",
         ]
 
-        risks = macro.get("risks", []) + fundamental["risk_assessment"].get(
-            "risk_factors", {}
-        ).values()
+        risks = (
+            macro.get("risks", []) + fundamental["risk_assessment"].get("risk_factors", {}).values()
+        )
 
         return {
             "asset": asset,
@@ -451,12 +441,8 @@ class ThesisSynthesizer:
             "key_drivers": key_drivers[:5],  # Top 5
             "risks": list(risks)[:5],  # Top 5
             "monitoring_triggers": {
-                "buy_trigger": sentiment.get("monitoring_triggers", {}).get(
-                    "buy_trigger", "N/A"
-                ),
-                "sell_trigger": sentiment.get("monitoring_triggers", {}).get(
-                    "sell_trigger", "N/A"
-                ),
+                "buy_trigger": sentiment.get("monitoring_triggers", {}).get("buy_trigger", "N/A"),
+                "sell_trigger": sentiment.get("monitoring_triggers", {}).get("sell_trigger", "N/A"),
                 "regime_change": "Monitor Fed policy announcements",
             },
             "timestamp": analysis["timestamp"],

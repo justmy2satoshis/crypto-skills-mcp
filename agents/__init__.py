@@ -141,7 +141,12 @@ AGENT_METADATA = {
                 "macro_synthesis",
             ],
             "required_mcps": ["ccxt-mcp"],
-            "optional_mcps": ["grok-search-mcp", "etf-flow-mcp", "tokenmetrics-mcp", "perplexity-mcp"],
+            "optional_mcps": [
+                "grok-search-mcp",
+                "etf-flow-mcp",
+                "tokenmetrics-mcp",
+                "perplexity-mcp",
+            ],
         },
         "crypto_vc_analyst": {
             "class": CryptoVCAnalyst,

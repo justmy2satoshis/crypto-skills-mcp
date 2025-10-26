@@ -87,7 +87,9 @@ async def example_complete_investment_thesis():
     print(f"Recommendation: {thesis['recommendation']}")
     print(f"Confidence: {thesis['confidence']:.2f}")
 
-    print(f"\nEntry Range: ${thesis['entry_range']['low']:,.0f} - ${thesis['entry_range']['high']:,.0f}")
+    print(
+        f"\nEntry Range: ${thesis['entry_range']['low']:,.0f} - ${thesis['entry_range']['high']:,.0f}"
+    )
     print(f"Position Size: {thesis['position_size'] * 100:.1f}%")
     print(f"Time Horizon: {thesis['time_horizon']}")
 
@@ -141,9 +143,11 @@ async def example_multi_asset_comparison():
     )
 
     # Display comparison
-    print("\n{:<8} {:<15} {:<12} {:<10} {:<15}".format(
-        "Asset", "Thesis", "Confidence", "Position", "Horizon"
-    ))
+    print(
+        "\n{:<8} {:<15} {:<12} {:<10} {:<15}".format(
+            "Asset", "Thesis", "Confidence", "Position", "Horizon"
+        )
+    )
     print("-" * 70)
 
     for asset, result in zip(assets, results):
@@ -344,9 +348,7 @@ async def example_convenience_functions():
 
     # Quick investment thesis
     print("\nGenerating quick investment thesis...")
-    thesis = await synthesize_investment_thesis(
-        "ETH", horizon_days=90, mcp_client=mcp_client
-    )
+    thesis = await synthesize_investment_thesis("ETH", horizon_days=90, mcp_client=mcp_client)
 
     print(f"Thesis: {thesis['thesis_type']}")
     print(f"Recommendation: {thesis['recommendation']}")

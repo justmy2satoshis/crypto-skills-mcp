@@ -75,9 +75,7 @@ class TestThesisSynthesizerInit:
 
         # Weights should sum to 1.0
         total_weight = (
-            synthesizer.macro_weight
-            + synthesizer.fundamental_weight
-            + synthesizer.sentiment_weight
+            synthesizer.macro_weight + synthesizer.fundamental_weight + synthesizer.sentiment_weight
         )
         assert abs(total_weight - 1.0) < 0.001  # Allow for floating point error
 
@@ -254,8 +252,7 @@ class TestGenerateInvestmentThesis:
 
         # Should mention macro, fundamental, and/or sentiment concepts
         has_macro_ref = any(
-            word in synthesis
-            for word in ["macro", "regime", "fed", "institutional", "flow"]
+            word in synthesis for word in ["macro", "regime", "fed", "institutional", "flow"]
         )
         has_fundamental_ref = any(
             word in synthesis
@@ -575,9 +572,7 @@ class TestSynthesizeSignals:
 
         # Reasoning should mention weighting
         reasoning = result["reasoning"].lower()
-        assert any(
-            word in reasoning for word in ["weight", "fundamental", "strong", "high"]
-        )
+        assert any(word in reasoning for word in ["weight", "fundamental", "strong", "high"])
 
 
 class TestGetCapabilities:
@@ -810,9 +805,9 @@ class TestConflictScenarios:
 
         # Should detect conflict
         assert len(conflicts) > 0
-        assert any(
-            c["type"] == "recommendation_divergence" for c in conflicts
-        ) or any(c["severity"] in ["moderate", "major"] for c in conflicts)
+        assert any(c["type"] == "recommendation_divergence" for c in conflicts) or any(
+            c["severity"] in ["moderate", "major"] for c in conflicts
+        )
 
     @pytest.mark.asyncio
     async def test_contrarian_sentiment_signal(self):
@@ -835,9 +830,7 @@ class TestConflictScenarios:
 
         # Synthesis should acknowledge contrarian opportunity
         reasoning = result["reasoning"].lower()
-        assert any(
-            word in reasoning for word in ["contrarian", "fear", "extreme", "opportunity"]
-        )
+        assert any(word in reasoning for word in ["contrarian", "fear", "extreme", "opportunity"])
 
 
 class TestWeightedSynthesis:

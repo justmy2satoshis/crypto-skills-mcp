@@ -188,9 +188,7 @@ async def demo_thesis_synthesizer():
         print(f"    {agent.title()}: {weight*100}%")
 
     print("\n1. Orchestrating Comprehensive Analysis (BTC)...")
-    comprehensive = await orchestrator.orchestrate_comprehensive_analysis(
-        "BTC", horizon_days=30
-    )
+    comprehensive = await orchestrator.orchestrate_comprehensive_analysis("BTC", horizon_days=30)
     print(f"  Analysis Complete!")
     print(f"\n  Macro Analysis:")
     print(f"    Recommendation: {comprehensive['macro_analysis']['recommendation']}")
@@ -199,9 +197,7 @@ async def demo_thesis_synthesizer():
     print(f"    Recommendation: {comprehensive['fundamental_analysis']['recommendation']}")
     print(f"    Overall Score: {comprehensive['fundamental_analysis']['overall_score']}/100")
     print(f"\n  Sentiment Analysis:")
-    print(
-        f"    Sentiment: {comprehensive['sentiment_analysis']['sentiment_assessment']}"
-    )
+    print(f"    Sentiment: {comprehensive['sentiment_analysis']['sentiment_assessment']}")
     print(f"    Confidence: {comprehensive['sentiment_analysis']['confidence']:.0%}")
 
     print("\n2. Generating Investment Thesis (BTC)...")

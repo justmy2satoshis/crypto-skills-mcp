@@ -355,9 +355,7 @@ class TestGenerateDueDiligenceReport:
         assert 0 <= result["overall_score"] <= 100
 
         # Verify recommendation is valid enum value
-        assert result["recommendation"] in [
-            rec.value for rec in InvestmentRecommendation
-        ]
+        assert result["recommendation"] in [rec.value for rec in InvestmentRecommendation]
 
         # Verify confidence
         assert 0.0 <= result["confidence"] <= 1.0

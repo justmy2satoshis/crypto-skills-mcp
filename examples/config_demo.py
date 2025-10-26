@@ -142,9 +142,7 @@ def demo_agents_only_mode():
     # Performance
     perf = config["performance"]
     print(f"\nToken Reduction Target: {perf['token_reduction']['target']*100}%")
-    print(
-        f"Agent Overhead: {perf['token_reduction']['agent_overhead']*100}%"
-    )
+    print(f"Agent Overhead: {perf['token_reduction']['agent_overhead']*100}%")
 
     # Benefits
     print(f"\nBenefits:")
@@ -240,6 +238,6 @@ if __name__ == "__main__":
     print("\nTo use in production:")
     print('  export CRYPTO_SKILLS_MODE="hybrid"  # or skills_only, agents_only')
     print("  from core import ConfigLoader")
-    print('  loader = ConfigLoader()')
-    print('  config = loader.get_active_config()')
+    print("  loader = ConfigLoader()")
+    print("  config = loader.get_active_config()")
     print()

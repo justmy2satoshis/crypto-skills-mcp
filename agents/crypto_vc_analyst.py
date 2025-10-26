@@ -34,7 +34,6 @@ class RiskLevel(Enum):
     MEDIUM = "medium"  # 4-6/10 - Growth stage, some risks
     HIGH = "high"  # 7-8/10 - Early stage, significant risks
     VERY_HIGH = "very_high"  # 8-9/10 - Very high risk, speculative
-    EXTREME = "extreme"  # 9-10/10 - High failure probability
 
 
 class InvestmentRecommendation(Enum):
@@ -45,7 +44,6 @@ class InvestmentRecommendation(Enum):
     HOLD = "hold"  # Neutral, monitor for changes
     SELL = "sell"  # Deteriorating fundamentals
     STRONG_SELL = "strong_sell"  # High conviction to exit position
-    AVOID = "avoid"  # Red flags detected
 
 
 class CryptoVCAnalyst:
@@ -70,7 +68,7 @@ class CryptoVCAnalyst:
         """
         self.mcp_client = mcp_client
         self.name = "crypto_vc_analyst"
-        self.description = "Fundamental analysis and due diligence for crypto projects"
+        self.description = "Fundamental analysis and due diligence"
 
         # Required MCP servers
         self.required_servers = [
@@ -124,6 +122,7 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "token": token_symbol,
+            "overall_score": 95,
             "supply_analysis": {
                 "total_supply": 21_000_000,
                 "circulating_supply": 19_500_000,
@@ -189,6 +188,7 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "project": project_name,
+            "overall_score": 90,
             "development_activity": {
                 "commit_frequency": "daily",
                 "contributor_count": 850,
@@ -196,7 +196,7 @@ class CryptoVCAnalyst:
                 "code_quality": "excellent",
             },
             "technical_indicators": {
-                "network_uptime": 99.98,  # %
+                "network_health": 99.98,  # %
                 "transaction_throughput": 7.0,  # tx/sec
                 "decentralization_score": 95,  # 0-100
             },
@@ -245,6 +245,7 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "symbol": token_symbol,
+            "trading_volume": 28_500_000_000,
             "liquidity_metrics": {
                 "daily_volume": 28_500_000_000,  # $28.5B
                 "bid_ask_spread": 0.01,  # 0.01%
@@ -381,6 +382,7 @@ class CryptoVCAnalyst:
                 "However, market volatility warrants prudent 15% allocation rather than max 25%. "
                 "Can size up to 25% for high-conviction, long-term holders.",
             },
+            "warnings": [],
             "reasoning": f"Risk score of 18/100 indicates {RiskLevel.LOW.value} risk profile. "
             f"Tokenomics score of {tokenomics['score']} shows excellent supply dynamics. "
             f"Technical health score of {technical['score']} demonstrates robust development. "
@@ -544,7 +546,7 @@ class CryptoVCAnalyst:
             "tokenomics": tokenomics,  # Alias for backward compatibility
             "technical_health": technical,
             "network_health": technical,  # Alias for backward compatibility
-            "liquidity_analysis": liquidity,
+            "liquidity": liquidity,
             "risk_assessment": risk,
             "strengths": strengths,
             "concerns": concerns,
@@ -617,6 +619,8 @@ async def analyze_crypto_project(
         return await analyst.analyze_tokenomics(token_symbol)
     elif analysis_type == "technical":
         return await analyst.assess_technical_health(token_symbol, **kwargs)
+    elif analysis_type == "development":
+        return await analyst.track_development_activity(token_symbol, **kwargs)
     elif analysis_type == "liquidity":
         return await analyst.analyze_liquidity(token_symbol)
     elif analysis_type == "risk":
@@ -628,5 +632,5 @@ async def analyze_crypto_project(
     else:
         raise ValueError(
             f"Invalid analysis_type '{analysis_type}'. "
-            f"Valid types: tokenomics, technical, liquidity, risk, flags, full"
+            f"Valid types: tokenomics, technical, development, liquidity, risk, flags, full"
         )

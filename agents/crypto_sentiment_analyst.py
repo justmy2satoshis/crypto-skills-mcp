@@ -43,7 +43,6 @@ class ContrarianSignal(Enum):
     STRONG_BUY = "strong_buy"  # Extreme fear = opportunity
     BUY = "buy"  # Fear = accumulation
     NEUTRAL = "neutral"  # Balanced sentiment, no clear signal
-    HOLD = "hold"  # Neutral sentiment
     SELL = "sell"  # Greed = distribution
     STRONG_SELL = "strong_sell"  # Extreme greed = top signal
 
@@ -126,10 +125,10 @@ class CryptoSentimentAnalyst:
             "interpretation": "Market in GREED regime (F&G: 68). Positive sentiment balance "
             "with elevated social volume indicates retail FOMO building. Approaching "
             "overbought territory where contrarian selling signals may emerge.",
-            "contrarian_signal": ContrarianSignal.HOLD.value,
+            "contrarian_signal": ContrarianSignal.NEUTRAL.value,
             "reasoning": "Greed level of 68 not yet extreme (needs >75 for strong sell signal). "
             "However, rising social volume and positive sentiment suggest caution. "
-            "HOLD and monitor for extreme greed (>75) which would trigger SELL signal. "
+            "NEUTRAL stance - monitor for extreme greed (>75) which would trigger SELL signal. "
             "Best contrarian opportunities emerge at extreme fear (<25).",
         }
 
@@ -192,7 +191,7 @@ class CryptoSentimentAnalyst:
                 "extreme_greed_warnings": 2,
                 "mean_reversion_timeframe": "2-4 weeks",
             },
-            "current_signal": "monitor_for_extreme",
+            "current_signal": "neutral",
             "reasoning": "Current sentiment at 62nd percentile - above average but not extreme. "
             "Historical analysis shows extreme fear (<25) creates 2-4 week buying opportunities "
             "with avg 30%+ gains. Extreme greed (>75) triggers 2-4 week corrections avg 10-15%. "
@@ -274,7 +273,7 @@ class CryptoSentimentAnalyst:
             {
                 "asset": str,
                 "period_hours": int,
-                "overall_sentiment": str,  # Renamed from news_sentiment
+                "news_sentiment": str,  # "bullish", "bearish", "neutral"
                 "sentiment_score": float,  # -1 to +1
                 "trending_topics": List[str],  # Renamed from top_narratives
                 "key_narratives": List[str],  # Added for test compatibility
@@ -311,7 +310,7 @@ class CryptoSentimentAnalyst:
         return {
             "asset": asset,
             "period_hours": period_hours,
-            "overall_sentiment": "bullish",  # Renamed from news_sentiment
+            "news_sentiment": "bullish",
             "sentiment_score": 0.65,  # Positive
             "trending_topics": narratives,  # Renamed from top_narratives
             "key_narratives": narratives,  # Alias for test compatibility
@@ -368,7 +367,7 @@ class CryptoSentimentAnalyst:
 
         return {
             "asset": asset,
-            "signal": ContrarianSignal.HOLD.value,
+            "signal": ContrarianSignal.NEUTRAL.value,
             "confidence": 0.72,
             "entry_timing": "wait_for_extreme_fear",
             "exit_timing": "wait_for_extreme_greed",
@@ -386,7 +385,7 @@ class CryptoSentimentAnalyst:
             "reasoning": f"Current Fear & Greed at {crowd['fear_greed_index']} ({crowd['sentiment_regime']}) - "
             f"above average but not extreme. Best contrarian opportunities emerge at extremes: "
             f"<25 (extreme fear = BUY) or >75 (extreme greed = SELL). "
-            f"Current signal: {ContrarianSignal.HOLD.value}. "
+            f"Current signal: {ContrarianSignal.NEUTRAL.value}. "
             f"Entry timing: Wait for extreme fear (<25) to deploy capital. "
             f"Exit timing: Wait for extreme greed (>75) to take profits. "
             f"No whale divergence detected - whales and retail aligned {whales['whale_sentiment']}.",
@@ -449,7 +448,7 @@ class CryptoSentimentAnalyst:
             "confidence": 0.76,
             "key_insights": [
                 f"Fear & Greed at {crowd['fear_greed_index']} - elevated but not extreme",
-                f"Whales {whales['whale_metrics']['accumulation_distribution']} - aligned with retail",
+                f"Whales {whales['large_transactions']['net_direction']} - aligned with retail",
                 f"News sentiment {news['news_sentiment']} with {news['sentiment_score']:.2f} score",
                 "Best opportunities emerge at F&G <25 (extreme fear) or >75 (extreme greed)",
             ],
@@ -459,9 +458,9 @@ class CryptoSentimentAnalyst:
             },
             "reasoning": f"Current sentiment regime: {crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']}). "
             f"No contrarian opportunity present - need extreme fear (<25) for buy signal or "
-            f"extreme greed (>75) for sell signal. Whales showing {whales['whale_metrics']['accumulation_distribution']} "
+            f"extreme greed (>75) for sell signal. Whales showing {whales['large_transactions']['net_direction']} "
             f"behavior, aligned with retail sentiment. News sentiment {news['news_sentiment']} "
-            f"with {news['top_narratives'][:2]} as top narratives. "
+            f"with {news['trending_topics'][:2]} as top narratives. "
             f"Recommended action: {signal['signal']} and monitor for sentiment extremes. "
             f"Historical analysis shows {extremes['pattern_analysis']['mean_reversion_timeframe']} "
             f"mean reversion after extremes.",

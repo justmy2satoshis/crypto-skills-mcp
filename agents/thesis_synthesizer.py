@@ -38,19 +38,20 @@ from .crypto_sentiment_analyst import (
 class ThesisType(Enum):
     """Investment thesis classifications"""
 
-    STRONG_BULLISH = "strong_bullish"  # All signals aligned bullish
-    BULLISH = "bullish"  # Majority bullish, some caution
+    STRONG_BUY = "strong_buy"  # All signals aligned bullish
+    BUY = "buy"  # Majority bullish, some caution
     NEUTRAL = "neutral"  # Mixed signals, no clear direction
-    BEARISH = "bearish"  # Majority bearish, some support
-    STRONG_BEARISH = "strong_bearish"  # All signals aligned bearish
+    HOLD = "hold"  # Majority cautious, maintain positions
+    SELL = "sell"  # Majority bearish, reduce exposure
+    STRONG_SELL = "strong_sell"  # All signals aligned bearish
 
 
 class ConflictType(Enum):
     """Signal conflict types"""
 
-    FUNDAMENTAL_VS_SENTIMENT = "fundamental_vs_sentiment"  # Strong fundamentals, weak sentiment
-    MACRO_VS_FUNDAMENTAL = "macro_vs_fundamental"  # Macro headwinds, good fundamentals
-    SENTIMENT_VS_MACRO = "sentiment_vs_macro"  # Sentiment extreme, macro neutral
+    RECOMMENDATION_DIVERGENCE = "recommendation_divergence"  # Agents recommend different actions
+    CONFIDENCE_MISMATCH = "confidence_mismatch"  # High confidence from one agent, low from others
+    TIMING_DIVERGENCE = "timing_divergence"  # Conflicting entry/exit timing signals
     NO_CONFLICT = "no_conflict"  # All Agents aligned
 
 
@@ -219,11 +220,11 @@ class ThesisSynthesizer:
 
         # Check for conflicts
         if fundamental_norm == "bullish" and sentiment_norm == "bearish":
-            return ConflictType.FUNDAMENTAL_VS_SENTIMENT
+            return ConflictType.RECOMMENDATION_DIVERGENCE
         elif macro_norm == "bearish" and fundamental_norm == "bullish":
-            return ConflictType.MACRO_VS_FUNDAMENTAL
+            return ConflictType.RECOMMENDATION_DIVERGENCE
         elif sentiment_norm != "neutral" and macro_norm != sentiment_norm:
-            return ConflictType.SENTIMENT_VS_MACRO
+            return ConflictType.TIMING_DIVERGENCE
         else:
             return ConflictType.NO_CONFLICT
 
@@ -270,13 +271,13 @@ class ThesisSynthesizer:
 
         # Determine thesis
         if bullish_count == 3:
-            return ThesisType.STRONG_BULLISH
+            return ThesisType.STRONG_BUY
         elif bullish_count == 2:
-            return ThesisType.BULLISH
+            return ThesisType.BUY
         elif bearish_count == 3:
-            return ThesisType.STRONG_BEARISH
+            return ThesisType.STRONG_SELL
         elif bearish_count == 2:
-            return ThesisType.BEARISH
+            return ThesisType.SELL
         else:
             return ThesisType.NEUTRAL
 
@@ -313,7 +314,7 @@ class ThesisSynthesizer:
         )
 
         # Generate recommendation based on thesis type
-        if thesis_type == ThesisType.STRONG_BULLISH:
+        if thesis_type == ThesisType.STRONG_BUY:
             action = "STRONG_BUY"
             allocation = min(target_allocation * 1.2, 25.0)  # Up to 20% increase
             reasoning = (
@@ -321,7 +322,7 @@ class ThesisSynthesizer:
                 f"Macro regime: {macro_regime}, Risk score: {risk_score}/100 ({risk_level}), "
                 f"Sentiment favorable. High-conviction opportunity."
             )
-        elif thesis_type == ThesisType.BULLISH:
+        elif thesis_type == ThesisType.BUY:
             action = "BUY"
             allocation = target_allocation
             reasoning = (
@@ -335,14 +336,14 @@ class ThesisSynthesizer:
                 "Mixed signals across analytical dimensions. "
                 "Maintain current exposure but do not increase."
             )
-        elif thesis_type == ThesisType.BEARISH:
+        elif thesis_type == ThesisType.SELL:
             action = "SELL"
             allocation = target_allocation * 0.5
             reasoning = (
                 "Majority bearish signals detected. "
                 "Reduce exposure by 50% and monitor for improvement."
             )
-        else:  # STRONG_BEARISH
+        else:  # STRONG_SELL
             action = "STRONG_SELL"
             allocation = 0.0
             reasoning = (
@@ -360,7 +361,7 @@ class ThesisSynthesizer:
 
     def _generate_entry_strategy(self, thesis_type: ThesisType, sentiment: Dict) -> str:
         """Generate entry timing strategy"""
-        if thesis_type in [ThesisType.STRONG_BULLISH, ThesisType.BULLISH]:
+        if thesis_type in [ThesisType.STRONG_BUY, ThesisType.BUY]:
             # Check sentiment for optimal entry
             if sentiment.get("contrarian_opportunity", False):
                 return "Enter immediately - contrarian opportunity at sentiment extreme"
@@ -373,7 +374,7 @@ class ThesisSynthesizer:
 
     def _generate_exit_strategy(self, thesis_type: ThesisType, risk_level: str) -> str:
         """Generate exit timing strategy"""
-        if thesis_type in [ThesisType.STRONG_BULLISH, ThesisType.BULLISH]:
+        if thesis_type in [ThesisType.STRONG_BUY, ThesisType.BUY]:
             if risk_level == "low":
                 return "Long-term hold (5+ years) with -30% trailing stop from ATH"
             else:
@@ -574,16 +575,60 @@ class ThesisSynthesizer:
         if macro_norm != fundamental_norm and macro_norm != "neutral" and fundamental_norm != "neutral":
             conflicts.append({
                 "type": "recommendation_divergence",
-                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}"
+                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}",
+                "severity": "high"
             })
 
         if fundamental_norm != sentiment_norm and fundamental_norm != "neutral" and sentiment_norm != "neutral":
             conflicts.append({
                 "type": "fundamental_sentiment_conflict",
-                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}"
+                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}",
+                "severity": "medium"
             })
 
         return conflicts
+
+    async def resolve_conflicts(
+        self, conflicts: List[Dict[str, str]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Public API: Resolve detected conflicts between agent analyses
+
+        Args:
+            conflicts: List of conflicts detected by detect_conflicts()
+
+        Returns:
+            List of resolved conflicts with resolution strategy
+        """
+        resolved = []
+
+        for conflict in conflicts:
+            conflict_type = conflict.get("type", "")
+            severity = conflict.get("severity", "medium")
+
+            # Generate resolution strategy based on conflict type
+            if conflict_type == "recommendation_divergence":
+                resolution = {
+                    **conflict,
+                    "resolution": "Use weighted voting with fundamental analysis (40%) as tiebreaker",
+                    "action": "Follow majority signal with reduced position size"
+                }
+            elif conflict_type == "fundamental_sentiment_conflict":
+                resolution = {
+                    **conflict,
+                    "resolution": "Prioritize fundamentals for entry, use sentiment for timing",
+                    "action": "Enter at contrarian sentiment extremes with fundamental support"
+                }
+            else:
+                resolution = {
+                    **conflict,
+                    "resolution": "Monitor for signal convergence before taking action",
+                    "action": "HOLD until clearer alignment emerges"
+                }
+
+            resolved.append(resolution)
+
+        return resolved
 
     async def synthesize_signals(
         self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
@@ -620,10 +665,11 @@ class ThesisSynthesizer:
         # Map thesis type to investment action
         action_map = {
             "neutral": "HOLD",
-            "bullish": "BUY",
-            "strong_bullish": "STRONG_BUY",
-            "bearish": "SELL",
-            "strong_bearish": "STRONG_SELL",
+            "buy": "BUY",
+            "strong_buy": "STRONG_BUY",
+            "hold": "HOLD",
+            "sell": "SELL",
+            "strong_sell": "STRONG_SELL",
         }
         action = action_map.get(thesis_type.value, "HOLD")
 

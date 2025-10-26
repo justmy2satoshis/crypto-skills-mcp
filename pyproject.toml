@@ -26,6 +26,13 @@ classifiers = [
     "Operating System :: OS Independent",
     "Framework :: AsyncIO",
 ]
+dependencies = [
+    "aiohttp>=3.8.0",
+    "typing-extensions>=4.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+]
 
 [project.urls]
 "Bug Reports" = "https://github.com/yourusername/crypto-skills-mcp/issues"
@@ -37,14 +44,26 @@ test = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",
+    "pytest-mock>=3.10.0",
 ]
 lint = [
     "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.5.0",
 ]
+skills = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+]
+agents = [
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.0.0",
+]
 dev = [
     "crypto-skills-mcp[test,lint]",
+]
+all = [
+    "crypto-skills-mcp[skills,agents,test,lint]",
 ]
 
 [tool.setuptools.packages.find]

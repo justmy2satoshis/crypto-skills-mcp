@@ -69,7 +69,19 @@ dev = [
     "mypy>=1.5.0",
 ]
 all = [
-    "crypto-skills-mcp[skills,agents,test,lint]",
+    # Test dependencies
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.10.0",
+    # Lint dependencies
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    # Skills dependencies
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    # Agent dependencies (pydantic and typing-extensions already in main dependencies)
 ]
 
 [tool.setuptools.packages.find]

@@ -244,8 +244,8 @@ class CryptoSentimentAnalyst:
             "divergence_detected": False,
             "large_transactions": {
                 "count": 342,
-                "volume": 12_500_000_000,  # $12.5B
-                "average_size": 36_549_707,  # ~$36.5M per transaction
+                "total_value": 12_500_000_000,  # $12.5B
+                "net_direction": "accumulation",  # accumulation, distribution, or neutral
             },
             "exchange_flows": {
                 "inflow": 3_200_000_000,  # $3.2B into exchanges

@@ -438,9 +438,8 @@ class CryptoVCAnalyst:
         }
 
         community_engagement = {
-            "social_mentions": 8500,
-            "active_addresses": 125000,
-            "community_growth": 12.5,  # 12.5% growth
+            "discord_members": 8500,
+            "twitter_followers": 125000,
         }
 
         # Calculate activity score (0-100) based on metrics

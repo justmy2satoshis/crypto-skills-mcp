@@ -60,11 +60,20 @@ agents = [
     "typing-extensions>=4.0.0",
 ]
 dev = [
-    "crypto-skills-mcp[test,lint]",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
 ]
 all = [
     "crypto-skills-mcp[skills,agents,test,lint]",
 ]
+
+[tool.setuptools]
+packages = ["agents"]
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -92,3 +101,6 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]

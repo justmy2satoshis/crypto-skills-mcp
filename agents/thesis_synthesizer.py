@@ -491,48 +491,6 @@ class ThesisSynthesizer:
             f"Exit Strategy: {synthesis['recommendation']['exit_strategy']}"
         )
 
-    async def detect_conflicts(
-        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
-    ) -> List[Dict[str, str]]:
-        """
-        Public API: Detect conflicts between agent analyses
-
-        Args:
-            macro_analysis: Macro analyst output
-            fundamental_analysis: Fundamental analyst output
-            sentiment_analysis: Sentiment analyst output
-
-        Returns:
-            List of detected conflicts with type and description
-        """
-        conflicts = []
-
-        # Extract signals
-        macro_signal = macro_analysis.get("recommendation", "neutral")
-        fundamental_signal = fundamental_analysis.get("recommendation", {})
-        if isinstance(fundamental_signal, dict):
-            fundamental_signal = fundamental_signal.get("action", "neutral")
-        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
-
-        # Check for recommendation divergence
-        macro_norm = self._normalize_signal(macro_signal)
-        fundamental_norm = self._normalize_signal(fundamental_signal)
-        sentiment_norm = self._normalize_signal(sentiment_signal)
-
-        if macro_norm != fundamental_norm and macro_norm != "neutral" and fundamental_norm != "neutral":
-            conflicts.append({
-                "type": "recommendation_divergence",
-                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}"
-            })
-
-        if fundamental_norm != sentiment_norm and fundamental_norm != "neutral" and sentiment_norm != "neutral":
-            conflicts.append({
-                "type": "fundamental_sentiment_conflict",
-                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}"
-            })
-
-        return conflicts
-
     def get_capabilities(self) -> Dict[str, Any]:
         """
         Get Agent capabilities and metadata

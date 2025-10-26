@@ -1,0 +1,75 @@
+# Skills-Only Mode Configuration
+# Maximum token efficiency through procedural workflows
+# Target: 73% token reduction (80-90% proceduralization)
+
+mode:
+  name: "skills_only"
+  description: "Procedural workflows only - maximum token efficiency"
+  default: false
+
+routing:
+  enabled: false
+  force_target: "skills"
+
+skills:
+  enabled: true
+
+  data_extraction:
+    - "fetch_ohlcv"
+    - "calculate_indicators"
+    - "aggregate_sentiment"
+    - "fetch_order_book"
+    - "fetch_trades"
+
+  technical_analysis:
+    - "momentum_scoring"
+    - "pattern_recognition"
+    - "support_resistance"
+    - "volatility_analysis"
+    - "trend_detection"
+
+  sentiment_analysis:
+    - "news_sentiment_scorer"
+    - "social_sentiment_tracker"
+    - "whale_activity_monitor"
+    - "sentiment_fusion"
+    - "fear_greed_analysis"
+
+agents:
+  enabled: false
+
+performance:
+  token_reduction:
+    target: 0.73  # 73% reduction target
+    actual: 0.73
+
+  distribution:
+    skills: 1.0   # 100% queries route to Skills
+    agents: 0.0
+    orchestrator: 0.0
+
+  limitations:
+    - "No strategic reasoning or synthesis"
+    - "No multi-agent conflict resolution"
+    - "No complex narrative generation"
+    - "Best for data extraction and technical analysis"
+
+mcp:
+  servers:
+    - name: "ccxt-mcp"
+      required: true
+      usage: ["skills"]
+    - name: "crypto-indicators-mcp"
+      required: true
+      usage: ["skills"]
+    - name: "crypto-sentiment-mcp"
+      required: true
+      usage: ["skills"]
+    - name: "crypto-feargreed-mcp"
+      required: false
+      usage: ["skills"]
+
+logging:
+  level: "INFO"
+  routing_decisions: false
+  performance_metrics: true

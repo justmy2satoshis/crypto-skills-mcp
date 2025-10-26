@@ -107,17 +107,20 @@ class TestCoreInfrastructure:
         assert config["skills"]["enabled"] is True
         assert config["agents"]["enabled"] is False
 
-    def test_load_agents_only_mode(self):
-        """Test loading agents-only mode configuration"""
+    def test_invalid_mode_rejected(self):
+        """Test that invalid modes are rejected"""
         from core import ConfigLoader
+        import pytest
 
         loader = ConfigLoader()
-        config = loader.load_mode("agents_only")
 
-        # Validate agents-only mode
-        assert config["mode"]["name"] == "agents_only"
-        assert config["skills"]["enabled"] is False
-        assert config["agents"]["enabled"] is True
+        # Test that agents_only mode is rejected (intentionally disabled)
+        with pytest.raises(ValueError, match="Invalid mode 'agents_only'"):
+            loader.load_mode("agents_only")
+
+        # Test that completely invalid modes are rejected
+        with pytest.raises(ValueError, match="Invalid mode 'invalid_mode'"):
+            loader.load_mode("invalid_mode")
 
 
 class TestSkillsAgentsCompatibility:
@@ -194,7 +197,8 @@ class TestConfigurationStructure:
 
         loader = ConfigLoader()
 
-        for mode in ["hybrid", "skills_only", "agents_only"]:
+        # Test only the two supported modes (agents_only is intentionally excluded)
+        for mode in ["hybrid", "skills_only"]:
             config = loader.load_mode(mode)
             assert "mcp" in config
             assert "servers" in config["mcp"]

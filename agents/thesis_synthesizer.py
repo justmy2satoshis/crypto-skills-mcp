@@ -68,21 +68,30 @@ class ThesisSynthesizer:
     - Auto-invoked for queries with >90% complexity
     """
 
-    def __init__(self, mcp_client=None):
+    def __init__(
+        self,
+        mcp_client=None,
+        macro_analyst=None,
+        vc_analyst=None,
+        sentiment_analyst=None,
+    ):
         """
         Initialize Thesis Synthesizer
 
         Args:
             mcp_client: MCP client for accessing data servers
+            macro_analyst: Optional CryptoMacroAnalyst instance (for dependency injection)
+            vc_analyst: Optional CryptoVCAnalyst instance (for dependency injection)
+            sentiment_analyst: Optional CryptoSentimentAnalyst instance (for dependency injection)
         """
         self.mcp_client = mcp_client
         self.name = "thesis_synthesizer"
-        self.description = "Strategic orchestrator for multi-domain investment synthesis"
+        self.description = "Strategic orchestration and thesis synthesis"
 
-        # Initialize specialized Agents
-        self.macro_analyst = CryptoMacroAnalyst(mcp_client)
-        self.vc_analyst = CryptoVCAnalyst(mcp_client)
-        self.sentiment_analyst = CryptoSentimentAnalyst(mcp_client)
+        # Initialize specialized Agents (with dependency injection support)
+        self.macro_analyst = macro_analyst or CryptoMacroAnalyst(mcp_client)
+        self.vc_analyst = vc_analyst or CryptoVCAnalyst(mcp_client)
+        self.sentiment_analyst = sentiment_analyst or CryptoSentimentAnalyst(mcp_client)
 
         # Agent weights for synthesis (can be tuned)
         self.weights = {
@@ -618,10 +627,30 @@ class ThesisSynthesizer:
         }
         action = action_map.get(thesis_type.value, "HOLD")
 
+        # Calculate weighted score using agent weights
+        macro_score = macro_analysis.get("confidence", 0.5)
+        fundamental_score = fundamental_analysis.get("confidence", 0.5)
+        sentiment_score = sentiment_analysis.get("confidence", 0.5)
+
+        weighted_score = (
+            macro_score * self.weights["macro"]
+            + fundamental_score * self.weights["fundamental"]
+            + sentiment_score * self.weights["sentiment"]
+        )
+
+        # Generate reasoning based on thesis type and signals
+        reasoning = (
+            f"Thesis type: {thesis_type.value}. "
+            f"Macro: {macro_signal}, Fundamental: {fundamental_signal}, Sentiment: {sentiment_signal}. "
+            f"Weighted score: {weighted_score:.2f} (confidence: {avg_confidence:.2f})"
+        )
+
         return {
             "recommendation": action,
             "confidence": avg_confidence,
             "thesis_type": thesis_type.value,
+            "weighted_score": weighted_score,
+            "reasoning": reasoning,
         }
 
 

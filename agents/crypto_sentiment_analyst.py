@@ -42,6 +42,7 @@ class ContrarianSignal(Enum):
 
     STRONG_BUY = "strong_buy"  # Extreme fear = opportunity
     BUY = "buy"  # Fear = accumulation
+    NEUTRAL = "neutral"  # Balanced sentiment, no clear signal
     HOLD = "hold"  # Neutral sentiment
     SELL = "sell"  # Greed = distribution
     STRONG_SELL = "strong_sell"  # Extreme greed = top signal

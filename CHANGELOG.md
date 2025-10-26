@@ -164,5 +164,5 @@ See [README.md](README.md) for planned features and enhancements.
 
 - **1.0.0** (2025-10-26): Initial release with multi-agent architecture, MCP integration, and production examples
 
-[Unreleased]: https://github.com/yourusername/crypto-skills-mcp/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/crypto-skills-mcp/releases/tag/v1.0.0
+[Unreleased]: https://github.com/justmy2satoshis/crypto-skills-mcp/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/justmy2satoshis/crypto-skills-mcp/releases/tag/v1.0.0

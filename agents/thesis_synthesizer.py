@@ -445,8 +445,10 @@ class ThesisSynthesizer:
             "key_catalysts": key_catalysts,  # Top catalysts driving thesis
             "synthesis": exec_summary,  # Text synthesis for test compatibility
             "stop_loss": entry_range["low"] * 0.85,  # 15% below entry range low
-            "position_size": synthesis["recommendation"].get("target_allocation", 10.0),
+            "position_size": synthesis["recommendation"].get("target_allocation", 10.0) / 100.0,  # Convert % to fraction
             "conflicts_detected": synthesis.get("conflict_detected", "NO_CONFLICT"),
+            "conflicts_resolved": synthesis.get("conflict_detected", "NO_CONFLICT") == "NO_CONFLICT",
+            "time_horizon": "medium_term",  # Placeholder for investment timeframe
             "supporting_analysis": {
                 "macro_regime": macro.get("regime", "neutral"),
                 "fundamental_score": fundamental["risk_assessment"].get("risk_score", 50),

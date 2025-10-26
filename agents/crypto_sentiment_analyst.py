@@ -128,7 +128,7 @@ class CryptoSentimentAnalyst:
             "contrarian_signal": ContrarianSignal.HOLD.value,
             "reasoning": "Greed level of 68 not yet extreme (needs >75 for strong sell signal). "
             "However, rising social volume and positive sentiment suggest caution. "
-            "NEUTRAL stance - monitor for extreme greed (>75) which would trigger SELL signal. "
+            "HOLD stance - monitor for extreme greed (>75) which would trigger SELL signal. "
             "Best contrarian opportunities emerge at extreme fear (<25).",
         }
 

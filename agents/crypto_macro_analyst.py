@@ -23,7 +23,7 @@ Strategic Value:
 - Provides context for investment decisions
 """
 
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, Any, List
 from enum import Enum
 
 

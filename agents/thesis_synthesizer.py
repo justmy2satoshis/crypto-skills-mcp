@@ -22,7 +22,7 @@ Strategic Value:
 - Orchestrates complex multi-step analytical workflows
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 from enum import Enum
 
 # Import specialized Agents

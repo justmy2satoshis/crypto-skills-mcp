@@ -23,7 +23,7 @@ Strategic Value:
 - Delivers institutional-grade due diligence
 """
 
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, Any, List
 from enum import Enum
 
 

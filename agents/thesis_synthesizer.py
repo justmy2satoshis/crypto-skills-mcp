@@ -443,14 +443,18 @@ class ThesisSynthesizer:
             "entry_range": entry_range,  # Price range for entry
             "exit_targets": exit_targets,  # Target prices for exits
             "key_catalysts": key_catalysts,  # Top catalysts driving thesis
-            "synthesis": synthesis,  # Include full synthesis for test compatibility
+            "synthesis": exec_summary,  # Text synthesis for test compatibility
+            "stop_loss": entry_range["low"] * 0.85,  # 15% below entry range low
+            "position_size": synthesis["recommendation"].get("target_allocation", 10.0),
+            "conflicts_detected": synthesis.get("conflict_detected", "NO_CONFLICT"),
             "supporting_analysis": {
                 "macro_regime": macro.get("regime", "neutral"),
                 "fundamental_score": fundamental["risk_assessment"].get("risk_score", 50),
                 "sentiment_regime": sentiment.get("sentiment_assessment", "neutral"),
             },
             "key_drivers": key_drivers[:5],  # Top 5
-            "risks": list(risks)[:5],  # Top 5
+            "key_risks": list(risks)[:5],  # Top 5 risks (renamed from 'risks')
+            "risks": list(risks)[:5],  # Keep for backward compatibility
             "monitoring_triggers": {
                 "buy_trigger": sentiment.get("monitoring_triggers", {}).get("buy_trigger", "N/A"),
                 "sell_trigger": sentiment.get("monitoring_triggers", {}).get("sell_trigger", "N/A"),

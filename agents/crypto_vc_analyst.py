@@ -425,8 +425,17 @@ class CryptoVCAnalyst:
         risk = await self.calculate_risk_score(token_symbol)
         flags = await self.identify_red_flags(token_symbol)
 
+        # Calculate overall score as weighted average of component scores
+        overall_score = (
+            tokenomics['score'] * 0.35 +  # 35% weight on tokenomics
+            technical['score'] * 0.30 +   # 30% weight on technical health
+            liquidity['score'] * 0.25 +   # 25% weight on liquidity
+            (100 - risk['risk_score']) * 0.10  # 10% weight on inverse risk (lower risk = higher score)
+        )
+
         return {
             "symbol": token_symbol,
+            "overall_score": round(overall_score, 1),  # Composite score 0-100
             "executive_summary": f"{token_symbol} presents a low-risk (18/100) investment opportunity "
             f"with excellent fundamentals. Tokenomics score of {tokenomics['score']}/100 indicates "
             f"ideal supply dynamics. Technical health score of {technical['score']}/100 demonstrates "

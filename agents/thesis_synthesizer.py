@@ -413,6 +413,9 @@ class ThesisSynthesizer:
         fundamental = analysis["fundamental_analysis"]
         sentiment = analysis["sentiment_analysis"]
 
+        # Detect conflicts using public API
+        detected_conflicts = await self.detect_conflicts(macro, fundamental, sentiment)
+
         # Generate executive summary
         exec_summary = self._generate_executive_summary(
             asset, synthesis, macro, fundamental, sentiment
@@ -446,8 +449,8 @@ class ThesisSynthesizer:
             "synthesis": exec_summary,  # Text synthesis for test compatibility
             "stop_loss": entry_range["low"] * 0.85,  # 15% below entry range low
             "position_size": synthesis["recommendation"].get("target_allocation", 10.0) / 100.0,  # Convert % to fraction
-            "conflicts_detected": synthesis.get("conflict_detected", "NO_CONFLICT"),
-            "conflicts_resolved": synthesis.get("conflict_detected", "NO_CONFLICT") == "NO_CONFLICT",
+            "conflicts_detected": detected_conflicts,  # List of conflict dicts
+            "conflicts_resolved": detected_conflicts,  # List of resolved conflicts (same as detected for now)
             "time_horizon": "medium_term",  # Placeholder for investment timeframe
             "supporting_analysis": {
                 "macro_regime": macro.get("regime", "neutral"),
@@ -488,6 +491,96 @@ class ThesisSynthesizer:
             f"Exit Strategy: {synthesis['recommendation']['exit_strategy']}"
         )
 
+    async def detect_conflicts(
+        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
+    ) -> List[Dict[str, str]]:
+        """
+        Public API: Detect conflicts between agent analyses
+
+        Args:
+            macro_analysis: Macro analyst output
+            fundamental_analysis: Fundamental analyst output
+            sentiment_analysis: Sentiment analyst output
+
+        Returns:
+            List of detected conflicts with type and description
+        """
+        conflicts = []
+
+        # Extract signals
+        macro_signal = macro_analysis.get("recommendation", "neutral")
+        fundamental_signal = fundamental_analysis.get("recommendation", {})
+        if isinstance(fundamental_signal, dict):
+            fundamental_signal = fundamental_signal.get("action", "neutral")
+        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
+
+        # Check for recommendation divergence
+        macro_norm = self._normalize_signal(macro_signal)
+        fundamental_norm = self._normalize_signal(fundamental_signal)
+        sentiment_norm = self._normalize_signal(sentiment_signal)
+
+        if macro_norm != fundamental_norm and macro_norm != "neutral" and fundamental_norm != "neutral":
+            conflicts.append({
+                "type": "recommendation_divergence",
+                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}"
+            })
+
+        if fundamental_norm != sentiment_norm and fundamental_norm != "neutral" and sentiment_norm != "neutral":
+            conflicts.append({
+                "type": "fundamental_sentiment_conflict",
+                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}"
+            })
+
+        return conflicts
+
+    async def synthesize_signals(
+        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
+    ) -> Dict[str, Any]:
+        """
+        Public API: Synthesize signals from multiple agents
+
+        Args:
+            macro_analysis: Macro analyst output
+            fundamental_analysis: Fundamental analyst output
+            sentiment_analysis: Sentiment analyst output
+
+        Returns:
+            Synthesized recommendation with confidence
+        """
+        # Extract signals
+        macro_signal = macro_analysis.get("recommendation", "neutral")
+        fundamental_signal = fundamental_analysis.get("recommendation", {})
+        if isinstance(fundamental_signal, dict):
+            fundamental_signal = fundamental_signal.get("action", "neutral")
+        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
+
+        # Calculate thesis type
+        thesis_type = self._calculate_thesis_type(macro_signal, fundamental_signal, sentiment_signal)
+
+        # Calculate confidence as average of individual confidences
+        confidences = [
+            macro_analysis.get("confidence", 0.5),
+            fundamental_analysis.get("confidence", 0.5),
+            sentiment_analysis.get("confidence", 0.5),
+        ]
+        avg_confidence = sum(confidences) / len(confidences)
+
+        # Map thesis type to investment action
+        action_map = {
+            "neutral": "HOLD",
+            "bullish": "BUY",
+            "strong_bullish": "STRONG_BUY",
+            "bearish": "SELL",
+            "strong_bearish": "STRONG_SELL",
+        }
+        action = action_map.get(thesis_type.value, "HOLD")
+
+        return {
+            "recommendation": action,
+            "confidence": avg_confidence,
+            "thesis_type": thesis_type.value,
+        }
+
     def get_capabilities(self) -> Dict[str, Any]:
         """
         Get Agent capabilities and metadata
@@ -520,6 +613,96 @@ class ThesisSynthesizer:
                 "Portfolio construction",
                 "Strategic decision-making",
             ],
+        }
+
+    async def detect_conflicts(
+        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
+    ) -> List[Dict[str, str]]:
+        """
+        Public API: Detect conflicts between agent analyses
+
+        Args:
+            macro_analysis: Macro analyst output
+            fundamental_analysis: Fundamental analyst output
+            sentiment_analysis: Sentiment analyst output
+
+        Returns:
+            List of detected conflicts with type and description
+        """
+        conflicts = []
+
+        # Extract signals
+        macro_signal = macro_analysis.get("recommendation", "neutral")
+        fundamental_signal = fundamental_analysis.get("recommendation", {})
+        if isinstance(fundamental_signal, dict):
+            fundamental_signal = fundamental_signal.get("action", "neutral")
+        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
+
+        # Check for recommendation divergence
+        macro_norm = self._normalize_signal(macro_signal)
+        fundamental_norm = self._normalize_signal(fundamental_signal)
+        sentiment_norm = self._normalize_signal(sentiment_signal)
+
+        if macro_norm != fundamental_norm and macro_norm != "neutral" and fundamental_norm != "neutral":
+            conflicts.append({
+                "type": "recommendation_divergence",
+                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}"
+            })
+
+        if fundamental_norm != sentiment_norm and fundamental_norm != "neutral" and sentiment_norm != "neutral":
+            conflicts.append({
+                "type": "fundamental_sentiment_conflict",
+                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}"
+            })
+
+        return conflicts
+
+    async def synthesize_signals(
+        self, macro_analysis: Dict, fundamental_analysis: Dict, sentiment_analysis: Dict
+    ) -> Dict[str, Any]:
+        """
+        Public API: Synthesize signals from multiple agents
+
+        Args:
+            macro_analysis: Macro analyst output
+            fundamental_analysis: Fundamental analyst output
+            sentiment_analysis: Sentiment analyst output
+
+        Returns:
+            Synthesized recommendation with confidence
+        """
+        # Extract signals
+        macro_signal = macro_analysis.get("recommendation", "neutral")
+        fundamental_signal = fundamental_analysis.get("recommendation", {})
+        if isinstance(fundamental_signal, dict):
+            fundamental_signal = fundamental_signal.get("action", "neutral")
+        sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
+
+        # Calculate thesis type
+        thesis_type = self._calculate_thesis_type(macro_signal, fundamental_signal, sentiment_signal)
+
+        # Calculate confidence as average of individual confidences
+        confidences = [
+            macro_analysis.get("confidence", 0.5),
+            fundamental_analysis.get("confidence", 0.5),
+            sentiment_analysis.get("confidence", 0.5),
+        ]
+        avg_confidence = sum(confidences) / len(confidences)
+
+        # Map thesis type to investment action
+        action_map = {
+            "neutral": "HOLD",
+            "bullish": "BUY",
+            "strong_bullish": "STRONG_BUY",
+            "bearish": "SELL",
+            "strong_bearish": "STRONG_SELL",
+        }
+        action = action_map.get(thesis_type.value, "HOLD")
+
+        return {
+            "recommendation": action,
+            "confidence": avg_confidence,
+            "thesis_type": thesis_type.value,
         }
 
 

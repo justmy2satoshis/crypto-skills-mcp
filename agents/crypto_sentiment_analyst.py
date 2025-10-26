@@ -347,7 +347,7 @@ class CryptoSentimentAnalyst:
             "exit_timing": "wait_for_extreme_greed",
             "rationale": {
                 "crowd_sentiment": f"{crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']})",
-                "sentiment_extreme": extremes["is_extreme"],
+                "sentiment_extreme": extremes["current_signal"],
                 "whale_divergence": whales["divergence_detected"],
                 "news_sentiment": news["news_sentiment"],
             },
@@ -404,9 +404,19 @@ class CryptoSentimentAnalyst:
         news = await self.analyze_news_sentiment(asset)
         signal = await self.generate_contrarian_signal(asset)
 
+        # Map sentiment regime to assessment
+        sentiment_map = {
+            "extreme_fear": "contrarian_buy",
+            "fear": "bearish",
+            "neutral": "neutral",
+            "greed": "bullish",
+            "extreme_greed": "contrarian_sell",
+        }
+        sentiment_assessment = sentiment_map.get(crowd['sentiment_regime'], "neutral")
+
         return {
             "asset": asset,
-            "sentiment_assessment": f"{crowd['sentiment_regime']} with {whales['whale_sentiment']} whale positioning",
+            "sentiment_assessment": sentiment_assessment,
             "contrarian_opportunity": False,  # Not at sentiment extreme
             "recommended_action": "monitor_and_wait",
             "confidence": 0.76,

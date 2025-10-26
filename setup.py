@@ -61,14 +61,14 @@ setup(
     version="1.0.0",
     author="Crypto Skills Development Team",
     author_email="contact@crypto-skills.dev",
-    description="Multi-Agent cryptocurrency investment analysis system with MCP integration",
+    description="Hybrid Claude Skills + Agents crypto analysis system with 60-65% token reduction",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/justmy2satoshis/crypto-skills-mcp",
+    url="https://github.com/yourusername/crypto-skills-mcp",
     project_urls={
-        "Bug Reports": "https://github.com/justmy2satoshis/crypto-skills-mcp/issues",
-        "Source": "https://github.com/justmy2satoshis/crypto-skills-mcp",
-        "Documentation": "https://github.com/justmy2satoshis/crypto-skills-mcp#readme",
+        "Bug Reports": "https://github.com/yourusername/crypto-skills-mcp/issues",
+        "Source": "https://github.com/yourusername/crypto-skills-mcp",
+        "Documentation": "https://github.com/yourusername/crypto-skills-mcp#readme",
     },
     packages=find_packages(exclude=["tests", "tests.*", "examples", "docs"]),
     classifiers=[
@@ -88,6 +88,11 @@ setup(
     python_requires=">=3.10",
     install_requires=install_requires,
     extras_require=extras_require,
+    entry_points={
+        "console_scripts": [
+            "crypto-skills=core.cli:main",
+        ],
+    },
     include_package_data=True,
     package_data={
         "": ["*.yaml", "*.json", "*.md"],

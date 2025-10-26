@@ -11,6 +11,7 @@ import os
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+
 # Read requirements
 def read_requirements(filename):
     """Read requirements from file, excluding comments and empty lines."""
@@ -20,6 +21,7 @@ def read_requirements(filename):
             for line in f
             if line.strip() and not line.startswith("#") and not line.startswith("python>=")
         ]
+
 
 # Core requirements
 install_requires = read_requirements("requirements.txt")
@@ -77,15 +79,13 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
         "Framework :: AsyncIO",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=install_requires,
     extras_require=extras_require,
     include_package_data=True,

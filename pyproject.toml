@@ -55,7 +55,7 @@ include = ["agents*"]
 
 [tool.black]
 line-length = 100
-target-version = ['py310']
+target-version = ['py310', 'py311', 'py312']
 
 [tool.ruff]
 line-length = 100

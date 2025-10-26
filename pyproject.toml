@@ -72,9 +72,6 @@ all = [
     "crypto-skills-mcp[skills,agents,test,lint]",
 ]
 
-[tool.setuptools]
-packages = ["agents"]
-
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["agents*"]

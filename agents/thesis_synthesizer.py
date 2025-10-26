@@ -420,12 +420,12 @@ class ThesisSynthesizer:
 
         # Extract key drivers and risks
         key_drivers = macro.get("key_drivers", []) + [
-            f"Fundamental score: {fundamental['risk_assessment']['score']}/100",
+            f"Fundamental risk score: {fundamental['risk_assessment'].get('risk_score', 50)}/100",
             f"Sentiment: {sentiment['sentiment_assessment']}",
         ]
 
         risks = (
-            macro.get("risks", []) + fundamental["risk_assessment"].get("risk_factors", {}).values()
+            macro.get("risks", []) + list(fundamental["risk_assessment"].get("risk_factors", {}).values())
         )
 
         return {
@@ -433,9 +433,10 @@ class ThesisSynthesizer:
             "thesis_type": synthesis["thesis_type"],
             "executive_summary": exec_summary,
             "recommendation": synthesis["recommendation"],
+            "synthesis": synthesis,  # Include full synthesis for test compatibility
             "supporting_analysis": {
                 "macro_regime": macro.get("regime", "neutral"),
-                "fundamental_score": fundamental["risk_assessment"].get("score", 50),
+                "fundamental_score": fundamental["risk_assessment"].get("risk_score", 50),
                 "sentiment_regime": sentiment.get("sentiment_assessment", "neutral"),
             },
             "key_drivers": key_drivers[:5],  # Top 5

@@ -146,6 +146,7 @@ class CryptoSentimentAnalyst:
             {
                 "asset": str,
                 "current_percentile": float,  # Where current sentiment ranks
+                "is_extreme": bool,  # Whether sentiment is at extreme (<25 or >75)
                 "extreme_events": List[Dict],
                 "pattern_analysis": {
                     "extreme_fear_opportunities": int,
@@ -164,9 +165,13 @@ class CryptoSentimentAnalyst:
         5. Generate current signal based on extremes
         """
         # Placeholder for MCP integration
+        current_percentile = 62  # 62nd percentile (above average)
+        is_extreme = current_percentile < 25 or current_percentile > 75
+
         return {
             "asset": asset,
-            "current_percentile": 62,  # 62nd percentile (above average)
+            "current_percentile": current_percentile,
+            "is_extreme": is_extreme,
             "extreme_events": [
                 {
                     "date": "2024-11-15",
@@ -407,7 +412,7 @@ class CryptoSentimentAnalyst:
             "confidence": 0.76,
             "key_insights": [
                 f"Fear & Greed at {crowd['fear_greed_index']} - elevated but not extreme",
-                f"Whales {whales['accumulation_distribution']} - aligned with retail",
+                f"Whales {whales['whale_metrics']['accumulation_distribution']} - aligned with retail",
                 f"News sentiment {news['news_sentiment']} with {news['sentiment_score']:.2f} score",
                 "Best opportunities emerge at F&G <25 (extreme fear) or >75 (extreme greed)",
             ],
@@ -417,7 +422,7 @@ class CryptoSentimentAnalyst:
             },
             "reasoning": f"Current sentiment regime: {crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']}). "
             f"No contrarian opportunity present - need extreme fear (<25) for buy signal or "
-            f"extreme greed (>75) for sell signal. Whales showing {whales['accumulation_distribution']} "
+            f"extreme greed (>75) for sell signal. Whales showing {whales['whale_metrics']['accumulation_distribution']} "
             f"behavior, aligned with retail sentiment. News sentiment {news['news_sentiment']} "
             f"with {news['top_narratives'][:2]} as top narratives. "
             f"Recommended action: {signal['signal']} and monitor for sentiment extremes. "

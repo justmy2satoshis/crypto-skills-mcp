@@ -135,7 +135,7 @@ class TestDataFlowBetweenAgents:
         thesis = await synthesizer.generate_investment_thesis("BTC")
 
         # Thesis should incorporate macro regime
-        assert "regime" in thesis or "macro" in thesis["synthesis"].lower()
+        assert "supporting_analysis" in thesis and "macro_regime" in thesis["supporting_analysis"]
 
         # If macro is bullish, thesis should reflect this
         if macro_result["recommendation"] == "bullish":

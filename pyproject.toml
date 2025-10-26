@@ -2,6 +2,36 @@
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "crypto-skills-mcp"
+version = "1.0.0"
+requires-python = ">=3.10"
+description = "Hybrid Claude Skills + Agents crypto analysis system with 60-65% token reduction"
+readme = "README.md"
+authors = [
+    {name = "Crypto Skills Development Team", email = "contact@crypto-skills.dev"}
+]
+keywords = ["cryptocurrency", "investment", "analysis", "mcp", "model-context-protocol", "claude", "ai-agents", "skills"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Framework :: AsyncIO",
+]
+
+[project.urls]
+"Bug Reports" = "https://github.com/yourusername/crypto-skills-mcp/issues"
+"Source" = "https://github.com/yourusername/crypto-skills-mcp"
+"Documentation" = "https://github.com/yourusername/crypto-skills-mcp#readme"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["agents*"]

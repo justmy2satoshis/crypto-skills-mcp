@@ -198,26 +198,34 @@ class CryptoSentimentAnalyst:
             "Not at extreme now - monitor for <25 (buy signal) or >75 (sell signal).",
         }
 
-    async def track_whale_activity(self, asset: str = "bitcoin") -> Dict[str, Any]:
+    async def track_whale_activity(
+        self, asset: str = "bitcoin", period_hours: int = 24
+    ) -> Dict[str, Any]:
         """
         Track whale/smart money activity vs. retail sentiment
 
         Args:
             asset: Cryptocurrency slug
+            period_hours: Number of hours to analyze (default: 24)
 
         Returns:
             {
                 "asset": str,
+                "period_hours": int,
                 "whale_sentiment": str,  # "bullish", "bearish", "neutral"
                 "retail_sentiment": str,
                 "divergence_detected": bool,
-                "whale_metrics": {
-                    "large_transaction_volume": float,
-                    "exchange_whale_ratio": float,
-                    "accumulation_distribution": str
+                "large_transactions": {  # Renamed from whale_metrics
+                    "count": int,
+                    "volume": float,
+                    "average_size": float
                 },
-                "signal": str,
-                "reasoning": str
+                "exchange_flows": {  # Added for test compatibility
+                    "inflow": float,
+                    "outflow": float,
+                    "net_flow": float
+                },
+                "interpretation": str  # Renamed from signal + reasoning combined
             }
 
         Strategy:
@@ -230,37 +238,46 @@ class CryptoSentimentAnalyst:
         # Placeholder for MCP integration (would need on-chain MCP server)
         return {
             "asset": asset,
+            "period_hours": period_hours,
             "whale_sentiment": "bullish",
             "retail_sentiment": "neutral_to_bullish",
             "divergence_detected": False,
-            "whale_metrics": {
-                "large_transaction_volume": 12_500_000_000,  # $12.5B
-                "exchange_whale_ratio": 0.68,  # More off-exchange than on
-                "accumulation_distribution": "accumulation",
+            "large_transactions": {
+                "count": 342,
+                "volume": 12_500_000_000,  # $12.5B
+                "average_size": 36_549_707,  # ~$36.5M per transaction
             },
-            "signal": "aligned_bullish",
-            "reasoning": "Whales showing accumulation behavior with 68% of large wallets "
-            "moving funds off exchanges (self-custody = bullish). Retail sentiment also "
+            "exchange_flows": {
+                "inflow": 3_200_000_000,  # $3.2B into exchanges
+                "outflow": 8_500_000_000,  # $8.5B out of exchanges
+                "net_flow": -5_300_000_000,  # -$5.3B (net outflow = bullish)
+            },
+            "interpretation": "Whales showing strong accumulation behavior with $5.3B net "
+            "outflow from exchanges (self-custody = bullish). Retail sentiment also "
             "bullish (F&G: 68). No divergence detected - both whales and retail aligned "
             "bullish. Strong signal when whales accumulate during retail fear.",
         }
 
     async def analyze_news_sentiment(
-        self, asset: str = "bitcoin", period_days: int = 7
+        self, asset: str = "bitcoin", period_hours: int = 168, period_days: int = None
     ) -> Dict[str, Any]:
         """
         Analyze news sentiment and narrative shifts
 
         Args:
             asset: Cryptocurrency to analyze
-            period_days: Days of news to analyze
+            period_hours: Hours of news to analyze (default: 168 = 7 days)
+            period_days: DEPRECATED - use period_hours instead (kept for backward compatibility)
 
         Returns:
             {
                 "asset": str,
-                "news_sentiment": str,  # "bullish", "bearish", "neutral"
+                "period_hours": int,
+                "overall_sentiment": str,  # Renamed from news_sentiment
                 "sentiment_score": float,  # -1 to +1
-                "top_narratives": List[str],
+                "trending_topics": List[str],  # Renamed from top_narratives
+                "key_narratives": List[str],  # Added for test compatibility
+                "news_volume": int,  # Added for test compatibility
                 "fud_fomo_index": float,  # Fear vs hype ratio
                 "headline_analysis": {
                     "positive_count": int,
@@ -278,17 +295,26 @@ class CryptoSentimentAnalyst:
         4. Calculate FUD/FOMO ratio
         5. Detect narrative shifts
         """
+        # Support backward compatibility with period_days
+        if period_days is not None:
+            period_hours = period_days * 24
+
         # Placeholder for MCP integration
+        narratives = [
+            "ETF inflows accelerating",
+            "Institutional adoption",
+            "Halving cycle dynamics",
+            "Inflation hedge narrative",
+        ]
+
         return {
             "asset": asset,
-            "news_sentiment": "bullish",
+            "period_hours": period_hours,
+            "overall_sentiment": "bullish",  # Renamed from news_sentiment
             "sentiment_score": 0.65,  # Positive
-            "top_narratives": [
-                "ETF inflows accelerating",
-                "Institutional adoption",
-                "Halving cycle dynamics",
-                "Inflation hedge narrative",
-            ],
+            "trending_topics": narratives,  # Renamed from top_narratives
+            "key_narratives": narratives,  # Alias for test compatibility
+            "news_volume": 90,  # Total news articles analyzed
             "fud_fomo_index": 0.35,  # More FOMO than FUD
             "headline_analysis": {
                 "positive_count": 42,
@@ -297,7 +323,7 @@ class CryptoSentimentAnalyst:
             },
             "narrative_shift": "bullish_momentum_building",
             "reasoning": "News sentiment strongly positive (0.65) with 42 bullish vs 18 bearish "
-            "headlines over past week. Top narratives focus on institutional adoption and "
+            f"headlines over past {period_hours} hours. Top narratives focus on institutional adoption and "
             "ETF flows - both fundamental drivers. FUD/FOMO ratio of 0.35 shows FOMO building "
             "but not yet extreme. Narrative shift toward bullish momentum.",
         }

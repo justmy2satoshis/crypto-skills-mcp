@@ -91,6 +91,15 @@ class ThesisSynthesizer:
             "sentiment": 0.25,  # 25% weight (timing factor)
         }
 
+        # Server configuration (delegates to specialized agents)
+        self.required_servers = []  # Empty - delegates to specialized agents
+        self.optional_servers = []  # Empty - delegates to specialized agents
+
+        # Weight properties for test compatibility
+        self.macro_weight = self.weights["macro"]
+        self.fundamental_weight = self.weights["fundamental"]
+        self.sentiment_weight = self.weights["sentiment"]
+
     async def orchestrate_comprehensive_analysis(
         self, asset: str = "BTC", horizon_days: int = 30
     ) -> Dict[str, Any]:

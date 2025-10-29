@@ -191,6 +191,7 @@ class CryptoSentimentAnalyst:
                 "extreme_greed_warnings": 2,
                 "mean_reversion_timeframe": "2-4 weeks",
                 "extreme_frequency": 5,  # Total extreme events
+                "current_deviation": 12.0,  # Standard deviations from mean
             },
             "extreme_frequency": 5,  # Computed from pattern_analysis
             "current_signal": "neutral",
@@ -372,8 +373,8 @@ class CryptoSentimentAnalyst:
             "asset": asset,
             "signal": ContrarianSignal.HOLD.value,
             "confidence": 0.72,
-            "entry_timing": "wait_for_extreme_fear",
-            "timing_recommendation": "wait_for_extreme_fear",  # Alias for entry_timing
+            "entry_timing": "wait_for_confirmation",
+            "timing_recommendation": "wait_for_confirmation",  # Alias for entry_timing
             "contrarian_signal": ContrarianSignal.HOLD.value,  # Alias for signal
             "exit_timing": "wait_for_extreme_greed",
             "rationale": {
@@ -467,6 +468,7 @@ class CryptoSentimentAnalyst:
             ),  # Timing guidance
             "news_summary": news,  # Full news sentiment data
             "extremes": extremes,  # Full extremes data
+            "whale_analysis": whales,  # Full whale activity data
             "reasoning": f"Current sentiment regime: {crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']}). "
             f"No contrarian opportunity present - need extreme fear (<25) for buy signal or "
             f"extreme greed (>75) for sell signal. Whales showing {whales['large_transactions']['net_direction']} "

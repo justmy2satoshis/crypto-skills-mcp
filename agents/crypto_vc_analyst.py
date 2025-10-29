@@ -78,6 +78,8 @@ class CryptoVCAnalyst:
         ]
         # Optional MCP servers
         self.optional_servers = []  # Default empty for test expectations
+
+    async def analyze_tokenomics(self, token_symbol: str = "BTC") -> Dict[str, Any]:
         """
         Analyze token economics and supply dynamics
 

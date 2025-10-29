@@ -588,7 +588,11 @@ class ThesisSynthesizer:
         return conflicts
 
     async def resolve_conflicts(
-        self, conflicts: List[Dict[str, str]]
+        self,
+        conflicts: List[Dict[str, str]] = None,
+        macro_analysis: Dict = None,
+        fundamental_analysis: Dict = None,
+        sentiment_analysis: Dict = None,
     ) -> List[Dict[str, Any]]:
         """
         Public API: Resolve detected conflicts between agent analyses
@@ -599,6 +603,16 @@ class ThesisSynthesizer:
         Returns:
             List of resolved conflicts with resolution strategy
         """
+
+        # Support both calling patterns:
+        # 1. resolve_conflicts(conflicts_list)
+        # 2. resolve_conflicts(conflicts, macro_analysis, fundamental_analysis, sentiment_analysis)
+        if conflicts is None:
+            # Pattern 2: detect conflicts from analyses
+            conflicts = await self.detect_conflicts(
+                macro_analysis, fundamental_analysis, sentiment_analysis
+            )
+
         resolved = []
 
         for conflict in conflicts:

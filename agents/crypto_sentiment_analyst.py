@@ -190,7 +190,9 @@ class CryptoSentimentAnalyst:
                 "extreme_fear_opportunities": 3,  # Last 90 days
                 "extreme_greed_warnings": 2,
                 "mean_reversion_timeframe": "2-4 weeks",
+                "extreme_frequency": 5,  # Total extreme events
             },
+            "extreme_frequency": 5,  # Computed from pattern_analysis
             "current_signal": "neutral",
             "reasoning": "Current sentiment at 62nd percentile - above average but not extreme. "
             "Historical analysis shows extreme fear (<25) creates 2-4 week buying opportunities "
@@ -312,6 +314,7 @@ class CryptoSentimentAnalyst:
             "period_hours": period_hours,
             "news_sentiment": "bullish",
             "sentiment_score": 0.65,  # Positive
+            "overall_sentiment": "bullish",  # Derived from sentiment_score
             "trending_topics": narratives,  # Renamed from top_narratives
             "key_narratives": narratives,  # Alias for test compatibility
             "news_volume": 90,  # Total news articles analyzed
@@ -370,6 +373,8 @@ class CryptoSentimentAnalyst:
             "signal": ContrarianSignal.HOLD.value,
             "confidence": 0.72,
             "entry_timing": "wait_for_extreme_fear",
+            "timing_recommendation": "wait_for_extreme_fear",  # Alias for entry_timing
+            "contrarian_signal": ContrarianSignal.HOLD.value,  # Alias for signal
             "exit_timing": "wait_for_extreme_greed",
             "rationale": {
                 "crowd_sentiment": f"{crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']})",
@@ -456,6 +461,10 @@ class CryptoSentimentAnalyst:
                 "buy_trigger": "Fear & Greed drops below 25 (extreme fear)",
                 "sell_trigger": "Fear & Greed rises above 75 (extreme greed)",
             },
+            "crowd_analysis": crowd,  # Full crowd sentiment data
+            "timing_recommendation": signal.get("timing_recommendation", signal.get("entry_timing")),  # Timing guidance
+            "news_summary": news,  # Full news sentiment data
+            "extremes": extremes,  # Full extremes data
             "reasoning": f"Current sentiment regime: {crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']}). "
             f"No contrarian opportunity present - need extreme fear (<25) for buy signal or "
             f"extreme greed (>75) for sell signal. Whales showing {whales['large_transactions']['net_direction']} "

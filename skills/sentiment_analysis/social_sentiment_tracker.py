@@ -16,7 +16,7 @@ class SocialSentimentTracker:
             "asset": asset,
             "days": days,
             "sentiment_score": 0.0,
-            "metadata": {"token_reduction": 0.85, "procedural": True}
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 

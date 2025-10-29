@@ -21,10 +21,7 @@ class SentimentAggregator:
         pass
 
     def aggregate(
-        self,
-        asset: str,
-        sources: Optional[List[str]] = None,
-        days: int = 7
+        self, asset: str, sources: Optional[List[str]] = None, days: int = 7
     ) -> Dict[str, Any]:
         """
         Aggregate sentiment data for an asset
@@ -47,17 +44,11 @@ class SentimentAggregator:
             "timeframe_days": days,
             "sentiment_score": 0.0,  # Would be calculated
             "sources": sources,
-            "metadata": {
-                "token_reduction": 0.85,
-                "procedural": True
-            }
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 
-def aggregate_sentiment(
-    asset: str,
-    days: int = 7
-) -> Dict[str, Any]:
+def aggregate_sentiment(asset: str, days: int = 7) -> Dict[str, Any]:
     """
     Convenience function to aggregate sentiment data
 

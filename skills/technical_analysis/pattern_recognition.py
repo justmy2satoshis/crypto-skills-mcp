@@ -16,7 +16,7 @@ class PatternRecognizer:
             "symbol": symbol,
             "timeframe": timeframe,
             "patterns": [],
-            "metadata": {"token_reduction": 0.85, "procedural": True}
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 

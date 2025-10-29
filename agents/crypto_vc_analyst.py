@@ -500,39 +500,40 @@ class CryptoVCAnalyst:
 
         # Calculate overall score as weighted average of component scores
         overall_score = (
-            tokenomics['score'] * 0.35 +  # 35% weight on tokenomics
-            technical['score'] * 0.30 +   # 30% weight on technical health
-            liquidity['score'] * 0.25 +   # 25% weight on liquidity
-            (100 - risk['risk_score']) * 0.10  # 10% weight on inverse risk (lower risk = higher score)
+            tokenomics["score"] * 0.35  # 35% weight on tokenomics
+            + technical["score"] * 0.30  # 30% weight on technical health
+            + liquidity["score"] * 0.25  # 25% weight on liquidity
+            + (100 - risk["risk_score"])
+            * 0.10  # 10% weight on inverse risk (lower risk = higher score)
         )
 
         # Generate strengths list (scores > 70)
         strengths = []
-        if tokenomics['score'] > 70:
+        if tokenomics["score"] > 70:
             strengths.append(f"Strong tokenomics (score: {tokenomics['score']}/100)")
-        if technical['score'] > 70:
+        if technical["score"] > 70:
             strengths.append(f"Robust technical health (score: {technical['score']}/100)")
-        if liquidity['score'] > 70:
+        if liquidity["score"] > 70:
             strengths.append(f"Excellent liquidity (rating: {liquidity['liquidity_rating']})")
-        if risk['risk_score'] < 30:
+        if risk["risk_score"] < 30:
             strengths.append(f"Low risk profile (risk: {risk['risk_score']}/100)")
 
         # Generate concerns list (scores < 40)
         concerns = []
-        if tokenomics['score'] < 40:
+        if tokenomics["score"] < 40:
             concerns.append(f"Weak tokenomics (score: {tokenomics['score']}/100)")
-        if technical['score'] < 40:
+        if technical["score"] < 40:
             concerns.append(f"Technical health concerns (score: {technical['score']}/100)")
-        if liquidity['score'] < 40:
+        if liquidity["score"] < 40:
             concerns.append(f"Poor liquidity (rating: {liquidity['liquidity_rating']})")
-        if risk['risk_score'] > 70:
+        if risk["risk_score"] > 70:
             concerns.append(f"High risk profile (risk: {risk['risk_score']}/100)")
 
         # Add red flags as concerns
-        if flags['red_flags']['critical']:
-            concerns.extend([f"CRITICAL: {flag}" for flag in flags['red_flags']['critical']])
-        if flags['red_flags']['major']:
-            concerns.extend([f"MAJOR: {flag}" for flag in flags['red_flags']['major']])
+        if flags["red_flags"]["critical"]:
+            concerns.extend([f"CRITICAL: {flag}" for flag in flags["red_flags"]["critical"]])
+        if flags["red_flags"]["major"]:
+            concerns.extend([f"MAJOR: {flag}" for flag in flags["red_flags"]["major"]])
 
         return {
             "symbol": token_symbol,

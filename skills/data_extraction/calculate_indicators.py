@@ -21,11 +21,7 @@ class IndicatorCalculator:
         pass
 
     def calculate(
-        self,
-        symbol: str,
-        indicators: List[str],
-        timeframe: str = "1h",
-        limit: int = 100
+        self, symbol: str, indicators: List[str], timeframe: str = "1h", limit: int = 100
     ) -> Dict[str, Any]:
         """
         Calculate technical indicators for a trading pair
@@ -48,15 +44,13 @@ class IndicatorCalculator:
             "metadata": {
                 "requested_indicators": indicators,
                 "token_reduction": 0.85,
-                "procedural": True
-            }
+                "procedural": True,
+            },
         }
 
 
 def calculate_indicators(
-    symbol: str,
-    indicators: List[str],
-    timeframe: str = "1h"
+    symbol: str, indicators: List[str], timeframe: str = "1h"
 ) -> Dict[str, Any]:
     """
     Convenience function to calculate technical indicators
@@ -70,8 +64,4 @@ def calculate_indicators(
         Indicator calculation results
     """
     calculator = IndicatorCalculator()
-    return calculator.calculate(
-        symbol=symbol,
-        indicators=indicators,
-        timeframe=timeframe
-    )
+    return calculator.calculate(symbol=symbol, indicators=indicators, timeframe=timeframe)

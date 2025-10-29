@@ -445,8 +445,8 @@ class ThesisSynthesizer:
             f"Sentiment: {sentiment['sentiment_assessment']}",
         ]
 
-        risks = (
-            macro.get("risks", []) + list(fundamental["risk_assessment"].get("risk_factors", {}).values())
+        risks = macro.get("risks", []) + list(
+            fundamental["risk_assessment"].get("risk_factors", {}).values()
         )
 
         # Generate entry/exit ranges for test compatibility
@@ -466,7 +466,8 @@ class ThesisSynthesizer:
             "key_catalysts": key_catalysts,  # Top catalysts driving thesis
             "synthesis": exec_summary,  # Text synthesis for test compatibility
             "stop_loss": entry_range["low"] * 0.85,  # 15% below entry range low
-            "position_size": synthesis["recommendation"].get("target_allocation", 10.0) / 100.0,  # Convert % to fraction
+            "position_size": synthesis["recommendation"].get("target_allocation", 10.0)
+            / 100.0,  # Convert % to fraction
             "conflicts_detected": detected_conflicts,  # List of conflict dicts
             "conflicts_resolved": detected_conflicts,  # List of resolved conflicts (same as detected for now)
             "time_horizon": "medium_term",  # Placeholder for investment timeframe
@@ -571,19 +572,31 @@ class ThesisSynthesizer:
         fundamental_norm = self._normalize_signal(fundamental_signal)
         sentiment_norm = self._normalize_signal(sentiment_signal)
 
-        if macro_norm != fundamental_norm and macro_norm != "neutral" and fundamental_norm != "neutral":
-            conflicts.append({
-                "type": "recommendation_divergence",
-                "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}",
-                "severity": "high"
-            })
+        if (
+            macro_norm != fundamental_norm
+            and macro_norm != "neutral"
+            and fundamental_norm != "neutral"
+        ):
+            conflicts.append(
+                {
+                    "type": "recommendation_divergence",
+                    "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}",
+                    "severity": "high",
+                }
+            )
 
-        if fundamental_norm != sentiment_norm and fundamental_norm != "neutral" and sentiment_norm != "neutral":
-            conflicts.append({
-                "type": "fundamental_sentiment_conflict",
-                "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}",
-                "severity": "medium"
-            })
+        if (
+            fundamental_norm != sentiment_norm
+            and fundamental_norm != "neutral"
+            and sentiment_norm != "neutral"
+        ):
+            conflicts.append(
+                {
+                    "type": "fundamental_sentiment_conflict",
+                    "description": f"Fundamentals are {fundamental_signal} but sentiment is {sentiment_signal}",
+                    "severity": "medium",
+                }
+            )
 
         return conflicts
 
@@ -624,19 +637,19 @@ class ThesisSynthesizer:
                 resolution = {
                     **conflict,
                     "resolution": "Use weighted voting with fundamental analysis (40%) as tiebreaker",
-                    "action": "Follow majority signal with reduced position size"
+                    "action": "Follow majority signal with reduced position size",
                 }
             elif conflict_type == "fundamental_sentiment_conflict":
                 resolution = {
                     **conflict,
                     "resolution": "Prioritize fundamentals for entry, use sentiment for timing",
-                    "action": "Enter at contrarian sentiment extremes with fundamental support"
+                    "action": "Enter at contrarian sentiment extremes with fundamental support",
                 }
             else:
                 resolution = {
                     **conflict,
                     "resolution": "Monitor for signal convergence before taking action",
-                    "action": "HOLD until clearer alignment emerges"
+                    "action": "HOLD until clearer alignment emerges",
                 }
 
             resolved.append(resolution)
@@ -665,7 +678,9 @@ class ThesisSynthesizer:
         sentiment_signal = sentiment_analysis.get("sentiment_assessment", "neutral")
 
         # Calculate thesis type
-        thesis_type = self._calculate_thesis_type(macro_signal, fundamental_signal, sentiment_signal)
+        thesis_type = self._calculate_thesis_type(
+            macro_signal, fundamental_signal, sentiment_signal
+        )
 
         # Calculate confidence as average of individual confidences
         confidences = [

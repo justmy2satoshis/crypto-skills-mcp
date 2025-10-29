@@ -23,11 +23,7 @@ class OrderBookFetcher:
         """
         self.exchange_id = exchange_id
 
-    def fetch(
-        self,
-        symbol: str,
-        limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+    def fetch(self, symbol: str, limit: Optional[int] = None) -> Dict[str, Any]:
         """
         Fetch order book for a trading pair
 
@@ -45,17 +41,11 @@ class OrderBookFetcher:
             "symbol": symbol,
             "bids": [],  # Would contain actual bid levels
             "asks": [],  # Would contain actual ask levels
-            "metadata": {
-                "token_reduction": 0.85,
-                "procedural": True
-            }
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 
-def fetch_order_book(
-    symbol: str,
-    exchange_id: str = "binance"
-) -> Dict[str, Any]:
+def fetch_order_book(symbol: str, exchange_id: str = "binance") -> Dict[str, Any]:
     """
     Convenience function to fetch order book
 

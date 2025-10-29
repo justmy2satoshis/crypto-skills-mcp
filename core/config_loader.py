@@ -61,8 +61,7 @@ class ConfigLoader:
         valid_modes = ["hybrid", "skills_only"]
         if mode_name not in valid_modes:
             raise ValueError(
-                f"Invalid mode '{mode_name}'. "
-                f"Available modes: {', '.join(valid_modes)}"
+                f"Invalid mode '{mode_name}'. " f"Available modes: {', '.join(valid_modes)}"
             )
 
         mode_file = self.modes_dir / f"{mode_name}.yaml"
@@ -73,7 +72,7 @@ class ConfigLoader:
                 f"Available modes: {', '.join(valid_modes)}"
             )
 
-        with open(mode_file, 'r') as f:
+        with open(mode_file, "r") as f:
             config = yaml.safe_load(f)
 
         # Validate configuration structure

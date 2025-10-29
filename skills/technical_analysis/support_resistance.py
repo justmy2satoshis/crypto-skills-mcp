@@ -17,7 +17,7 @@ class SupportResistanceFinder:
             "timeframe": timeframe,
             "support_levels": [],
             "resistance_levels": [],
-            "metadata": {"token_reduction": 0.85, "procedural": True}
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 

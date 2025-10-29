@@ -13,7 +13,7 @@ from .fetch_order_book import OrderBookFetcher, fetch_order_book
 # Module metadata
 __version__ = "1.0.0"
 __proceduralization__ = 0.85  # 85% proceduralization rate
-__token_reduction__ = 0.85    # 85% token reduction vs baseline
+__token_reduction__ = 0.85  # 85% token reduction vs baseline
 
 __all__ = [
     "OHLCVFetcher",

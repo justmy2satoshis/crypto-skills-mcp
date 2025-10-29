@@ -17,7 +17,7 @@ class SentimentFusion:
             "sources": sources,
             "days": days,
             "fused_sentiment": 0.0,
-            "metadata": {"token_reduction": 0.85, "procedural": True}
+            "metadata": {"token_reduction": 0.85, "procedural": True},
         }
 
 

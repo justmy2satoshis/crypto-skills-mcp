@@ -29,11 +29,7 @@ class OHLCVFetcher:
         self.exchange_id = exchange_id
 
     def fetch(
-        self,
-        symbol: str,
-        timeframe: str = "1h",
-        limit: int = 100,
-        since: Optional[int] = None
+        self, symbol: str, timeframe: str = "1h", limit: int = 100, since: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Fetch OHLCV data for a trading pair
@@ -59,16 +55,12 @@ class OHLCVFetcher:
             "metadata": {
                 "fetched_at": datetime.now().isoformat(),
                 "token_reduction": 0.85,
-                "procedural": True
-            }
+                "procedural": True,
+            },
         }
 
     def fetch_multi_exchange(
-        self,
-        symbol: str,
-        exchanges: List[str],
-        timeframe: str = "1h",
-        limit: int = 100
+        self, symbol: str, exchanges: List[str], timeframe: str = "1h", limit: int = 100
     ) -> Dict[str, Any]:
         """
         Fetch OHLCV data from multiple exchanges
@@ -90,16 +82,13 @@ class OHLCVFetcher:
             "metadata": {
                 "fetched_at": datetime.now().isoformat(),
                 "token_reduction": 0.85,
-                "procedural": True
-            }
+                "procedural": True,
+            },
         }
 
 
 def fetch_ohlcv(
-    symbol: str,
-    timeframe: str = "1h",
-    limit: int = 100,
-    exchange_id: str = "binance"
+    symbol: str, timeframe: str = "1h", limit: int = 100, exchange_id: str = "binance"
 ) -> Dict[str, Any]:
     """
     Convenience function to fetch OHLCV data

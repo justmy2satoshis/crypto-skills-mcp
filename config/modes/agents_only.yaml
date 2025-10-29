@@ -1,0 +1,87 @@
+# Agents-Only Mode Configuration
+# Maximum reasoning capability through specialized agents
+# Target: 0% token reduction (prioritize quality over efficiency)
+
+mode:
+  name: "agents_only"
+  description: "Specialized agents with full reasoning - no token optimization"
+  default: false
+
+routing:
+  enabled: false
+  force_target: "agents"
+
+skills:
+  enabled: false
+
+agents:
+  enabled: true
+
+  specialized:
+    - "crypto_macro_analyst"
+    - "crypto_vc_analyst"
+    - "crypto_sentiment_analyst"
+
+  orchestrator:
+    enabled: true
+    agent: "thesis_synthesizer"
+    auto_invoke: true
+
+  capabilities:
+    multi_agent_synthesis: true
+    conflict_resolution: true
+    narrative_generation: true
+    strategic_reasoning: true
+    contrarian_analysis: true
+
+performance:
+  token_reduction:
+    target: 0.0  # 0% reduction - prioritize quality
+    actual: 0.0
+    agent_overhead: 1.0  # 100% of baseline token usage
+
+  distribution:
+    skills: 0.0
+    agents: 0.90   # 90% queries to specialized agents
+    orchestrator: 0.10  # 10% synthesis queries
+
+  benefits:
+    - "Full strategic reasoning capability"
+    - "Multi-agent conflict resolution"
+    - "Complex narrative generation"
+    - "Contrarian analysis"
+    - "Investment thesis synthesis"
+
+  tradeoffs:
+    - "Higher token usage"
+    - "Slower response times"
+    - "Higher API costs"
+
+mcp:
+  servers:
+    - name: "ccxt-mcp"
+      required: true
+      usage: ["agents"]
+    - name: "crypto-sentiment-mcp"
+      required: true
+      usage: ["agents"]
+    - name: "crypto-feargreed-mcp"
+      required: true
+      usage: ["agents"]
+    - name: "crypto-projects-mcp"
+      required: true
+      usage: ["agents"]
+    - name: "cryptopanic-mcp-server"
+      required: false
+      usage: ["agents"]
+    - name: "etf-flow-mcp"
+      required: false
+      usage: ["agents"]
+    - name: "grok-search-mcp"
+      required: false
+      usage: ["agents"]
+
+logging:
+  level: "INFO"
+  routing_decisions: false
+  performance_metrics: true

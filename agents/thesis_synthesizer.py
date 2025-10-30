@@ -266,7 +266,7 @@ class ThesisSynthesizer:
         """Calculate overall confidence score from Agent confidences"""
         # Extract confidence scores from each Agent
         macro_conf = macro.get("confidence", 0.75)
-        fundamental_conf = fundamental["recommendation"].get("confidence", 0.80)
+        fundamental_conf = fundamental.get("confidence", 0.80)
         sentiment_conf = sentiment.get("confidence", 0.70)
 
         # Weighted average

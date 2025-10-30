@@ -97,17 +97,11 @@ class WhaleActivityMonitor:
         total_volume_usd = sum(tx["value_usd"] for tx in whale_transactions)
 
         # Determine activity level
-        activity_level = self._classify_activity_level(
-            len(whale_transactions), total_volume_usd
-        )
+        activity_level = self._classify_activity_level(len(whale_transactions), total_volume_usd)
 
         # Detect accumulation/distribution patterns
-        accumulation_signal = self._detect_accumulation(
-            whale_transactions, net_flow_usd
-        )
-        distribution_signal = self._detect_distribution(
-            whale_transactions, net_flow_usd
-        )
+        accumulation_signal = self._detect_accumulation(whale_transactions, net_flow_usd)
+        distribution_signal = self._detect_distribution(whale_transactions, net_flow_usd)
 
         # Determine position bias
         position_bias = self._determine_position_bias(
@@ -118,9 +112,7 @@ class WhaleActivityMonitor:
         conviction = self._calculate_conviction(whale_transactions, net_flow_usd)
 
         # Generate trading signal
-        trading_signal = self._generate_trading_signal(
-            position_bias, activity_level, conviction
-        )
+        trading_signal = self._generate_trading_signal(position_bias, activity_level, conviction)
 
         # Calculate confidence
         confidence = 0.60  # Base confidence
@@ -263,9 +255,7 @@ class WhaleActivityMonitor:
 
         return net_flow, flow_direction
 
-    def _classify_activity_level(
-        self, transaction_count: int, total_volume_usd: float
-    ) -> str:
+    def _classify_activity_level(self, transaction_count: int, total_volume_usd: float) -> str:
         """Classify whale activity level"""
         if transaction_count >= 15 or total_volume_usd >= 200_000_000:
             return "very_high"
@@ -276,9 +266,7 @@ class WhaleActivityMonitor:
         else:
             return "low"
 
-    def _detect_accumulation(
-        self, transactions: List[Dict], net_flow_usd: float
-    ) -> bool:
+    def _detect_accumulation(self, transactions: List[Dict], net_flow_usd: float) -> bool:
         """
         Detect accumulation pattern
 
@@ -301,9 +289,7 @@ class WhaleActivityMonitor:
 
         return buy_ratio > 0.70 and net_flow_usd > 10_000_000  # $10M inflow
 
-    def _detect_distribution(
-        self, transactions: List[Dict], net_flow_usd: float
-    ) -> bool:
+    def _detect_distribution(self, transactions: List[Dict], net_flow_usd: float) -> bool:
         """
         Detect distribution pattern
 
@@ -341,9 +327,7 @@ class WhaleActivityMonitor:
         else:
             return "neutral"
 
-    def _calculate_conviction(
-        self, transactions: List[Dict], net_flow_usd: float
-    ) -> float:
+    def _calculate_conviction(self, transactions: List[Dict], net_flow_usd: float) -> float:
         """
         Calculate conviction level based on flow consistency
 

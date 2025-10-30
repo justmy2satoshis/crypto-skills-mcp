@@ -104,17 +104,13 @@ class SentimentFusionEngine:
             technical_score = await self._get_technical_score(symbol, timeframe)
 
         # Fuse signals
-        combined_score = self._fuse_signals(
-            sentiment_score, technical_score, alpha
-        )
+        combined_score = self._fuse_signals(sentiment_score, technical_score, alpha)
 
         # Classify combined signal
         combined_signal = self._classify_score(combined_score)
 
         # Assess signal alignment
-        signal_alignment = self._assess_signal_alignment(
-            sentiment_score, technical_score
-        )
+        signal_alignment = self._assess_signal_alignment(sentiment_score, technical_score)
 
         # Calculate conviction (based on alignment and volatility)
         conviction = self._calculate_conviction(
@@ -240,9 +236,7 @@ class SentimentFusionEngine:
             # Low volatility: Technical leads (20% weight)
             return 0.20
 
-    def _fuse_signals(
-        self, sentiment_score: float, technical_score: float, alpha: float
-    ) -> float:
+    def _fuse_signals(self, sentiment_score: float, technical_score: float, alpha: float) -> float:
         """
         Fuse sentiment and technical signals
 
@@ -272,9 +266,7 @@ class SentimentFusionEngine:
         else:
             return "Strong Sell"
 
-    def _assess_signal_alignment(
-        self, sentiment_score: float, technical_score: float
-    ) -> str:
+    def _assess_signal_alignment(self, sentiment_score: float, technical_score: float) -> str:
         """
         Assess alignment between sentiment and technical signals
 
@@ -348,30 +340,27 @@ class SentimentFusionEngine:
         """Generate trading recommendation"""
 
         # Strong alignment + bullish = strong recommendation
-        if (
-            combined_signal in ["Strong Buy", "Buy"]
-            and signal_alignment in ["aligned", "strongly_aligned"]
-        ):
+        if combined_signal in ["Strong Buy", "Buy"] and signal_alignment in [
+            "aligned",
+            "strongly_aligned",
+        ]:
             if volatility_regime in ["high", "very_high"]:
                 return "Sentiment leading technical - follow sentiment signal (high confidence)"
             else:
                 return "Both signals bullish - enter long position"
 
         # Strong alignment + bearish = strong warning
-        if (
-            combined_signal in ["Strong Sell", "Sell"]
-            and signal_alignment in ["aligned", "strongly_aligned"]
-        ):
+        if combined_signal in ["Strong Sell", "Sell"] and signal_alignment in [
+            "aligned",
+            "strongly_aligned",
+        ]:
             if volatility_regime in ["high", "very_high"]:
                 return "Sentiment leading technical - follow sentiment signal (exit/short)"
             else:
                 return "Both signals bearish - exit or avoid"
 
         # Divergent signals during high volatility = follow sentiment
-        if signal_alignment == "divergent" and volatility_regime in [
-            "high",
-            "very_high"
-        ]:
+        if signal_alignment == "divergent" and volatility_regime in ["high", "very_high"]:
             if sentiment_score > technical_score:
                 return "Sentiment bullish, technical lagging - sentiment may lead (watch for technical confirmation)"
             else:
@@ -399,9 +388,7 @@ class SentimentFusionEngine:
         For now, we'll use a simplified approach with Fear & Greed Index
         """
         try:
-            result = await self.mcp.call_tool(
-                "mcp__crypto-feargreed-mcp__get_current_fng_tool", {}
-            )
+            result = await self.mcp.call_tool("mcp__crypto-feargreed-mcp__get_current_fng_tool", {})
 
             if isinstance(result, dict):
                 content = result.get("content", [{}])
@@ -470,6 +457,4 @@ def fuse_sentiment_technical(
         Standardized fusion data structure
     """
     fusion = SentimentFusionEngine(mcp_client)
-    return asyncio.run(
-        fusion.fuse(symbol, sentiment_score, technical_score, timeframe)
-    )
+    return asyncio.run(fusion.fuse(symbol, sentiment_score, technical_score, timeframe))

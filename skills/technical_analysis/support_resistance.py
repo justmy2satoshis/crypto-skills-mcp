@@ -108,9 +108,7 @@ class SupportResistanceIdentifier:
         resistance_clusters = self._cluster_price_levels(
             [highs[i] for i in resistance_pivots], tolerance
         )
-        support_clusters = self._cluster_price_levels(
-            [lows[i] for i in support_pivots], tolerance
-        )
+        support_clusters = self._cluster_price_levels([lows[i] for i in support_pivots], tolerance)
 
         # Calculate level strength (touches + volume weighting)
         resistance_levels = self._calculate_level_strength(
@@ -121,33 +119,23 @@ class SupportResistanceIdentifier:
         )
 
         # Sort by strength and take top N
-        resistance_levels = sorted(
-            resistance_levels, key=lambda x: x["strength"], reverse=True
-        )[:top_n]
-        support_levels = sorted(support_levels, key=lambda x: x["strength"], reverse=True)[
+        resistance_levels = sorted(resistance_levels, key=lambda x: x["strength"], reverse=True)[
             :top_n
         ]
+        support_levels = sorted(support_levels, key=lambda x: x["strength"], reverse=True)[:top_n]
 
         # Find nearest levels to current price
         nearest_support = self._find_nearest_level(support_levels, current_price, below=True)
-        nearest_resistance = self._find_nearest_level(
-            resistance_levels, current_price, below=False
-        )
+        nearest_resistance = self._find_nearest_level(resistance_levels, current_price, below=False)
 
         # Calculate distances
-        support_distance = (
-            nearest_support - current_price if nearest_support else None
-        )
-        resistance_distance = (
-            nearest_resistance - current_price if nearest_resistance else None
-        )
+        support_distance = nearest_support - current_price if nearest_support else None
+        resistance_distance = nearest_resistance - current_price if nearest_resistance else None
 
         # Calculate confidence based on data quality
         confidence = min(
             0.95,
-            0.70
-            + (len(support_levels) / top_n) * 0.15
-            + (len(resistance_levels) / top_n) * 0.10,
+            0.70 + (len(support_levels) / top_n) * 0.15 + (len(resistance_levels) / top_n) * 0.10,
         )
 
         return {
@@ -243,9 +231,7 @@ class SupportResistanceIdentifier:
                 current_cluster.append(price)
             else:
                 # Finalize current cluster
-                clusters.append(
-                    (sum(current_cluster) / len(current_cluster), len(current_cluster))
-                )
+                clusters.append((sum(current_cluster) / len(current_cluster), len(current_cluster)))
                 current_cluster = [price]
 
         # Add last cluster

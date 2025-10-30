@@ -13,8 +13,15 @@ synthesizer = ThesisSynthesizer()
 capabilities = synthesizer.get_capabilities()
 
 required_fields = [
-    "name", "description", "type", "domain", "capabilities",
-    "required_mcps", "optional_mcps", "token_efficiency", "use_cases"
+    "name",
+    "description",
+    "type",
+    "domain",
+    "capabilities",
+    "required_mcps",
+    "optional_mcps",
+    "token_efficiency",
+    "use_cases",
 ]
 
 print("\n✅ Field existence checks:")
@@ -32,13 +39,13 @@ expected_caps = [
     "comprehensive_analysis_orchestration",
     "conflict_detection_resolution",
     "weighted_signal_synthesis",
-    "investment_thesis_generation"
+    "investment_thesis_generation",
 ]
 for cap in expected_caps:
     exists = cap in capabilities.get("capabilities", [])
     print(f"  {cap}: {'✅' if exists else '❌'}")
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)
 if all(field in capabilities for field in required_fields):
     print("✅ All required fields present!")
 else:

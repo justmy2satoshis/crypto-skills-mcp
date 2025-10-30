@@ -231,15 +231,11 @@ class TaskRouter:
             return "agents.crypto_macro_analyst"
 
         # Fundamental/due diligence
-        if re.search(
-            r"(fundamental|tokenomics|project|team|due\s+diligence|risk)", query
-        ):
+        if re.search(r"(fundamental|tokenomics|project|team|due\s+diligence|risk)", query):
             return "agents.crypto_vc_analyst"
 
         # Sentiment/psychology
-        if re.search(
-            r"(sentiment|psychology|fear|greed|fomo|capitulation)", query
-        ):
+        if re.search(r"(sentiment|psychology|fear|greed|fomo|capitulation)", query):
             return "agents.crypto_sentiment_analyst"
 
         # Default to VC analyst (most comprehensive)

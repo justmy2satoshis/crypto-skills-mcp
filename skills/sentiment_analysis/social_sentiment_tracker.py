@@ -99,9 +99,7 @@ class SocialSentimentTracker:
 
         # Detect volume spike
         social_volume = self._extract_social_volume(social_volume_result)
-        volume_spike = self._detect_volume_spike(
-            social_volume, volume_spike_threshold
-        )
+        volume_spike = self._detect_volume_spike(social_volume, volume_spike_threshold)
 
         # Extract social dominance
         social_dominance = self._extract_social_dominance(social_dominance_result)
@@ -120,9 +118,7 @@ class SocialSentimentTracker:
         )
 
         # Assess risk level
-        risk_level = self._assess_risk_level(
-            current_sentiment, momentum, volume_spike
-        )
+        risk_level = self._assess_risk_level(current_sentiment, momentum, volume_spike)
 
         # Calculate confidence
         confidence = 0.75
@@ -286,9 +282,7 @@ class SocialSentimentTracker:
 
         return trend, momentum
 
-    def _detect_volume_spike(
-        self, current_volume: float, threshold: float
-    ) -> bool:
+    def _detect_volume_spike(self, current_volume: float, threshold: float) -> bool:
         """
         Detect volume spike above baseline
 
@@ -306,9 +300,7 @@ class SocialSentimentTracker:
 
         return current_volume > spike_threshold
 
-    def _check_alignment(
-        self, sentiment_score: float, fear_greed_value: float
-    ) -> bool:
+    def _check_alignment(self, sentiment_score: float, fear_greed_value: float) -> bool:
         """
         Check if sentiment aligns with Fear & Greed Index
 
@@ -367,9 +359,7 @@ class SocialSentimentTracker:
         # Default
         return "Mixed signals - monitor for trend confirmation"
 
-    def _assess_risk_level(
-        self, sentiment: float, momentum: float, volume_spike: bool
-    ) -> str:
+    def _assess_risk_level(self, sentiment: float, momentum: float, volume_spike: bool) -> str:
         """Assess trading risk level"""
 
         # Extreme sentiment + high momentum + volume spike = high risk

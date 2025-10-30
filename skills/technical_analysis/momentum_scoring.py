@@ -181,9 +181,7 @@ class MomentumScorer:
             ),
         ]
 
-        rsi_result, macd_result, stoch_result = await asyncio.gather(
-            *tasks, return_exceptions=True
-        )
+        rsi_result, macd_result, stoch_result = await asyncio.gather(*tasks, return_exceptions=True)
 
         return {
             "rsi": self._extract_indicator_value(rsi_result, "rsi"),

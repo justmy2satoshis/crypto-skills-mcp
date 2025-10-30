@@ -60,9 +60,7 @@ class ConfigLoader:
 
         # Validate config directory exists
         if not self.config_dir.exists():
-            raise ConfigurationError(
-                f"Config directory not found: {self.config_dir}"
-            )
+            raise ConfigurationError(f"Config directory not found: {self.config_dir}")
         if not self.modes_dir.exists():
             raise ConfigurationError(f"Modes directory not found: {self.modes_dir}")
 
@@ -98,9 +96,7 @@ class ConfigLoader:
             OperationalMode(mode)
         except ValueError:
             valid_modes = [m.value for m in OperationalMode]
-            raise ConfigurationError(
-                f"Invalid mode '{mode}'. Valid modes: {valid_modes}"
-            )
+            raise ConfigurationError(f"Invalid mode '{mode}'. Valid modes: {valid_modes}")
 
         # Load YAML file
         config_file = self.modes_dir / f"{mode}.yaml"
@@ -261,9 +257,7 @@ class ConfigLoader:
         required_keys = ["mode", "routing", "skills", "agents", "mcp"]
         missing_keys = [key for key in required_keys if key not in config]
         if missing_keys:
-            raise ConfigurationError(
-                f"Missing required config keys: {missing_keys}"
-            )
+            raise ConfigurationError(f"Missing required config keys: {missing_keys}")
 
         # Validate mode section
         mode_config = config["mode"]
@@ -281,9 +275,7 @@ class ConfigLoader:
 
         # If routing enabled, validate router_class
         if routing_config["enabled"] and "router_class" not in routing_config:
-            raise ConfigurationError(
-                "routing.router_class required when routing is enabled"
-            )
+            raise ConfigurationError("routing.router_class required when routing is enabled")
 
         # Validate skills section
         skills_config = config["skills"]
@@ -299,9 +291,7 @@ class ConfigLoader:
             ]
             for category in required_categories:
                 if category not in skills_config:
-                    raise ConfigurationError(
-                        f"skills.{category} required when skills are enabled"
-                    )
+                    raise ConfigurationError(f"skills.{category} required when skills are enabled")
 
         # Validate agents section
         agents_config = config["agents"]
@@ -311,9 +301,7 @@ class ConfigLoader:
         # If agents enabled, validate agent list
         if agents_config["enabled"]:
             if "specialized" not in agents_config:
-                raise ConfigurationError(
-                    "agents.specialized required when agents are enabled"
-                )
+                raise ConfigurationError("agents.specialized required when agents are enabled")
 
         # Validate MCP section
         mcp_config = config["mcp"]
@@ -322,9 +310,7 @@ class ConfigLoader:
 
         # Validate at least one capability is enabled
         if not skills_config["enabled"] and not agents_config["enabled"]:
-            raise ConfigurationError(
-                "At least one of skills or agents must be enabled"
-            )
+            raise ConfigurationError("At least one of skills or agents must be enabled")
 
     def get_performance_targets(self) -> Dict:
         """

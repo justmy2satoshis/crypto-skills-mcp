@@ -113,9 +113,7 @@ class VolatilityAnalyzer:
             ),
         ]
 
-        atr_result, bb_result, ohlcv_result = await asyncio.gather(
-            *tasks, return_exceptions=True
-        )
+        atr_result, bb_result, ohlcv_result = await asyncio.gather(*tasks, return_exceptions=True)
 
         # Extract current price
         current_price = self._extract_current_price(ohlcv_result)

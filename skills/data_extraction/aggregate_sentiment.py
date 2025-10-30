@@ -353,9 +353,7 @@ class SentimentAggregator:
         if "whale" in sentiment_data:
             whale = sentiment_data["whale"]
             signal = whale.get("signal", "neutral")
-            whale_score = {"accumulation": 75, "neutral": 50, "distribution": 25}.get(
-                signal, 50
-            )
+            whale_score = {"accumulation": 75, "neutral": 50, "distribution": 25}.get(signal, 50)
             scores.append(whale_score)
             weights.append(0.10)
 

@@ -94,9 +94,7 @@ class NewsSentimentScorer:
         negative_count = sum(
             1 for article in relevant_articles if article["sentiment"] == "negative"
         )
-        neutral_count = sum(
-            1 for article in relevant_articles if article["sentiment"] == "neutral"
-        )
+        neutral_count = sum(1 for article in relevant_articles if article["sentiment"] == "neutral")
 
         # Calculate overall sentiment (0-100 scale)
         overall_sentiment = self._calculate_overall_sentiment(
@@ -352,9 +350,7 @@ class NewsSentimentScorer:
 
         # Weighted calculation
         # Positive = 100, Neutral = 50, Negative = 0
-        score = (
-            (positive_count * 100) + (neutral_count * 50) + (negative_count * 0)
-        ) / total
+        score = ((positive_count * 100) + (neutral_count * 50) + (negative_count * 0)) / total
 
         return score
 
@@ -468,11 +464,7 @@ class NewsSentimentScorer:
         momentum_impact = abs(momentum)  # 0.0 to 1.0
 
         # Combined impact (weighted average)
-        impact = (
-            abs(sentiment_impact) * 0.50
-            + velocity_impact * 0.30
-            + momentum_impact * 0.20
-        )
+        impact = abs(sentiment_impact) * 0.50 + velocity_impact * 0.30 + momentum_impact * 0.20
 
         return min(impact, 1.0)
 

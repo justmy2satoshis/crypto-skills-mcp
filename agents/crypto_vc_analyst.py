@@ -681,4 +681,3 @@ async def analyze_crypto_project(
             f"Invalid analysis_type '{analysis_type}'. "
             f"Valid types: tokenomics, technical, development, liquidity, risk, flags, full"
         )
- 

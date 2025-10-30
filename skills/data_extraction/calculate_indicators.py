@@ -138,9 +138,7 @@ class IndicatorsCalculator:
         }
 
         if failed_indicators:
-            response["metadata"]["warnings"] = [
-                f"{ind}: {err}" for ind, err in failed_indicators
-            ]
+            response["metadata"]["warnings"] = [f"{ind}: {err}" for ind, err in failed_indicators]
 
         return response
 

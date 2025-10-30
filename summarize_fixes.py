@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """Summary of all thesis synthesizer fixes applied"""
 
-print("="*70)
+print("=" * 70)
 print("THESIS SYNTHESIZER FIXES APPLIED")
-print("="*70)
+print("=" * 70)
 
 fixes = [
     {
         "fix": "1. Fixed line 185 - fundamental recommendation access",
         "change": 'Changed fundamental["recommendation"]["action"] to fundamental["recommendation"]',
-        "reason": "VC analyst returns recommendation as string, not dict with action field"
+        "reason": "VC analyst returns recommendation as string, not dict with action field",
     },
     {
         "fix": "2. Fixed line 584 - severity value",
         "change": 'Changed "high" to "major"',
-        "reason": 'Test expects severity in ["minor", "moderate", "major"]'
+        "reason": 'Test expects severity in ["minor", "moderate", "major"]',
     },
     {
         "fix": "3. Fixed get_capabilities - domain field",
         "change": 'Changed "multi_domain_synthesis" to "strategic_orchestration"',
-        "reason": "Test expects strategic_orchestration domain"
+        "reason": "Test expects strategic_orchestration domain",
     },
     {
         "fix": "4. Fixed get_capabilities - capabilities list",
@@ -34,12 +34,12 @@ With:
     - conflict_detection_resolution
     - weighted_signal_synthesis
     - investment_thesis_generation""",
-        "reason": "Test expects specific capability names"
+        "reason": "Test expects specific capability names",
     },
     {
         "fix": "5. Fixed get_capabilities - added MCP fields",
         "change": 'Added "required_mcps": [] and "optional_mcps": []',
-        "reason": "Test checks for these fields, orchestrator delegates to agents"
+        "reason": "Test checks for these fields, orchestrator delegates to agents",
     },
     {
         "fix": "6. Fixed resolve_conflicts - field names",
@@ -48,13 +48,13 @@ With:
     - "resolution" → "resolution_strategy"
     - "action" → "final_decision"
     - Added "rationale" field""",
-        "reason": "Test expects these exact field names with rationale"
+        "reason": "Test expects these exact field names with rationale",
     },
     {
         "fix": "7. Fixed synthesize_investment_thesis - function signature",
         "change": "Added optional macro_analyst, vc_analyst, sentiment_analyst kwargs",
-        "reason": "Test passes agent instances to convenience function"
-    }
+        "reason": "Test passes agent instances to convenience function",
+    },
 ]
 
 for i, fix_info in enumerate(fixes, 1):
@@ -62,10 +62,11 @@ for i, fix_info in enumerate(fixes, 1):
     print(f"  Change: {fix_info['change']}")
     print(f"  Reason: {fix_info['reason']}")
 
-print("\n" + "="*70)
+print("\n" + "=" * 70)
 print("EXPECTED IMPACT")
-print("="*70)
-print("""
+print("=" * 70)
+print(
+    """
 Previous: 25 passed, 16 failed
 Expected: Significant reduction in failures
 
@@ -79,4 +80,5 @@ Key areas fixed:
 Remaining potential issues to investigate:
 - Any other field name mismatches
 - Any other structural differences
-""")
+"""
+)

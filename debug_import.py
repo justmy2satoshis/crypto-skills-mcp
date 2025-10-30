@@ -15,10 +15,12 @@ from agents.crypto_vc_analyst import CryptoVCAnalyst
 print(f"Module file: {CryptoVCAnalyst.__module__}")
 
 import inspect
+
 print(f"Source file: {inspect.getfile(CryptoVCAnalyst)}")
 
 # Check the actual return statement
 import asyncio
+
 analyst = CryptoVCAnalyst()
 result = asyncio.run(analyst.analyze_tokenomics("BTC"))
 

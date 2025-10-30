@@ -138,9 +138,7 @@ class OHLCVFetcher:
         # Aggregate data (volume-weighted average prices)
         return self._aggregate_multi_exchange(valid_results, symbol, timeframe)
 
-    def _normalize_ohlcv(
-        self, raw_data: Dict, symbol: str, timeframe: str, exchange: str
-    ) -> Dict:
+    def _normalize_ohlcv(self, raw_data: Dict, symbol: str, timeframe: str, exchange: str) -> Dict:
         """
         Normalize ccxt-mcp response to standard format
 
@@ -184,9 +182,7 @@ class OHLCVFetcher:
             },
         }
 
-    def _aggregate_multi_exchange(
-        self, results: List[Dict], symbol: str, timeframe: str
-    ) -> Dict:
+    def _aggregate_multi_exchange(self, results: List[Dict], symbol: str, timeframe: str) -> Dict:
         """
         Aggregate OHLCV data from multiple exchanges using volume-weighted prices
 

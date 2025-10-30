@@ -467,7 +467,7 @@ class ThesisSynthesizer:
             "synthesis": exec_summary,  # Text synthesis for test compatibility
             "stop_loss": {
                 "price": entry_range["low"] * 0.85,
-                "reason": "15% below entry range low"
+                "reason": "15% below entry range low",
             },
             "position_size": synthesis["recommendation"].get("target_allocation", 10.0)
             / 100.0,  # Convert % to fraction

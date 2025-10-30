@@ -604,4 +604,3 @@ class TestAsyncPatterns:
 
         # Verify overall score is calculated from sub-scores
         assert result["score"] > 0
- 

@@ -202,9 +202,7 @@ class PatternRecognizer:
         strongest_pattern = patterns_found[0]["name"] if patterns_found else None
 
         # Calculate overall confidence
-        confidence = (
-            max(p["confidence"] for p in patterns_found) if patterns_found else 0.50
-        )
+        confidence = max(p["confidence"] for p in patterns_found) if patterns_found else 0.50
 
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
@@ -317,9 +315,7 @@ class PatternRecognizer:
         # Return absolute value (pattern can be inverted)
         return abs(correlation)
 
-    def _validate_volume(
-        self, volumes: List[float], start_index: int, end_index: int
-    ) -> bool:
+    def _validate_volume(self, volumes: List[float], start_index: int, end_index: int) -> bool:
         """
         Validate pattern with volume confirmation
 
@@ -335,9 +331,7 @@ class PatternRecognizer:
             return False
 
         # Calculate average volume before and during pattern
-        pattern_volume = sum(volumes[start_index : end_index + 1]) / (
-            end_index - start_index + 1
-        )
+        pattern_volume = sum(volumes[start_index : end_index + 1]) / (end_index - start_index + 1)
         baseline_volume = sum(volumes[max(0, start_index - 20) : start_index]) / min(
             20, start_index
         )
@@ -400,23 +394,15 @@ class PatternRecognizer:
             return "neutral"
 
         # Count bullish vs bearish patterns
-        bullish_count = sum(
-            1 for p in patterns if "bullish" in p["interpretation"].lower()
-        )
-        bearish_count = sum(
-            1 for p in patterns if "bearish" in p["interpretation"].lower()
-        )
+        bullish_count = sum(1 for p in patterns if "bullish" in p["interpretation"].lower())
+        bearish_count = sum(1 for p in patterns if "bearish" in p["interpretation"].lower())
 
         # Weight by confidence
         bullish_weight = sum(
-            p["confidence"]
-            for p in patterns
-            if "bullish" in p["interpretation"].lower()
+            p["confidence"] for p in patterns if "bullish" in p["interpretation"].lower()
         )
         bearish_weight = sum(
-            p["confidence"]
-            for p in patterns
-            if "bearish" in p["interpretation"].lower()
+            p["confidence"] for p in patterns if "bearish" in p["interpretation"].lower()
         )
 
         if bullish_weight > bearish_weight * 1.2:

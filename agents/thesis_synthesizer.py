@@ -420,7 +420,7 @@ class ThesisSynthesizer:
 
         # Extract key drivers and risks
         key_drivers = macro.get("key_drivers", []) + [
-            f"Fundamental score: {fundamental['overall_score']}/100",
+            f"Fundamental score: {fundamental['risk_assessment']['risk_score']}/100",
             f"Sentiment: {sentiment['sentiment_assessment']}",
         ]
 

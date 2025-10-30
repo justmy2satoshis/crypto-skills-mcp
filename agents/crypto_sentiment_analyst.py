@@ -376,12 +376,14 @@ class CryptoSentimentAnalyst:
             "entry_timing": "wait_for_confirmation",
             "timing_recommendation": "wait_for_confirmation",  # Alias for entry_timing
             "contrarian_signal": ContrarianSignal.HOLD.value,  # Alias for signal
-            "exit_timing": "wait_for_extreme_greed",
+            "exit_timing": "hold",
             "rationale": {
                 "crowd_sentiment": f"{crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']})",
                 "sentiment_extreme": extremes["current_signal"],
                 "whale_divergence": whales["divergence_detected"],
                 "news_sentiment": news["news_sentiment"],
+                "historical_pattern": extremes["pattern_analysis"]["mean_reversion_timeframe"],
+                "risk_reward": "neutral - no extreme present",
             },
             "risk_factors": [
                 "Sentiment elevated but not extreme",
@@ -438,13 +440,25 @@ class CryptoSentimentAnalyst:
 
         # Map sentiment regime to assessment
         sentiment_map = {
-            "extreme_fear": "contrarian_buy",
-            "fear": "bearish",
+            "extreme_fear": "extreme_fear_buy_opportunity",
+            "fear": "fear_accumulate",
             "neutral": "neutral",
-            "greed": "bullish",
-            "extreme_greed": "contrarian_sell",
+            "greed": "greed_reduce",
+            "extreme_greed": "extreme_greed_sell_signal",
         }
         sentiment_assessment = sentiment_map.get(crowd["sentiment_regime"], "neutral")
+
+        # Map contrarian signal to timing recommendation
+        timing_map = {
+            "strong_buy": "strong_buy",
+            "buy": "buy",
+            "accumulate": "accumulate",
+            "hold": "hold",
+            "reduce": "reduce",
+            "sell": "sell",
+            "strong_sell": "strong_sell",
+        }
+        timing_recommendation = timing_map.get(signal["signal"], "hold")
 
         return {
             "asset": asset,
@@ -463,10 +477,8 @@ class CryptoSentimentAnalyst:
                 "sell_trigger": "Fear & Greed rises above 75 (extreme greed)",
             },
             "crowd_analysis": crowd,  # Full crowd sentiment data
-            "timing_recommendation": signal.get(
-                "timing_recommendation", signal.get("entry_timing")
-            ),  # Timing guidance
-            "news_summary": news,  # Full news sentiment data
+            "timing_recommendation": timing_recommendation,
+            "news_analysis": news,  # Full news sentiment data
             "extremes": extremes,  # Full extremes data
             "whale_analysis": whales,  # Full whale activity data
             "reasoning": f"Current sentiment regime: {crowd['sentiment_regime']} (F&G: {crowd['fear_greed_index']}). "

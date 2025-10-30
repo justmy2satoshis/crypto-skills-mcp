@@ -488,9 +488,9 @@ class ThesisSynthesizer:
                 "conflict_detection_resolution",
                 "investment_thesis_generation",
                 "weighted_signal_synthesis",
+            ],
             "required_mcps": [],  # Orchestrator delegates to specialized agents
             "optional_mcps": [],  # Orchestrator delegates to specialized agents
-            ],
             "coordinated_agents": [
                 self.macro_analyst.name,
                 self.vc_analyst.name,

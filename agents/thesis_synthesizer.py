@@ -462,7 +462,7 @@ class ThesisSynthesizer:
             f"Recommendation: {action} with {allocation:.1f}% portfolio allocation\n\n"
             f"Multi-Domain Analysis:\n"
             f"- Macro: {macro['recommendation']} (regime: {macro.get('regime', 'neutral')})\n"
-            f"- Fundamental: {fundamental['recommendation']['action']} "
+            f"- Fundamental: {fundamental['recommendation']} "
             f"(risk score: {fundamental['risk_assessment']['risk_score']}/100)\n"
             f"- Sentiment: {sentiment['recommended_action']} "
             f"(assessment: {sentiment['sentiment_assessment']})\n\n"

@@ -205,7 +205,7 @@ class TestDataFlowBetweenAgents:
 
         # Fundamental should have score and recommendation
         fundamental = orchestration["fundamental_analysis"]
-        assert "overall_score" in fundamental
+        assert "score" in fundamental
         assert "recommendation" in fundamental
 
         # Sentiment should have assessment
@@ -581,7 +581,7 @@ class TestIntegrationWithMockData:
 
         # Each should have required fields
         assert "recommendation" in result["macro_analysis"]
-        assert "overall_score" in result["fundamental_analysis"]
+        assert "score" in result["fundamental_analysis"]
         assert "sentiment_assessment" in result["sentiment_analysis"]
 
     @pytest.mark.asyncio
@@ -601,7 +601,7 @@ class TestIntegrationWithMockData:
         assert 0.0 <= macro_result["confidence"] <= 1.0
 
         # Verify fundamental data
-        assert 0 <= vc_result["overall_score"] <= 100
+        assert 0 <= vc_result["score"] <= 100
         assert 0.0 <= vc_result["confidence"] <= 1.0
 
         # Verify sentiment data - matches actual sentiment analyst output

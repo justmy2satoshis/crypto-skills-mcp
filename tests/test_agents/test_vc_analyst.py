@@ -28,7 +28,7 @@ class TestCryptoVCAnalystInit:
         """Test initialization without MCP client"""
         analyst = CryptoVCAnalyst()
         assert analyst.name == "crypto_vc_analyst"
-        assert analyst.description == "Fundamental analysis and due diligence"
+        assert analyst.description == "Fundamental analysis and due diligence for crypto projects"
         assert analyst.mcp_client is None
 
     def test_init_with_mcp_client(self):
@@ -66,7 +66,7 @@ class TestAnalyzeTokenomics:
         assert "distribution" in result
         assert "utility" in result
         assert "red_flags" in result
-        assert "overall_score" in result
+        assert "score" in result
 
         # Verify supply analysis
         supply = result["supply_analysis"]
@@ -93,7 +93,7 @@ class TestAnalyzeTokenomics:
         assert 0 <= utility["score"] <= 100
 
         # Verify overall score
-        assert 0 <= result["overall_score"] <= 100
+        assert 0 <= result["score"] <= 100
 
         # Verify red flags is a list
         assert isinstance(result["red_flags"], list)
@@ -105,7 +105,7 @@ class TestAnalyzeTokenomics:
         result = await analyst.analyze_tokenomics("ETH")
 
         assert "supply_analysis" in result
-        assert "overall_score" in result
+        assert "score" in result
 
     @pytest.mark.asyncio
     async def test_tokenomics_scores_valid_range(self):
@@ -116,7 +116,7 @@ class TestAnalyzeTokenomics:
         assert 0 <= result["supply_analysis"]["score"] <= 100
         assert 0 <= result["distribution"]["score"] <= 100
         assert 0 <= result["utility"]["score"] <= 100
-        assert 0 <= result["overall_score"] <= 100
+        assert 0 <= result["score"] <= 100
 
 
 class TestAssessTechnicalHealth:
@@ -132,7 +132,7 @@ class TestAssessTechnicalHealth:
         assert "network_health" in result
         assert "security" in result
         assert "performance" in result
-        assert "overall_score" in result
+        assert "score" in result
 
         # Verify network health
         network = result["network_health"]
@@ -156,7 +156,7 @@ class TestAssessTechnicalHealth:
         assert 0 <= performance["score"] <= 100
 
         # Verify overall score
-        assert 0 <= result["overall_score"] <= 100
+        assert 0 <= result["score"] <= 100
 
     @pytest.mark.asyncio
     async def test_assess_technical_health_custom_asset(self):
@@ -165,7 +165,7 @@ class TestAssessTechnicalHealth:
         result = await analyst.assess_technical_health("ETH")
 
         assert "network_health" in result
-        assert "overall_score" in result
+        assert "score" in result
 
 
 class TestAnalyzeLiquidity:
@@ -340,7 +340,7 @@ class TestGenerateDueDiligenceReport:
         result = await analyst.generate_due_diligence_report("BTC")
 
         # Verify structure
-        assert "overall_score" in result
+        assert "score" in result
         assert "recommendation" in result
         assert "confidence" in result
         assert "strengths" in result
@@ -353,7 +353,7 @@ class TestGenerateDueDiligenceReport:
         assert "executive_summary" in result
 
         # Verify overall score
-        assert 0 <= result["overall_score"] <= 100
+        assert 0 <= result["score"] <= 100
 
         # Verify recommendation is valid enum value
         assert result["recommendation"] in [rec.value for rec in InvestmentRecommendation]
@@ -368,8 +368,8 @@ class TestGenerateDueDiligenceReport:
         assert len(result["concerns"]) > 0
 
         # Verify sub-analyses are present
-        assert "overall_score" in result["tokenomics"]
-        assert "overall_score" in result["technical_health"]
+        assert "score" in result["tokenomics"]
+        assert "score" in result["technical_health"]
         assert "liquidity_score" in result["liquidity"]
         assert "activity_score" in result["development_activity"]
         assert "risk_score" in result["risk_assessment"]
@@ -384,7 +384,7 @@ class TestGenerateDueDiligenceReport:
         analyst = CryptoVCAnalyst()
         result = await analyst.generate_due_diligence_report("ETH")
 
-        assert "overall_score" in result
+        assert "score" in result
         assert "recommendation" in result
 
     @pytest.mark.asyncio
@@ -460,14 +460,14 @@ class TestConvenienceFunction:
         """Test convenience function with tokenomics analysis"""
         result = await analyze_crypto_project("BTC", "tokenomics")
         assert "supply_analysis" in result
-        assert "overall_score" in result
+        assert "score" in result
 
     @pytest.mark.asyncio
     async def test_analyze_crypto_project_technical(self):
         """Test convenience function with technical analysis"""
         result = await analyze_crypto_project("BTC", "technical")
         assert "network_health" in result
-        assert "overall_score" in result
+        assert "score" in result
 
     @pytest.mark.asyncio
     async def test_analyze_crypto_project_liquidity(self):
@@ -494,7 +494,7 @@ class TestConvenienceFunction:
     async def test_analyze_crypto_project_full(self):
         """Test convenience function with full DD report"""
         result = await analyze_crypto_project("BTC", "full")
-        assert "overall_score" in result
+        assert "score" in result
         assert "recommendation" in result
         assert "confidence" in result
         assert "executive_summary" in result
@@ -521,7 +521,7 @@ class TestRiskLevelEnum:
         assert RiskLevel.LOW.value == "low"
         assert RiskLevel.MEDIUM.value == "medium"
         assert RiskLevel.HIGH.value == "high"
-        assert RiskLevel.VERY_HIGH.value == "very_high"
+        assert RiskLevel.EXTREME.value == "extreme"
 
     def test_risk_level_all_members(self):
         """Test RiskLevel has all expected members"""
@@ -529,7 +529,7 @@ class TestRiskLevelEnum:
         assert "low" in risk_levels
         assert "medium" in risk_levels
         assert "high" in risk_levels
-        assert "very_high" in risk_levels
+        assert "extreme" in risk_levels
         assert len(risk_levels) == 4
 
 
@@ -596,12 +596,12 @@ class TestAsyncPatterns:
         result = await analyst.generate_due_diligence_report("BTC")
 
         # Verify all sub-analyses are present and valid
-        assert result["tokenomics"]["overall_score"] > 0
-        assert result["technical_health"]["overall_score"] > 0
+        assert result["tokenomics"]["score"] > 0
+        assert result["technical_health"]["score"] > 0
         assert result["liquidity"]["liquidity_score"] > 0
         assert result["development_activity"]["activity_score"] > 0
         assert result["risk_assessment"]["risk_score"] > 0
 
         # Verify overall score is calculated from sub-scores
-        assert result["overall_score"] > 0
+        assert result["score"] > 0
  

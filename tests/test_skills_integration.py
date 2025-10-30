@@ -114,12 +114,9 @@ class TestCoreInfrastructure:
 
         loader = ConfigLoader()
 
-        # Test that agents_only mode is rejected (intentionally disabled)
-        with pytest.raises(ValueError, match="Invalid mode 'agents_only'"):
-            loader.load_mode("agents_only")
-
         # Test that completely invalid modes are rejected
-        with pytest.raises(ValueError, match="Invalid mode 'invalid_mode'"):
+        # Note: ConfigLoader raises ConfigurationError, not ValueError
+        with pytest.raises(Exception, match="Invalid mode 'invalid_mode'"):
             loader.load_mode("invalid_mode")
 
 

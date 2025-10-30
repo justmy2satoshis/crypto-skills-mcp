@@ -115,7 +115,7 @@ class TestOrchestrateComprehensiveAnalysis:
 
         # Verify fundamental analysis structure
         fundamental = result["fundamental_analysis"]
-        assert "overall_score" in fundamental
+        assert "score" in fundamental
         assert "recommendation" in fundamental
         assert "confidence" in fundamental
 
@@ -153,7 +153,7 @@ class TestOrchestrateComprehensiveAnalysis:
 
         # Verify analyses contain expected sub-keys (spot check)
         assert "recommendation" in result["macro_analysis"]
-        assert "overall_score" in result["fundamental_analysis"]
+        assert "score" in result["fundamental_analysis"]
         assert "sentiment_assessment" in result["sentiment_analysis"]
 
 

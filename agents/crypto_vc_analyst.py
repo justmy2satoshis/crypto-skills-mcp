@@ -33,7 +33,7 @@ class RiskLevel(Enum):
     LOW = "low"  # 1-3/10 - Blue chip, established projects
     MEDIUM = "medium"  # 4-6/10 - Growth stage, some risks
     HIGH = "high"  # 7-8/10 - Early stage, significant risks
-    VERY_HIGH = "very_high"  # 8-9/10 - Very high risk, speculative
+    EXTREME = "extreme"  # 9-10/10 - High failure probability
 
 
 class InvestmentRecommendation(Enum):
@@ -68,7 +68,7 @@ class CryptoVCAnalyst:
         """
         self.mcp_client = mcp_client
         self.name = "crypto_vc_analyst"
-        self.description = "Fundamental analysis and due diligence"
+        self.description = "Fundamental analysis and due diligence for crypto projects"
 
         # Required MCP servers
         self.required_servers = [
@@ -77,7 +77,7 @@ class CryptoVCAnalyst:
             "crypto-indicators-mcp",  # Technical indicators
         ]
         # Optional MCP servers
-        self.optional_servers = []  # Default empty for test expectations
+        self.optional_servers = ["github-manager"]  # For development activity tracking
 
     async def analyze_tokenomics(self, token_symbol: str = "BTC") -> Dict[str, Any]:
         """
@@ -119,7 +119,7 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "token": token_symbol,
-            "overall_score": 95,
+            "score": 95,
             "supply_analysis": {
                 "score": 95,  # Excellent supply model
                 "total_supply": 21_000_000,
@@ -191,7 +191,7 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "project": project_name,
-            "overall_score": 90,
+            "score": 90,
             "development_activity": {
                 "commit_frequency": "daily",
                 "contributor_count": 850,
@@ -423,7 +423,7 @@ class CryptoVCAnalyst:
             "max_allocation": 25.0,  # Exposed from position_sizing
             "warnings": [],
             "reasoning": f"Risk score of 18/100 indicates {RiskLevel.LOW.value} risk profile. "
-            f"Tokenomics score of {tokenomics['overall_score']} shows excellent supply dynamics. "
+            f"Tokenomics score of {tokenomics['score']} shows excellent supply dynamics. "
             f"Technical health score of {technical['score']} demonstrates robust development. "
             f"Liquidity rating of '{liquidity['liquidity_rating']}' enables easy entry/exit. "
             f"Primary risks are regulatory uncertainty and market volatility, both manageable. "
@@ -538,7 +538,7 @@ class CryptoVCAnalyst:
 
         # Calculate overall score as weighted average of component scores
         overall_score = (
-            tokenomics["overall_score"] * 0.35  # 35% weight on tokenomics
+            tokenomics["score"] * 0.35  # 35% weight on tokenomics
             + technical["score"] * 0.30  # 30% weight on technical health
             + liquidity["score"] * 0.25  # 25% weight on liquidity
             + (100 - risk["risk_score"])
@@ -547,8 +547,8 @@ class CryptoVCAnalyst:
 
         # Generate strengths list (scores > 70)
         strengths = []
-        if tokenomics["overall_score"] > 70:
-            strengths.append(f"Strong tokenomics (score: {tokenomics['overall_score']}/100)")
+        if tokenomics["score"] > 70:
+            strengths.append(f"Strong tokenomics (score: {tokenomics['score']}/100)")
         if technical["score"] > 70:
             strengths.append(f"Robust technical health (score: {technical['score']}/100)")
         if liquidity["score"] > 70:
@@ -558,8 +558,8 @@ class CryptoVCAnalyst:
 
         # Generate concerns list (scores < 40)
         concerns = []
-        if tokenomics["overall_score"] < 40:
-            concerns.append(f"Weak tokenomics (score: {tokenomics['overall_score']}/100)")
+        if tokenomics["score"] < 40:
+            concerns.append(f"Weak tokenomics (score: {tokenomics['score']}/100)")
         if technical["score"] < 40:
             concerns.append(f"Technical health concerns (score: {technical['score']}/100)")
         if liquidity["score"] < 40:
@@ -577,10 +577,10 @@ class CryptoVCAnalyst:
 
         return {
             "symbol": token_symbol,
-            "overall_score": round(overall_score, 1),  # Composite score 0-100
+            "score": round(overall_score, 1),  # Composite score 0-100
             "confidence": 0.88,  # Overall confidence in the analysis
             "executive_summary": f"{token_symbol} presents a low-risk (18/100) investment opportunity "
-            f"with excellent fundamentals. Tokenomics score of {tokenomics['overall_score']}/100 indicates "
+            f"with excellent fundamentals. Tokenomics score of {tokenomics['score']}/100 indicates "
             f"ideal supply dynamics. Technical health score of {technical['score']}/100 demonstrates "
             f"robust development and network resilience. Exceptional liquidity ({liquidity['liquidity_rating']}) "
             f"enables efficient capital deployment. Recommended action: {flags['recommendation']} "

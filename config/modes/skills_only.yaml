@@ -1,75 +1,119 @@
 # Skills-Only Mode Configuration
-# Maximum token efficiency through procedural workflows
-# Target: 73% token reduction (80-90% proceduralization)
+# Pure procedural mode for maximum token efficiency
+# Target: 73% average token reduction across all queries
 
 mode:
   name: "skills_only"
-  description: "Procedural workflows only - maximum token efficiency"
+  description: "Pure Skills mode - maximum token efficiency (73% reduction)"
   default: false
 
 routing:
-  enabled: false
-  force_target: "skills"
+  enabled: false  # No routing - all queries go to Skills
+  force_target: "skill"
 
 skills:
   enabled: true
 
+  # Data Extraction Skills
   data_extraction:
-    - "fetch_ohlcv"
-    - "calculate_indicators"
-    - "aggregate_sentiment"
-    - "fetch_order_book"
-    - "fetch_trades"
+    - aggregate_sentiment
+    - extract_medium
+    - extract_twitter
+    - extract_arxiv
 
+  # Technical Analysis Skills
   technical_analysis:
-    - "momentum_scoring"
-    - "pattern_recognition"
-    - "support_resistance"
-    - "volatility_analysis"
-    - "trend_detection"
+    - momentum_scoring
+    - volatility_assessment
+    - pattern_recognition
 
+  # Sentiment Analysis Skills
   sentiment_analysis:
-    - "news_sentiment_scorer"
-    - "social_sentiment_tracker"
-    - "whale_activity_monitor"
-    - "sentiment_fusion"
-    - "fear_greed_analysis"
+    - social_sentiment_tracker
+    - whale_activity_monitor
+    - news_sentiment_scorer
+    - sentiment_fusion
+
+  # Skill selection strategy
+  selection:
+    # When query doesn't clearly map to a specific Skill
+    default_skill: "data_extraction.aggregate_sentiment"
+
+    # Fuzzy matching for Skill selection
+    fuzzy_match: true
+    fuzzy_threshold: 0.70
 
 agents:
-  enabled: false
+  enabled: false  # Agents disabled in Skills-only mode
+
+  # Note: Complex queries that would normally require Agents will be
+  # handled by Skills with reduced reasoning capability but higher efficiency
 
 performance:
+  # Token usage targets
   token_reduction:
-    target: 0.73  # 73% reduction target
-    actual: 0.73
+    target: 0.73  # 73% overall reduction (Skills baseline)
+    skill_reduction: 0.73  # 73% reduction per Skill
 
+  # Expected query distribution
   distribution:
-    skills: 1.0   # 100% queries route to Skills
+    skills: 1.0  # 100% of queries
     agents: 0.0
     orchestrator: 0.0
 
+  # Limitations
   limitations:
-    - "No strategic reasoning or synthesis"
-    - "No multi-agent conflict resolution"
-    - "No complex narrative generation"
-    - "Best for data extraction and technical analysis"
+    - "No strategic reasoning capability"
+    - "No multi-domain synthesis"
+    - "No investment recommendations"
+    - "Procedural analysis only"
 
 mcp:
+  # MCP servers used by Skills only
   servers:
-    - name: "ccxt-mcp"
-      required: true
-      usage: ["skills"]
-    - name: "crypto-indicators-mcp"
-      required: true
-      usage: ["skills"]
+    # Sentiment data
     - name: "crypto-sentiment-mcp"
       required: true
       usage: ["skills"]
+
     - name: "crypto-feargreed-mcp"
-      required: false
+      required: true
       usage: ["skills"]
 
+    # Trading data
+    - name: "ccxt-mcp"
+      required: true
+      usage: ["skills"]
+
+    - name: "crypto-indicators-mcp"
+      required: true
+      usage: ["skills"]
+
+    # News/content
+    - name: "cryptopanic-mcp-server"
+      required: true
+      usage: ["skills"]
+
+    # Agent-specific servers (not required in Skills-only mode)
+    - name: "crypto-projects-mcp"
+      required: false
+      usage: []
+
 logging:
-  level: "INFO"
-  routing_decisions: false
-  performance_metrics: true
+  # Performance tracking
+  track_routing_decisions: false  # No routing in this mode
+  track_token_usage: true
+  track_skill_usage: true
+
+  # Log levels
+  skills: "INFO"
+  routing: "DISABLED"
+  agents: "DISABLED"
+  orchestrator: "DISABLED"
+
+# Recommended use cases for Skills-only mode:
+# - High-volume data extraction pipelines
+# - Real-time market monitoring dashboards
+# - Automated alert systems
+# - Token-constrained environments
+# - Educational/demo scenarios

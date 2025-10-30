@@ -164,7 +164,7 @@ class ThesisSynthesizer:
         """
         # Extract key signals from each Agent
         macro_signal = macro["recommendation"]  # "bullish", "bearish", "neutral"
-        fundamental_signal = fundamental["recommendation"]["action"]  # BUY, SELL, etc
+        fundamental_signal = fundamental["recommendation"]  # BUY, SELL, etc
         sentiment_signal = sentiment["recommended_action"]  # contrarian signal
 
         # Detect conflicts

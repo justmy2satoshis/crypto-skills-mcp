@@ -182,7 +182,7 @@ class ThesisSynthesizer:
         """
         # Extract key signals from each Agent
         macro_signal = macro["recommendation"]  # "bullish", "bearish", "neutral"
-        fundamental_signal = fundamental["recommendation"]["action"]  # BUY, SELL, etc
+        fundamental_signal = fundamental["recommendation"]  # BUY, SELL, HOLD
         sentiment_signal = sentiment["recommended_action"]  # contrarian signal
 
         # Detect conflicts
@@ -284,7 +284,7 @@ class ThesisSynthesizer:
         """Calculate overall confidence score from Agent confidences"""
         # Extract confidence scores from each Agent
         macro_conf = macro.get("confidence", 0.75)
-        fundamental_conf = fundamental["recommendation"].get("confidence", 0.80)
+        fundamental_conf = fundamental.get("confidence", 0.80)
         sentiment_conf = sentiment.get("confidence", 0.70)
 
         # Weighted average
@@ -459,13 +459,16 @@ class ThesisSynthesizer:
             "asset": asset,
             "thesis_type": synthesis["thesis_type"],
             "executive_summary": exec_summary,
-            "recommendation": synthesis["recommendation"],
+            "recommendation": synthesis["recommendation"]["action"],  # Extract action string
             "confidence": synthesis.get("confidence", 0.5),  # Expose confidence at top level
             "entry_range": entry_range,  # Price range for entry
             "exit_targets": exit_targets,  # Target prices for exits
             "key_catalysts": key_catalysts,  # Top catalysts driving thesis
             "synthesis": exec_summary,  # Text synthesis for test compatibility
-            "stop_loss": entry_range["low"] * 0.85,  # 15% below entry range low
+            "stop_loss": {
+                "price": entry_range["low"] * 0.85,
+                "reason": "15% below entry range low"
+            },
             "position_size": synthesis["recommendation"].get("target_allocation", 10.0)
             / 100.0,  # Convert % to fraction
             "conflicts_detected": detected_conflicts,  # List of conflict dicts
@@ -501,7 +504,7 @@ class ThesisSynthesizer:
             f"Recommendation: {action} with {allocation:.1f}% portfolio allocation\n\n"
             f"Multi-Domain Analysis:\n"
             f"- Macro: {macro['recommendation']} (regime: {macro.get('regime', 'neutral')})\n"
-            f"- Fundamental: {fundamental['recommendation']['action']} "
+            f"- Fundamental: {fundamental['recommendation']} "
             f"(risk score: {fundamental['risk_assessment']['risk_score']}/100)\n"
             f"- Sentiment: {sentiment['recommended_action']} "
             f"(assessment: {sentiment['sentiment_assessment']})\n\n"
@@ -521,19 +524,20 @@ class ThesisSynthesizer:
             "name": self.name,
             "description": self.description,
             "type": "orchestrator_agent",
-            "domain": "multi_domain_synthesis",
+            "domain": "strategic_orchestration",
             "capabilities": [
-                "agent_orchestration",
-                "multi_domain_synthesis",
-                "conflict_resolution",
-                "thesis_generation",
-                "investment_recommendations",
+                "comprehensive_analysis_orchestration",
+                "conflict_detection_resolution",
+                "weighted_signal_synthesis",
+                "investment_thesis_generation",
             ],
             "coordinated_agents": [
                 self.macro_analyst.name,
                 self.vc_analyst.name,
                 self.sentiment_analyst.name,
             ],
+            "required_mcps": [],  # Orchestrator delegates to specialized agents
+            "optional_mcps": [],
             "token_efficiency": 0.0,  # Orchestrator has highest overhead
             "use_cases": [
                 "Comprehensive investment analysis",
@@ -581,7 +585,7 @@ class ThesisSynthesizer:
                 {
                     "type": "recommendation_divergence",
                     "description": f"Macro recommends {macro_signal} but fundamentals suggest {fundamental_signal}",
-                    "severity": "high",
+                    "severity": "major",
                 }
             )
 
@@ -635,21 +639,30 @@ class ThesisSynthesizer:
             # Generate resolution strategy based on conflict type
             if conflict_type == "recommendation_divergence":
                 resolution = {
-                    **conflict,
-                    "resolution": "Use weighted voting with fundamental analysis (40%) as tiebreaker",
-                    "action": "Follow majority signal with reduced position size",
+                    "conflict_type": conflict_type,
+                    "description": conflict.get("description", ""),
+                    "severity": severity,
+                    "resolution_strategy": "Use weighted voting with fundamental analysis (40%) as tiebreaker",
+                    "final_decision": "Follow majority signal with reduced position size",
+                    "rationale": "Fundamental analysis provides deeper insight into long-term value while respecting macro trends",
                 }
             elif conflict_type == "fundamental_sentiment_conflict":
                 resolution = {
-                    **conflict,
-                    "resolution": "Prioritize fundamentals for entry, use sentiment for timing",
-                    "action": "Enter at contrarian sentiment extremes with fundamental support",
+                    "conflict_type": conflict_type,
+                    "description": conflict.get("description", ""),
+                    "severity": severity,
+                    "resolution_strategy": "Prioritize fundamentals for entry, use sentiment for timing",
+                    "final_decision": "Enter at contrarian sentiment extremes with fundamental support",
+                    "rationale": "Strong fundamentals provide downside protection while extreme sentiment offers better entry points",
                 }
             else:
                 resolution = {
-                    **conflict,
-                    "resolution": "Monitor for signal convergence before taking action",
-                    "action": "HOLD until clearer alignment emerges",
+                    "conflict_type": conflict_type,
+                    "description": conflict.get("description", ""),
+                    "severity": severity,
+                    "resolution_strategy": "Monitor for signal convergence before taking action",
+                    "final_decision": "HOLD until clearer alignment emerges",
+                    "rationale": "Conflicting signals suggest waiting for more clarity to reduce risk",
                 }
 
             resolved.append(resolution)
@@ -730,7 +743,11 @@ class ThesisSynthesizer:
 
 # Convenience function for quick access
 async def synthesize_investment_thesis(
-    asset: str = "BTC", horizon_days: int = 30
+    asset: str = "BTC",
+    horizon_days: int = 30,
+    macro_analyst=None,
+    vc_analyst=None,
+    sentiment_analyst=None,
 ) -> Dict[str, Any]:
     """
     Convenience function for investment thesis generation
@@ -738,6 +755,9 @@ async def synthesize_investment_thesis(
     Args:
         asset: Cryptocurrency symbol
         horizon_days: Investment horizon in days
+        macro_analyst: Optional macro analyst instance
+        vc_analyst: Optional VC analyst instance
+        sentiment_analyst: Optional sentiment analyst instance
 
     Returns:
         Investment thesis dictionary
@@ -747,5 +767,9 @@ async def synthesize_investment_thesis(
         >>> print(thesis["recommendation"]["action"])
         BUY
     """
-    synthesizer = ThesisSynthesizer()
+    synthesizer = ThesisSynthesizer(
+        macro_analyst=macro_analyst,
+        vc_analyst=vc_analyst,
+        sentiment_analyst=sentiment_analyst,
+    )
     return await synthesizer.generate_investment_thesis(asset, horizon_days)

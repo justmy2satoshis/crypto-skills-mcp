@@ -121,6 +121,7 @@ class CryptoVCAnalyst:
             "token": token_symbol,
             "overall_score": 95,
             "supply_analysis": {
+                "score": 95,  # Excellent supply model
                 "total_supply": 21_000_000,
                 "circulating_supply": 19_500_000,
                 "max_supply": 21_000_000,
@@ -128,18 +129,23 @@ class CryptoVCAnalyst:
                 "supply_schedule": "halving_every_4_years",
             },
             "distribution": {
+                "score": 100,  # Fair launch, no pre-mine
+                "top_10_holders": 5.2,  # % held by top 10 addresses
+                "gini_coefficient": 0.68,  # Distribution inequality measure (0=equal, 1=unequal)
                 "team_allocation": 0.0,  # No pre-mine
                 "investor_allocation": 0.0,
                 "community_allocation": 100.0,  # Fair launch
                 "vesting_schedule": "n/a",
             },
-            "utility": [
-                "Store of value",
-                "Medium of exchange",
-                "Unit of account",
-                "Inflation hedge",
-            ],
-            "score": 95,  # Excellent tokenomics
+            "utility": {
+                "score": 92,  # Multiple proven use cases
+                "use_cases": [
+                    "Store of value",
+                    "Medium of exchange",
+                    "Unit of account",
+                    "Inflation hedge",
+                ],
+            },
             "red_flags": [],
             "reasoning": "Bitcoin has ideal tokenomics: fixed max supply (21M), fair launch "
             "with no pre-mine, predictable inflation via halving schedule, and clear "
@@ -193,12 +199,29 @@ class CryptoVCAnalyst:
                 "code_quality": "excellent",
             },
             "technical_indicators": {
-                "network_health": 99.98,  # %
+                "network_uptime": 99.98,  # %
                 "transaction_throughput": 7.0,  # tx/sec
                 "decentralization_score": 95,  # 0-100
             },
-            "network_health": 99.98,  # Exposed from technical_indicators
-            "network_health": 99.98,  # Exposed from technical_indicators
+            "security": {
+                "score": 95,  # Excellent security
+                "hash_rate": "450 EH/s",  # Network hash rate
+                "consensus_mechanism": "Proof of Work (SHA-256)",
+                "audit_status": "Multiple audits completed",
+            },
+            "performance": {
+                "score": 75,  # Good but not leading-edge
+                "tps": 7.0,  # Transactions per second
+                "block_time": "~10 minutes",
+                "finality_time": "~60 minutes (6 confirmations)",
+            },
+            "network_health": {
+                "score": 98,  # Exceptional network health
+                "active_addresses": 950_000,  # Daily active addresses
+                "transaction_count": 350_000,  # Daily transactions
+                "node_count": 16_500,  # Full nodes
+                "geographic_distribution": "Global",
+            },
             "score": 90,
             "concerns": [],
             "reasoning": "Bitcoin Core development remains extremely active with 850+ contributors "
@@ -244,16 +267,29 @@ class CryptoVCAnalyst:
         # Placeholder for MCP integration
         return {
             "symbol": token_symbol,
-            "trading_volume": 28_500_000_000,
+            "trading_volume": {
+                "24h_volume": 28_500_000_000,  # $28.5B
+                "volume_trend": "stable",  # stable, increasing, decreasing
+                "volume_rank": 1,  # Rank by volume
+            },
             "liquidity_metrics": {
                 "daily_volume": 28_500_000_000,  # $28.5B
                 "bid_ask_spread": 0.01,  # 0.01%
                 "market_depth_1pct": 125_000_000,  # $125M
                 "exchange_count": 450,
             },
+            "market_depth": {
+                "bid_ask_spread": 0.01,  # 0.01%
+                "order_book_depth": 125_000_000,  # $125M within 1%
+                "depth_score": 98,  # 0-100
+            },
+            "exchange_availability": {
+                "exchange_count": 450,  # Listed on 450+ exchanges
+                "major_exchanges": ["Binance", "Coinbase", "Kraken", "Bitstamp"],
+                "tier_1_exchanges": 12,  # Top-tier exchanges
+            },
             "liquidity_rating": "excellent",
-            "liquidity_score": 98,  # Top-level score
-            "market_depth": 125_000_000,  # Alias for market_depth_1pct
+            "liquidity_score": 98,  # Top-level liquidity score
             "slippage_estimate": {
                 "10k": 0.005,  # 0.005%
                 "100k": 0.01,
@@ -378,8 +414,8 @@ class CryptoVCAnalyst:
                 "market_risk": 40,  # Volatility
             },
             "position_sizing": {
-                "max_portfolio_allocation": 25.0,  # % of portfolio
-                "suggested_allocation": 15.0,
+                "max_allocation": 0.25,  # fraction of portfolio
+                "recommended_allocation": 0.15,
                 "reasoning": "Low overall risk (18/100) supports substantial allocation. "
                 "However, market volatility warrants prudent 15% allocation rather than max 25%. "
                 "Can size up to 25% for high-conviction, long-term holders.",
@@ -387,7 +423,7 @@ class CryptoVCAnalyst:
             "max_allocation": 25.0,  # Exposed from position_sizing
             "warnings": [],
             "reasoning": f"Risk score of 18/100 indicates {RiskLevel.LOW.value} risk profile. "
-            f"Tokenomics score of {tokenomics['score']} shows excellent supply dynamics. "
+            f"Tokenomics score of {tokenomics['overall_score']} shows excellent supply dynamics. "
             f"Technical health score of {technical['score']} demonstrates robust development. "
             f"Liquidity rating of '{liquidity['liquidity_rating']}' enables easy entry/exit. "
             f"Primary risks are regulatory uncertainty and market volatility, both manageable. "
@@ -502,7 +538,7 @@ class CryptoVCAnalyst:
 
         # Calculate overall score as weighted average of component scores
         overall_score = (
-            tokenomics["score"] * 0.35  # 35% weight on tokenomics
+            tokenomics["overall_score"] * 0.35  # 35% weight on tokenomics
             + technical["score"] * 0.30  # 30% weight on technical health
             + liquidity["score"] * 0.25  # 25% weight on liquidity
             + (100 - risk["risk_score"])
@@ -511,8 +547,8 @@ class CryptoVCAnalyst:
 
         # Generate strengths list (scores > 70)
         strengths = []
-        if tokenomics["score"] > 70:
-            strengths.append(f"Strong tokenomics (score: {tokenomics['score']}/100)")
+        if tokenomics["overall_score"] > 70:
+            strengths.append(f"Strong tokenomics (score: {tokenomics['overall_score']}/100)")
         if technical["score"] > 70:
             strengths.append(f"Robust technical health (score: {technical['score']}/100)")
         if liquidity["score"] > 70:
@@ -522,8 +558,8 @@ class CryptoVCAnalyst:
 
         # Generate concerns list (scores < 40)
         concerns = []
-        if tokenomics["score"] < 40:
-            concerns.append(f"Weak tokenomics (score: {tokenomics['score']}/100)")
+        if tokenomics["overall_score"] < 40:
+            concerns.append(f"Weak tokenomics (score: {tokenomics['overall_score']}/100)")
         if technical["score"] < 40:
             concerns.append(f"Technical health concerns (score: {technical['score']}/100)")
         if liquidity["score"] < 40:
@@ -536,13 +572,15 @@ class CryptoVCAnalyst:
             concerns.extend([f"CRITICAL: {flag}" for flag in flags["red_flags"]["critical"]])
         if flags["red_flags"]["major"]:
             concerns.extend([f"MAJOR: {flag}" for flag in flags["red_flags"]["major"]])
+        if flags["red_flags"]["minor"]:
+            concerns.extend([flag for flag in flags["red_flags"]["minor"]])
 
         return {
             "symbol": token_symbol,
             "overall_score": round(overall_score, 1),  # Composite score 0-100
             "confidence": 0.88,  # Overall confidence in the analysis
             "executive_summary": f"{token_symbol} presents a low-risk (18/100) investment opportunity "
-            f"with excellent fundamentals. Tokenomics score of {tokenomics['score']}/100 indicates "
+            f"with excellent fundamentals. Tokenomics score of {tokenomics['overall_score']}/100 indicates "
             f"ideal supply dynamics. Technical health score of {technical['score']}/100 demonstrates "
             f"robust development and network resilience. Exceptional liquidity ({liquidity['liquidity_rating']}) "
             f"enables efficient capital deployment. Recommended action: {flags['recommendation']} "
@@ -557,7 +595,8 @@ class CryptoVCAnalyst:
             "risk_assessment": risk,
             "strengths": strengths,
             "concerns": concerns,
-            "recommendation": {
+            "recommendation": InvestmentRecommendation.BUY.value,  # String enum value
+            "recommendation_details": {
                 "action": InvestmentRecommendation.BUY.value,
                 "confidence": 0.88,
                 "target_allocation": 15.0,  # % of portfolio
@@ -586,6 +625,7 @@ class CryptoVCAnalyst:
                 "risk_scoring",
                 "red_flag_identification",
                 "due_diligence_reporting",
+                "development_activity_tracking",
             ],
             "required_mcps": self.required_servers,
             "optional_mcps": self.optional_servers,

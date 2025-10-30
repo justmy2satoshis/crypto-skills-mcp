@@ -604,13 +604,13 @@ class TestIntegrationWithMockData:
         assert 0 <= vc_result["overall_score"] <= 100
         assert 0.0 <= vc_result["confidence"] <= 1.0
 
-        # Verify sentiment data
+        # Verify sentiment data - matches actual sentiment analyst output
         assert sentiment_result["sentiment_assessment"] in [
-            "bullish",
-            "bearish",
+            "extreme_fear_buy_opportunity",
+            "fear_accumulate",
             "neutral",
-            "contrarian_buy",
-            "contrarian_sell",
+            "greed_reduce",
+            "extreme_greed_sell_signal",
         ]
         assert 0.0 <= sentiment_result["confidence"] <= 1.0
 

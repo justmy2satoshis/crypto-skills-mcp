@@ -198,7 +198,7 @@ class SentimentFusionEngine:
                                 else 0.5
                             )
                             return percentile
-        except:
+        except Exception:
             pass
 
         return 0.30  # Default moderate volatility
@@ -400,7 +400,7 @@ class SentimentFusionEngine:
                     numbers = re.findall(r"\d+", text)
                     if numbers:
                         return float(numbers[0])
-        except:
+        except Exception:
             pass
 
         return 50.0  # Default neutral
@@ -429,7 +429,7 @@ class SentimentFusionEngine:
                             # Convert RSI (0-100) to score (0-100)
                             # RSI 50 = neutral score 50
                             return current_rsi
-        except:
+        except Exception:
             pass
 
         return 50.0  # Default neutral

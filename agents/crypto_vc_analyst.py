@@ -23,7 +23,7 @@ Strategic Value:
 - Delivers institutional-grade due diligence
 """
 
-from typing import Dict, Optional, Any, List
+from typing import Dict, Optional, Any
 from enum import Enum
 
 
@@ -222,7 +222,6 @@ class CryptoVCAnalyst:
                 "node_count": 16_500,  # Full nodes
                 "geographic_distribution": "Global",
             },
-            "score": 90,
             "concerns": [],
             "reasoning": "Bitcoin Core development remains extremely active with 850+ contributors "
             "and daily commits. Network has 99.98% uptime over 15+ years. "
@@ -400,7 +399,6 @@ class CryptoVCAnalyst:
         technical = await self.assess_technical_health(token_symbol)
         liquidity = await self.analyze_liquidity(token_symbol)
         flags = await self.identify_red_flags(token_symbol)
-        development_activity = await self.track_development_activity(token_symbol)
 
         return {
             "symbol": token_symbol,

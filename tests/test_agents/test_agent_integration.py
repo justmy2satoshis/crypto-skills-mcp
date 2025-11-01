@@ -17,8 +17,6 @@ from agents import (
     CryptoVCAnalyst,
     CryptoSentimentAnalyst,
     MacroRegime,
-    RiskLevel,
-    SentimentRegime,
     ThesisType,
 )
 

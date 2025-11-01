@@ -5,7 +5,6 @@ Hybrid Claude Skills + Agents crypto analysis system with modular installation.
 """
 
 from setuptools import setup, find_packages
-import os
 
 # Read long description from README
 with open("README.md", "r", encoding="utf-8") as fh:

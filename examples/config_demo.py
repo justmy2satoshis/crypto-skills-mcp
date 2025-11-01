@@ -10,7 +10,7 @@ This example shows:
 4. Accessing performance targets
 """
 
-from core import ConfigLoader, load_config, get_active_mode
+from core import ConfigLoader
 
 
 def print_separator():
@@ -54,7 +54,7 @@ def demo_hybrid_mode():
     perf = loader.get_performance_targets()
     print(f"\nToken Reduction Target: {perf['token_reduction']['target']*100}%")
     distribution = perf["distribution"]
-    print(f"Expected Distribution:")
+    print("Expected Distribution:")
     print(f"  - Skills: {distribution['skills']*100}%")
     print(f"  - Agents: {distribution['agents']*100}%")
     print(f"  - Orchestrator: {distribution['orchestrator']*100}%")
@@ -96,7 +96,7 @@ def demo_skills_only_mode():
     print(f"Query Distribution: {perf['distribution']['skills']*100}% Skills")
 
     # Limitations
-    print(f"\nLimitations:")
+    print("\nLimitations:")
     for limitation in perf["limitations"]:
         print(f"  - {limitation}")
 
@@ -135,7 +135,7 @@ def demo_agents_only_mode():
 
     # Capabilities
     capabilities = agents_config["capabilities"]
-    print(f"\nCapabilities:")
+    print("\nCapabilities:")
     for cap, enabled in capabilities.items():
         print(f"  - {cap.replace('_', ' ').title()}: {enabled}")
 
@@ -145,12 +145,12 @@ def demo_agents_only_mode():
     print(f"Agent Overhead: {perf['token_reduction']['agent_overhead']*100}%")
 
     # Benefits
-    print(f"\nBenefits:")
+    print("\nBenefits:")
     for benefit in perf["benefits"]:
         print(f"  ✓ {benefit}")
 
     # Trade-offs
-    print(f"\nTrade-offs:")
+    print("\nTrade-offs:")
     for tradeoff in perf["tradeoffs"]:
         print(f"  ⚠ {tradeoff}")
 

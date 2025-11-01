@@ -93,18 +93,18 @@ async def example_complete_investment_thesis():
     print(f"Position Size: {thesis['position_size'] * 100:.1f}%")
     print(f"Time Horizon: {thesis['time_horizon']}")
 
-    print(f"\nExit Targets:")
+    print("\nExit Targets:")
     for i, target in enumerate(thesis["exit_targets"], 1):
         print(f"   Target {i}: ${target['price']:,.0f} ({target['reasoning']})")
 
     print(f"\nStop Loss: ${thesis['stop_loss']['price']:,.0f}")
     print(f"   Reason: {thesis['stop_loss']['reason']}")
 
-    print(f"\nKey Catalysts:")
+    print("\nKey Catalysts:")
     for catalyst in thesis["key_catalysts"]:
         print(f"   • {catalyst}")
 
-    print(f"\nKey Risks:")
+    print("\nKey Risks:")
     for risk in thesis["key_risks"]:
         print(f"   • {risk}")
 
@@ -112,7 +112,7 @@ async def example_complete_investment_thesis():
         print(f"\nConflicts Detected: {len(thesis['conflicts_detected'])}")
         print(f"Conflicts Resolved: {len(thesis['conflicts_resolved'])}")
 
-    print(f"\nExecutive Summary:")
+    print("\nExecutive Summary:")
     print(f"{thesis['synthesis'][:300]}...")
 
     print("\n" + "=" * 80)
@@ -189,7 +189,7 @@ async def example_macro_regime_analysis():
     regime = await macro.analyze_macro_regime("BTC")
     print(f"   Regime: {regime['regime']}")
     print(f"   Score: {regime['regime_score']:.2f}")
-    print(f"   Indicators:")
+    print("   Indicators:")
     for key, value in regime["regime_indicators"].items():
         print(f"      {key}: {value}")
 
@@ -377,7 +377,7 @@ async def example_error_handling():
     try:
         # Try analyzing with unknown asset
         result = await synthesizer.generate_investment_thesis("UNKNOWN_TOKEN")
-        print(f"\nAnalysis completed for unknown token")
+        print("\nAnalysis completed for unknown token")
         print(f"Recommendation: {result['recommendation']}")
 
     except Exception as e:
@@ -407,14 +407,14 @@ async def example_cache_management():
     import time
 
     start = time.time()
-    data1 = await mcp_client.get_fear_greed_index()
+    await mcp_client.get_fear_greed_index()
     time1 = time.time() - start
     print(f"Time: {time1:.3f}s")
 
     # Second call - will use cache
     print("\nSecond call (using cache)...")
     start = time.time()
-    data2 = await mcp_client.get_fear_greed_index()
+    await mcp_client.get_fear_greed_index()
     time2 = time.time() - start
     print(f"Time: {time2:.3f}s")
 
@@ -422,7 +422,7 @@ async def example_cache_management():
 
     # Get cache stats
     stats = mcp_client.get_cache_stats()
-    print(f"\nCache Stats:")
+    print("\nCache Stats:")
     print(f"   Total Entries: {stats['total_entries']}")
 
     # Clear specific cache

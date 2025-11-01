@@ -144,7 +144,7 @@ class TestOrchestrateComprehensiveAnalysis:
 
         start_time = time.time()
         result = await synthesizer.orchestrate_comprehensive_analysis("BTC")
-        elapsed_time = time.time() - start_time
+        time.time() - start_time
 
         # Verify result is complete
         assert "macro_analysis" in result

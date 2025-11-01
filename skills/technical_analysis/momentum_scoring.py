@@ -306,7 +306,7 @@ class MomentumScorer:
         # Count signal types
         buy_count = signals.count("Buy") + signals.count("Strong Buy")
         sell_count = signals.count("Sell") + signals.count("Strong Sell")
-        neutral_count = signals.count("Neutral")
+        signals.count("Neutral")
 
         total = len(signals)
 

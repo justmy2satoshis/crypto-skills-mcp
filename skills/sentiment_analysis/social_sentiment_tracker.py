@@ -5,7 +5,7 @@ Procedural workflow for social media sentiment trend analysis.
 Achieves 73% token reduction vs agent-only approach.
 """
 
-from typing import Dict, Optional
+from typing import Dict
 from datetime import datetime
 import asyncio
 
@@ -168,7 +168,7 @@ class SocialSentimentTracker:
             numbers = re.findall(r"-?\d+\.?\d*", content)
             if numbers:
                 return float(numbers[-1])  # Last number is usually the value
-        except:
+        except Exception:
             pass
 
         return 0.0
@@ -195,7 +195,7 @@ class SocialSentimentTracker:
             numbers = re.findall(r"\d+\.?\d*", content)
             if numbers:
                 return float(numbers[-1])
-        except:
+        except Exception:
             pass
 
         return 0.0
@@ -220,7 +220,7 @@ class SocialSentimentTracker:
             percentages = re.findall(r"(\d+\.?\d*)%", content)
             if percentages:
                 return float(percentages[-1])
-        except:
+        except Exception:
             pass
 
         return 0.0
@@ -245,7 +245,7 @@ class SocialSentimentTracker:
             numbers = re.findall(r"\d+", content)
             if numbers:
                 return float(numbers[0])  # First number is usually the index value
-        except:
+        except Exception:
             pass
 
         return 50.0

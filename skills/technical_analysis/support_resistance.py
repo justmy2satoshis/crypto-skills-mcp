@@ -331,11 +331,11 @@ class SupportResistanceIdentifier:
 
         if below:
             # Find highest level below current price
-            candidates = [l["price"] for l in levels if l["price"] < current_price]
+            candidates = [level["price"] for level in levels if level["price"] < current_price]
             return max(candidates) if candidates else None
         else:
             # Find lowest level above current price
-            candidates = [l["price"] for l in levels if l["price"] > current_price]
+            candidates = [level["price"] for level in levels if level["price"] > current_price]
             return min(candidates) if candidates else None
 
 

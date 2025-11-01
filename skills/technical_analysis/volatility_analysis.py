@@ -5,7 +5,7 @@ Procedural workflow for volatility measurement and breakout detection.
 Achieves 86% token reduction vs agent-only approach.
 """
 
-from typing import Dict, Optional
+from typing import Dict
 from datetime import datetime
 import asyncio
 

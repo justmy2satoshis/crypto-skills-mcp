@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Apply test fixes for VC analyst tests"""
-import re
 
 
 def fix_tests():
@@ -27,7 +26,7 @@ def fix_tests():
         print("  - Replaced VERY_HIGH with EXTREME")
         print("  - Replaced overall_score with score")
     else:
-        print(f"  No changes needed")
+        print("  No changes needed")
 
 
 if __name__ == "__main__":

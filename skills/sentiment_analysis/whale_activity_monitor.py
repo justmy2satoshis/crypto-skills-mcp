@@ -5,7 +5,7 @@ Procedural workflow for tracking large wallet movements.
 Achieves 72% token reduction vs agent-only approach.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from datetime import datetime
 import asyncio
 
@@ -163,7 +163,7 @@ class WhaleActivityMonitor:
                         # Try to extract last price
                         return float(ticker_data.get("last", 0.0))
             return 0.0
-        except:
+        except Exception:
             return 0.0
 
     def _identify_whale_transactions(
@@ -221,7 +221,7 @@ class WhaleActivityMonitor:
                                     "timestamp": trade.get("timestamp"),
                                 }
                             )
-        except:
+        except Exception:
             pass
 
         return whale_txs

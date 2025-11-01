@@ -17,13 +17,12 @@ Usage:
     python install_to_claude.py --target both     # For both
 """
 
-import os
 import sys
 import json
 import shutil
 import argparse
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 
 class CryptoSkillsInstaller:
@@ -128,7 +127,7 @@ class CryptoSkillsInstaller:
 
         # Verify installation
         if installed:
-            print(f"\n✅ Claude Code installation complete!")
+            print("\n✅ Claude Code installation complete!")
             print(f"   Skills installed: {', '.join(installed)}")
             print(f"   Skills directory: {self.code_skills_dir}")
             return True

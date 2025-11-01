@@ -5,7 +5,7 @@ Procedural workflow for news sentiment analysis and impact assessment.
 Achieves 75% token reduction vs agent-only approach.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from datetime import datetime
 import asyncio
 
@@ -212,7 +212,7 @@ class NewsSentimentScorer:
                                     "timestamp": datetime.utcnow().isoformat() + "Z",
                                 }
                             )
-        except:
+        except Exception:
             pass
 
         return articles

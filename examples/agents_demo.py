@@ -19,11 +19,6 @@ from agents import (
     # Strategic Orchestrator
     ThesisSynthesizer,
     # Enums
-    MacroRegime,
-    RiskLevel,
-    SentimentRegime,
-    ThesisType,
-    # Convenience Functions
     analyze_crypto_macro,
     analyze_crypto_sentiment,
     synthesize_investment_thesis,
@@ -78,7 +73,7 @@ async def demo_macro_analyst():
     print(f"  Recommendation: {outlook['recommendation'].upper()}")
     print(f"  Confidence: {outlook['confidence']:.0%}")
     print(f"  Regime: {outlook['regime']}")
-    print(f"\n  Key Drivers:")
+    print("\n  Key Drivers:")
     for driver in outlook["key_drivers"]:
         print(f"    • {driver}")
     print(f"\n  Entry Timing: {outlook['entry_timing']}")
@@ -104,7 +99,7 @@ async def demo_vc_analyst():
     print(f"  Distribution Score: {tokenomics['distribution']['score']}/100")
     print(f"  Utility Score: {tokenomics['utility']['score']}/100")
     if tokenomics["red_flags"]:
-        print(f"\n  ⚠️  Red Flags:")
+        print("\n  ⚠️  Red Flags:")
         for flag in tokenomics["red_flags"]:
             print(f"    • {flag}")
 
@@ -113,7 +108,7 @@ async def demo_vc_analyst():
     print(f"  Risk Score: {risk['risk_score']}/100")
     print(f"  Risk Level: {risk['risk_level'].upper()}")
     print(f"  Position Sizing: {risk['position_sizing']['max_allocation']*100}%")
-    print(f"\n  Risk Breakdown:")
+    print("\n  Risk Breakdown:")
     for category, score in risk["risk_breakdown"].items():
         print(f"    {category.replace('_', ' ').title()}: {score}/100")
 
@@ -122,10 +117,10 @@ async def demo_vc_analyst():
     print(f"  Overall Score: {dd_report['overall_score']}/100")
     print(f"  Recommendation: {dd_report['recommendation'].upper()}")
     print(f"  Confidence: {dd_report['confidence']:.0%}")
-    print(f"\n  Strengths:")
+    print("\n  Strengths:")
     for strength in dd_report["strengths"][:3]:
         print(f"    ✓ {strength}")
-    print(f"\n  Concerns:")
+    print("\n  Concerns:")
     for concern in dd_report["concerns"][:3]:
         print(f"    ⚠ {concern}")
 
@@ -155,7 +150,7 @@ async def demo_sentiment_analyst():
     extremes = await analyst.detect_sentiment_extremes("bitcoin", lookback_days=90)
     print(f"  Current Percentile: {extremes['current_percentile']}th")
     print(f"  Current Signal: {extremes['current_signal']}")
-    print(f"\n  Historical Extreme Events:")
+    print("\n  Historical Extreme Events:")
     for event in extremes["extreme_events"]:
         print(f"    {event['date']}: F&G {event['fear_greed']} → {event['outcome']}")
     print(f"\n  Mean Reversion: {extremes['pattern_analysis']['mean_reversion_timeframe']}")
@@ -166,7 +161,7 @@ async def demo_sentiment_analyst():
     print(f"  Confidence: {signal['confidence']:.0%}")
     print(f"  Entry Timing: {signal['entry_timing']}")
     print(f"  Exit Timing: {signal['exit_timing']}")
-    print(f"\n  Rationale:")
+    print("\n  Rationale:")
     for key, value in signal["rationale"].items():
         print(f"    {key.replace('_', ' ').title()}: {value}")
 
@@ -183,33 +178,33 @@ async def demo_thesis_synthesizer():
     print(f"  Type: {capabilities['type']}")
     print(f"  Coordinates: {', '.join(capabilities['coordinates_agents'])}")
     print(f"  Capabilities: {', '.join(capabilities['capabilities'])}")
-    print(f"\n  Agent Weights:")
+    print("\n  Agent Weights:")
     for agent, weight in orchestrator.weights.items():
         print(f"    {agent.title()}: {weight*100}%")
 
     print("\n1. Orchestrating Comprehensive Analysis (BTC)...")
     comprehensive = await orchestrator.orchestrate_comprehensive_analysis("BTC", horizon_days=30)
-    print(f"  Analysis Complete!")
-    print(f"\n  Macro Analysis:")
+    print("  Analysis Complete!")
+    print("\n  Macro Analysis:")
     print(f"    Recommendation: {comprehensive['macro_analysis']['recommendation']}")
     print(f"    Confidence: {comprehensive['macro_analysis']['confidence']:.0%}")
-    print(f"\n  Fundamental Analysis:")
+    print("\n  Fundamental Analysis:")
     print(f"    Recommendation: {comprehensive['fundamental_analysis']['recommendation']}")
     print(f"    Overall Score: {comprehensive['fundamental_analysis']['overall_score']}/100")
-    print(f"\n  Sentiment Analysis:")
+    print("\n  Sentiment Analysis:")
     print(f"    Sentiment: {comprehensive['sentiment_analysis']['sentiment_assessment']}")
     print(f"    Confidence: {comprehensive['sentiment_analysis']['confidence']:.0%}")
 
     print("\n2. Generating Investment Thesis (BTC)...")
     thesis = await orchestrator.generate_investment_thesis("BTC", horizon_days=30)
-    print(f"\n  === INVESTMENT THESIS ===")
+    print("\n  === INVESTMENT THESIS ===")
     print(f"  Asset: {thesis['asset']}")
     print(f"  Thesis Type: {thesis['thesis_type'].upper()}")
     print(f"  Overall Confidence: {thesis['confidence']:.0%}")
     print(f"\n  Recommendation: {thesis['recommendation'].upper()}")
     print(f"  Horizon: {thesis['investment_horizon_days']} days")
 
-    print(f"\n  Agent Signals:")
+    print("\n  Agent Signals:")
     for agent, signal in thesis["agent_signals"].items():
         print(f"    {agent.title()}: {signal}")
 
@@ -217,27 +212,27 @@ async def demo_thesis_synthesizer():
     if thesis["conflict_analysis"]["conflict_detected"]:
         print(f"  Resolution: {thesis['conflict_analysis']['resolution']}")
 
-    print(f"\n  Key Insights:")
+    print("\n  Key Insights:")
     for insight in thesis["key_insights"][:3]:
         print(f"    • {insight}")
 
-    print(f"\n  Entry Strategy:")
+    print("\n  Entry Strategy:")
     print(f"    Price Target: ${thesis['entry_strategy']['price_target']:,.2f}")
     print(f"    Position Size: {thesis['entry_strategy']['position_size']*100}%")
     print(f"    Timing: {thesis['entry_strategy']['timing']}")
 
-    print(f"\n  Exit Strategy:")
+    print("\n  Exit Strategy:")
     print(f"    Target Price: ${thesis['exit_strategy']['target_price']:,.2f}")
     print(
         f"    Stop Loss: ${thesis['exit_strategy']['stop_loss']:,.2f} ({thesis['exit_strategy']['stop_loss_pct']*100}%)"
     )
     print(f"    Take Profit Levels: {len(thesis['exit_strategy']['take_profit_levels'])}")
 
-    print(f"\n  Risk Assessment:")
+    print("\n  Risk Assessment:")
     print(f"    Overall Risk: {thesis['risk_assessment']['overall_risk'].upper()}")
     print(f"    Risk Score: {thesis['risk_assessment']['risk_score']}/100")
 
-    print(f"\n  Executive Summary:")
+    print("\n  Executive Summary:")
     print(f"  {thesis['executive_summary']}")
 
 
@@ -280,7 +275,7 @@ def demo_agent_metadata():
     print(f"  Domain: {metadata['domain']}")
     print(f"  Description: {metadata['description']}")
     print(f"  Required MCPs: {', '.join(metadata['required_mcps'])}")
-    print(f"  Capabilities:")
+    print("  Capabilities:")
     for cap in metadata["capabilities"]:
         print(f"    • {cap}")
 
@@ -289,7 +284,7 @@ def demo_agent_metadata():
     print(f"  Domain: {metadata['domain']}")
     print(f"  Description: {metadata['description']}")
     print(f"  Requires Agents: {', '.join(metadata['requires_agents'])}")
-    print(f"  Synthesis Weights:")
+    print("  Synthesis Weights:")
     for agent, weight in metadata["weights"].items():
         print(f"    {agent.title()}: {weight*100}%")
 

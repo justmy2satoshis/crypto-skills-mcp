@@ -36,10 +36,10 @@ class TestSkillsImport:
         """Test technical analysis Skills import"""
         try:
             from skills.technical_analysis import (
-                momentum_scoring,
-                pattern_recognition,
-                support_resistance,
-                volatility_analysis,
+                momentum_scoring,  # noqa: F401
+                pattern_recognition,  # noqa: F401
+                support_resistance,  # noqa: F401
+                volatility_analysis,  # noqa: F401
             )
 
             # Check that modules exist (may not have convenience functions)
@@ -51,10 +51,10 @@ class TestSkillsImport:
         """Test sentiment analysis Skills import"""
         try:
             from skills.sentiment_analysis import (
-                news_sentiment_scorer,
-                sentiment_fusion,
-                social_sentiment_tracker,
-                whale_activity_monitor,
+                news_sentiment_scorer,  # noqa: F401
+                sentiment_fusion,  # noqa: F401
+                social_sentiment_tracker,  # noqa: F401
+                whale_activity_monitor,  # noqa: F401
             )
 
             # Check that modules exist
@@ -146,7 +146,6 @@ class TestSkillsAgentsCompatibility:
     def test_config_loader_with_agents(self):
         """Test ConfigLoader works alongside Agents"""
         from core import ConfigLoader
-        from agents import CryptoMacroAnalyst
 
         loader = ConfigLoader()
         config = loader.load_mode("hybrid")

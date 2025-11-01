@@ -23,7 +23,7 @@ Strategic Value:
 - Tracks narrative shifts and FUD/FOMO cycles
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from enum import Enum
 
 

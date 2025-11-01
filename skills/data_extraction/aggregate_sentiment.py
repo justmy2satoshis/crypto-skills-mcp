@@ -7,7 +7,7 @@ Implements adaptive fusion mechanism with volatility-conditional weighting.
 """
 
 from typing import Dict, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 import asyncio
 
 

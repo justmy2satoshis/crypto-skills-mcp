@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Apply Phase 3 fixes to thesis_synthesizer.py"""
-import re
 
 file_path = "agents/thesis_synthesizer.py"
 

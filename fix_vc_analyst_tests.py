@@ -56,9 +56,9 @@ def fix_vc_analyst_tests():
     if content != original:
         test_file.write_text(content, encoding="utf-8")
         print(f"[OK] Fixed {test_file}")
-        print(f"  - Replaced 'overall_score' with 'score'")
-        print(f"  - Replaced 'VERY_HIGH' with 'EXTREME'")
-        print(f"  - Updated enum member expectations")
+        print("  - Replaced 'overall_score' with 'score'")
+        print("  - Replaced 'VERY_HIGH' with 'EXTREME'")
+        print("  - Updated enum member expectations")
         return True
     else:
         print(f"  No changes needed for {test_file}")

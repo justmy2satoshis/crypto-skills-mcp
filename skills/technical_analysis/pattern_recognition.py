@@ -5,7 +5,7 @@ Procedural workflow for identifying chart patterns using template correlation.
 Achieves 85% token reduction vs agent-only approach.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from datetime import datetime
 import asyncio
 
@@ -147,7 +147,7 @@ class PatternRecognizer:
 
         closes = [float(c[4]) for c in candles]
         volumes = [float(c[5]) for c in candles]
-        current_price = closes[-1]
+        closes[-1]
 
         # Normalize price data to 0-1 scale for pattern matching
         normalized_prices = self._normalize_prices(closes)
@@ -394,8 +394,8 @@ class PatternRecognizer:
             return "neutral"
 
         # Count bullish vs bearish patterns
-        bullish_count = sum(1 for p in patterns if "bullish" in p["interpretation"].lower())
-        bearish_count = sum(1 for p in patterns if "bearish" in p["interpretation"].lower())
+        sum(1 for p in patterns if "bullish" in p["interpretation"].lower())
+        sum(1 for p in patterns if "bearish" in p["interpretation"].lower())
 
         # Weight by confidence
         bullish_weight = sum(

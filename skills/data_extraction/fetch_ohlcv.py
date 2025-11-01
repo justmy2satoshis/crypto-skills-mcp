@@ -5,7 +5,7 @@ Procedural workflow for fetching price data across multiple exchanges using ccxt
 Achieves 88% token reduction vs agent-only approach.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from datetime import datetime
 import asyncio
 

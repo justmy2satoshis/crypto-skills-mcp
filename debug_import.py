@@ -10,16 +10,16 @@ for p in sys.path:
     print(f"  {p}")
 
 print("\nImporting agents.crypto_vc_analyst...")
-from agents.crypto_vc_analyst import CryptoVCAnalyst # noqa: E402
+from agents.crypto_vc_analyst import CryptoVCAnalyst  # noqa: E402
 
 print(f"Module file: {CryptoVCAnalyst.__module__}")
 
-import inspect # noqa: E402
+import inspect  # noqa: E402
 
 print(f"Source file: {inspect.getfile(CryptoVCAnalyst)}")
 
 # Check the actual return statement
-import asyncio # noqa: E402
+import asyncio  # noqa: E402
 
 analyst = CryptoVCAnalyst()
 result = asyncio.run(analyst.analyze_tokenomics("BTC"))

@@ -5,7 +5,6 @@ Provides procedural, token-efficient implementations for cryptocurrency analysis
 Skills achieve 80-90% token reduction compared to Agent-based approaches.
 """
 
-
 # Module metadata
 __version__ = "1.0.0"
 __proceduralization__ = 0.85  # 85% proceduralization rate

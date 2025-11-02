@@ -70,6 +70,7 @@ setup(
         "Documentation": "https://github.com/yourusername/crypto-skills-mcp#readme",
     },
     packages=find_packages(exclude=["tests", "tests.*", "examples", "docs"]),
+    py_modules=["cli", "mcp_client"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -89,7 +90,7 @@ setup(
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
-            "crypto-skills=core.cli:main",
+            "crypto-skills=cli:main",
         ],
     },
     include_package_data=True,

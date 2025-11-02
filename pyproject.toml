@@ -88,6 +88,9 @@ all = [
     # Agent dependencies (pydantic and typing-extensions already in main dependencies)
 ]
 
+[tool.setuptools]
+py-modules = ["cli", "mcp_client"]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["agents*", "skills*", "core*", "config*"]

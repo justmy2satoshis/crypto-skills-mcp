@@ -235,7 +235,7 @@ def cmd_validate(args) -> int:
         }
 
     # Check 4: Config files exist
-    config_dir = Path(__file__).parent.parent / "config" / "modes"
+    config_dir = Path(__file__).parent / "config" / "modes"
     required_configs = ["hybrid.yaml", "skills_only.yaml", "agents_only.yaml"]
 
     missing_configs = [

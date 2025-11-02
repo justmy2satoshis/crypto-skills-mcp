@@ -41,7 +41,7 @@ dependencies = [
 "Documentation" = "https://github.com/yourusername/crypto-skills-mcp#readme"
 
 [project.scripts]
-crypto-skills = "core.cli:main"
+crypto-skills = "cli:main"
 
 [project.optional-dependencies]
 test = [

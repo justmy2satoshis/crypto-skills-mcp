@@ -328,6 +328,43 @@ def cmd_version(args) -> int:
     return 0
 
 
+def cmd_configure(args) -> int:
+    """
+    Configure command - manually set up MCP server in Claude Code
+
+    This command adds crypto-skills-mcp to .claude.json, normally done
+    automatically during installation.
+
+    Args:
+        args: Parsed command-line arguments
+
+    Returns:
+        Exit code (0=success, 1=error)
+    """
+    try:
+        # Import and run the post-install configuration
+        from scripts.post_install import configure_mcp
+
+        print("=" * 70)
+        print("Manual MCP Configuration")
+        print("=" * 70)
+        print("\nThis will add crypto-skills-mcp to your Claude Code configuration.")
+        print("All existing MCP servers will be preserved.\n")
+
+        # Run configuration
+        configure_mcp()
+
+        return 0
+
+    except ImportError as e:
+        print(f"[ERROR] Configuration script not found: {e}", file=sys.stderr)
+        print("        Please ensure crypto-skills-mcp is properly installed", file=sys.stderr)
+        return 1
+    except Exception as e:
+        print(f"[ERROR] Configuration failed: {e}", file=sys.stderr)
+        if args.debug:
+            raise
+        return 1
 def main():
     """
     Main CLI entry point
@@ -405,6 +442,12 @@ Examples:
         "version",
         help="Show version and system information"
     )
+    # Configure command
+    parser_configure = subparsers.add_parser(
+        "configure",
+        help="Configure MCP server in Claude Code .claude.json"
+    )
+
 
     # Parse arguments
     args = parser.parse_args()
@@ -420,6 +463,7 @@ Examples:
         "config": cmd_config,
         "validate": cmd_validate,
         "version": cmd_version,
+        "configure": cmd_configure,
     }
 
     handler = handlers.get(args.command)

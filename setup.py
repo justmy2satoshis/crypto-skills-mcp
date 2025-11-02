@@ -5,6 +5,10 @@ Hybrid Claude Skills + Agents crypto analysis system with modular installation.
 """
 
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+from setuptools.command.develop import develop
+import subprocess
+import sys
 
 # Read long description from README
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -55,6 +59,32 @@ extras_require = {
 # All includes everything
 extras_require["all"] = list(set(sum(extras_require.values(), [])))
 
+
+# Custom install commands for auto-configuration
+class PostInstallCommand(install):
+    """Post-installation for installation mode"""
+    def run(self):
+        install.run(self)
+        # Run post-install configuration
+        try:
+            subprocess.call([sys.executable, 'scripts/post_install.py'])
+        except Exception as e:
+            print(f"⚠️  Auto-configuration skipped: {e}")
+            print("   Run 'crypto-skills --configure' to configure manually")
+
+
+class PostDevelopCommand(develop):
+    """Post-installation for development mode"""
+    def run(self):
+        develop.run(self)
+        # Run post-install configuration
+        try:
+            subprocess.call([sys.executable, 'scripts/post_install.py'])
+        except Exception as e:
+            print(f"⚠️  Auto-configuration skipped: {e}")
+            print("   Run 'crypto-skills --configure' to configure manually")
+
+
 setup(
     name="crypto-skills-mcp",
     version="1.0.0",
@@ -88,6 +118,10 @@ setup(
     python_requires=">=3.10",
     install_requires=install_requires,
     extras_require=extras_require,
+    cmdclass={
+        'install': PostInstallCommand,
+        'develop': PostDevelopCommand,
+    },
     entry_points={
         "console_scripts": [
             "crypto-skills=cli:main",

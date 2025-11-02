@@ -60,7 +60,7 @@ def create_mcp_config() -> Dict[str, Any]:
 
     return {
         "command": sys.executable,
-        "args": ["-m", "mcp_client"],
+        "args": ["server.py"],
         "cwd": str(project_root),
         "env": {
             "MODE": "hybrid"

@@ -93,7 +93,7 @@ py-modules = ["cli", "mcp_client"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["agents*", "skills*", "core*", "config*"]
+include = ["agents*", "skills*", "core*", "config*", "scripts*"]
 
 [tool.setuptools.package-data]
 config = ["modes/*.yaml"]

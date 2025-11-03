@@ -72,24 +72,35 @@ def safe_merge_config(config: Dict[str, Any]) -> bool:
     """Safely merge crypto-skills-mcp into mcpServers
 
     Returns:
-        bool: True if configuration was added, False if already exists
+        bool: True if configuration was added/updated, False if no change needed
     """
     if "mcpServers" not in config:
         config["mcpServers"] = {}
 
-    if "crypto-skills-mcp" in config["mcpServers"]:
-        print("[OK] crypto-skills-mcp already configured in .claude.json")
-        return False
+    new_config = create_mcp_config()
+    existing_config = config["mcpServers"].get("crypto-skills-mcp")
 
-    existing_count = len(config["mcpServers"])
-    print(f"[INFO] Found {existing_count} existing MCP servers")
-
-    # Add crypto-skills-mcp configuration
-    config["mcpServers"]["crypto-skills-mcp"] = create_mcp_config()
-
-    print("[OK] Added crypto-skills-mcp to MCP servers")
-    print(f"[OK] All {existing_count} existing MCP servers preserved")
-    return True
+    if existing_config:
+        # Compare existing with new configuration
+        if existing_config == new_config:
+            print("[OK] crypto-skills-mcp already up-to-date in .claude.json")
+            return False
+        else:
+            # Update existing configuration
+            print("[INFO] Updating crypto-skills-mcp configuration...")
+            print(f"[INFO] Old args: {existing_config.get('args')}")
+            print(f"[INFO] New args: {new_config.get('args')}")
+            config["mcpServers"]["crypto-skills-mcp"] = new_config
+            print("[OK] crypto-skills-mcp configuration updated")
+            return True
+    else:
+        # Add new configuration
+        existing_count = len(config["mcpServers"])
+        print(f"[INFO] Found {existing_count} existing MCP servers")
+        config["mcpServers"]["crypto-skills-mcp"] = new_config
+        print("[OK] Added crypto-skills-mcp to MCP servers")
+        print(f"[OK] All {existing_count} existing MCP servers preserved")
+        return True
 
 
 def atomic_write(config_path: Path, config: Dict[str, Any]):

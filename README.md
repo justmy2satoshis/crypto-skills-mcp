@@ -65,6 +65,53 @@ pip install -e ".[test]"
 pip install -e ".[all]"
 ```
 
+### MCP Configuration
+
+The installation script automatically configures the MCP server in your `.claude.json` file. If you need to configure manually, add this to your `.claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "crypto-skills-mcp": {
+      "type": "stdio",
+      "command": "/path/to/python",
+      "args": ["server.py"],
+      "cwd": "/path/to/crypto-skills-mcp",
+      "env": {
+        "MODE": "hybrid",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
+```
+
+**Replace placeholders**:
+- `/path/to/python` → Full path to your Python executable (e.g., `C:\Python313\python.exe` or `/usr/bin/python3`)
+- `/path/to/crypto-skills-mcp` → Full path to cloned repository
+
+**Example configurations**:
+- See [claude.json.example](claude.json.example) for a complete example
+- Windows: `command: "C:\\Users\\YourName\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"`
+- macOS/Linux: `command: "/usr/local/bin/python3"`
+
+### Troubleshooting
+
+**Connection Failed**:
+1. Verify Python path: `which python3` (Unix) or `where python` (Windows)
+2. Check `.claude.json` has `"type": "stdio"` field (required)
+3. Ensure `cwd` points to crypto-skills-mcp directory
+4. Restart Claude Desktop/Code after configuration changes
+
+**Import Errors**:
+- Run `pip install -e ".[all]"` to install all dependencies including FastMCP
+- Verify installation: `python -c "import fastmcp; print(fastmcp.__version__)"`
+
+**Server Not Loading**:
+- Check Claude Desktop/Code MCP server status panel
+- Look for error messages in console/logs
+- Verify server starts manually: `cd /path/to/crypto-skills-mcp && python server.py`
+
 ## Architecture
 
 ### Multi-Agent System

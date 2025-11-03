@@ -59,11 +59,13 @@ def create_mcp_config() -> Dict[str, Any]:
     project_root = get_project_root()
 
     return {
+        "type": "stdio",
         "command": sys.executable,
         "args": ["server.py"],
         "cwd": str(project_root),
         "env": {
-            "MODE": "hybrid"
+            "MODE": "hybrid",
+            "PYTHONUNBUFFERED": "1"
         }
     }
 

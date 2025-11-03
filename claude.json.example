@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "crypto-skills-mcp": {
+      "type": "stdio",
+      "command": "/path/to/python",
+      "args": ["server.py"],
+      "cwd": "/path/to/crypto-skills-mcp",
+      "env": {
+        "MODE": "hybrid",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

@@ -1,6 +1,9 @@
 # Core dependencies
 python>=3.8
 
+# MCP Framework (REQUIRED)
+fastmcp>=2.0.0
+
 # Async support
 asyncio
 aiohttp>=3.8.0

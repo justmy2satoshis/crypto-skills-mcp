@@ -9,6 +9,7 @@ from setuptools.command.install import install
 from setuptools.command.develop import develop
 import subprocess
 import sys
+from pathlib import Path
 
 # Read long description from README
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -65,24 +66,90 @@ class PostInstallCommand(install):
     """Post-installation for installation mode"""
     def run(self):
         install.run(self)
-        # Run post-install configuration
+
+        # Get absolute path to post-install script
+        script_dir = Path(__file__).parent
+        post_install_script = script_dir / 'scripts' / 'post_install.py'
+
+        print("\n" + "=" * 70)
+        print("🔧 Running post-installation MCP configuration...")
+        print("=" * 70)
+
         try:
-            subprocess.call([sys.executable, 'scripts/post_install.py'])
+            # Verify script exists
+            if not post_install_script.exists():
+                raise FileNotFoundError(f"Post-install script not found: {post_install_script}")
+
+            # Run configuration script with absolute path
+            result = subprocess.call([sys.executable, str(post_install_script)])
+
+            if result == 0:
+                print("\n✅ MCP configuration successful!")
+                print("   Restart Claude Code to use crypto-skills-mcp")
+                print("=" * 70 + "\n")
+            else:
+                raise RuntimeError(f"Post-install script failed with exit code {result}")
+
         except Exception as e:
-            print(f"⚠️  Auto-configuration skipped: {e}")
-            print("   Run 'crypto-skills --configure' to configure manually")
+            print("\n" + "=" * 70)
+            print("⚠️  MCP CONFIGURATION FAILED")
+            print("=" * 70)
+            print(f"Error: {e}")
+            print(f"\n🔧 To configure manually, run:")
+            print(f"    cd {script_dir}")
+            print(f"    python scripts/post_install.py")
+            print(f"\n   Or use the CLI command:")
+            print(f"    crypto-skills configure")
+            print("=" * 70 + "\n")
+
+            # Print stack trace for debugging
+            import traceback
+            traceback.print_exc()
 
 
 class PostDevelopCommand(develop):
     """Post-installation for development mode"""
     def run(self):
         develop.run(self)
-        # Run post-install configuration
+
+        # Get absolute path to post-install script
+        script_dir = Path(__file__).parent
+        post_install_script = script_dir / 'scripts' / 'post_install.py'
+
+        print("\n" + "=" * 70)
+        print("🔧 Running post-installation MCP configuration (dev mode)...")
+        print("=" * 70)
+
         try:
-            subprocess.call([sys.executable, 'scripts/post_install.py'])
+            # Verify script exists
+            if not post_install_script.exists():
+                raise FileNotFoundError(f"Post-install script not found: {post_install_script}")
+
+            # Run configuration script with absolute path
+            result = subprocess.call([sys.executable, str(post_install_script)])
+
+            if result == 0:
+                print("\n✅ MCP configuration successful!")
+                print("   Restart Claude Code to use crypto-skills-mcp")
+                print("=" * 70 + "\n")
+            else:
+                raise RuntimeError(f"Post-install script failed with exit code {result}")
+
         except Exception as e:
-            print(f"⚠️  Auto-configuration skipped: {e}")
-            print("   Run 'crypto-skills --configure' to configure manually")
+            print("\n" + "=" * 70)
+            print("⚠️  MCP CONFIGURATION FAILED")
+            print("=" * 70)
+            print(f"Error: {e}")
+            print(f"\n🔧 To configure manually, run:")
+            print(f"    cd {script_dir}")
+            print(f"    python scripts/post_install.py")
+            print(f"\n   Or use the CLI command:")
+            print(f"    crypto-skills configure")
+            print("=" * 70 + "\n")
+
+            # Print stack trace for debugging
+            import traceback
+            traceback.print_exc()
 
 
 setup(

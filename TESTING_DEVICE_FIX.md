@@ -1,5 +1,8 @@
 # Configuration Fix for Testing Device
 
+## Root Cause Identified
+The setup.py file had a critical bug using relative paths that caused silent failures during `pip install`. This has been **FIXED** in the latest commit.
+
 ## Problem
 Your `.claude.json` has outdated crypto-skills-mcp configuration from before the fixes were implemented.
 
@@ -16,9 +19,23 @@ Your `.claude.json` has outdated crypto-skills-mcp configuration from before the
 }
 ```
 
-## Solution: Reinstall Package
+## Solution: Reinstall with Fixed setup.py
 
-The latest code (commit `02c794d`) includes a fixed `post_install.py` script that will automatically update your configuration.
+The latest commit includes fixes to setup.py that resolve the silent installation failure.
+
+### What Was Fixed
+
+**Before (BROKEN):**
+- setup.py used relative paths: `subprocess.call([sys.executable, 'scripts/post_install.py'])`
+- During `pip install`, working directory changes caused path resolution to fail
+- Script never ran, but installation appeared successful
+- Result: `.claude.json` never updated
+
+**After (FIXED):**
+- setup.py uses absolute paths: `Path(__file__).parent / 'scripts' / 'post_install.py'`
+- Explicit exit code checking raises exceptions on failure
+- Clear success/failure messages with troubleshooting steps
+- Configuration now updates reliably during installation
 
 ### Steps to Fix
 
@@ -26,7 +43,7 @@ The latest code (commit `02c794d`) includes a fixed `post_install.py` script tha
 # 1. Navigate to crypto-skills-mcp directory
 cd C:\Users\trist\crypto-skills-mcp
 
-# 2. Pull latest changes (if not already done)
+# 2. Pull latest changes with setup.py fixes
 git pull origin main
 
 # 3. Reinstall package to trigger configuration update
@@ -34,13 +51,33 @@ pip install -e .
 ```
 
 ### Expected Output
-You should see:
+With the fixed setup.py, you should now see:
 ```
+======================================================================
+🔧 Running post-installation MCP configuration...
+======================================================================
 [INFO] Updating crypto-skills-mcp configuration...
 [INFO] Old args: ['-m', 'mcp_client']
 [INFO] New args: ['server.py']
 [OK] crypto-skills-mcp configuration updated
+
+✅ MCP configuration successful!
+   Restart Claude Code to use crypto-skills-mcp
+======================================================================
 ```
+
+### Verify Installation
+
+Run the validation script to confirm everything is configured correctly:
+```bash
+python scripts/validate_install.py
+```
+
+This will check:
+- Package installation
+- FastMCP dependency
+- .claude.json configuration
+- Server compilation
 
 ### After Installation
 

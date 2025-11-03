@@ -97,20 +97,45 @@ The installation script automatically configures the MCP server in your `.claude
 
 ### Troubleshooting
 
+**Configuration Not Applied After Installation**:
+If `pip install` succeeds but `.claude.json` is not updated:
+1. Run the validation script: `python scripts/validate_install.py`
+2. If validation fails, manually run configuration: `python scripts/post_install.py`
+3. Restart Claude Code
+4. Verify connection in MCP server status panel
+
 **Connection Failed**:
 1. Verify Python path: `which python3` (Unix) or `where python` (Windows)
 2. Check `.claude.json` has `"type": "stdio"` field (required)
 3. Ensure `cwd` points to crypto-skills-mcp directory
-4. Restart Claude Desktop/Code after configuration changes
+4. Verify `args` is `["server.py"]` not `["-m", "mcp_client"]`
+5. Check `PYTHONUNBUFFERED` is set to `"1"` in env
+6. Restart Claude Desktop/Code after configuration changes
 
 **Import Errors**:
 - Run `pip install -e ".[all]"` to install all dependencies including FastMCP
 - Verify installation: `python -c "import fastmcp; print(fastmcp.__version__)"`
+- If FastMCP missing: `pip install fastmcp>=2.0.0`
 
 **Server Not Loading**:
 - Check Claude Desktop/Code MCP server status panel
 - Look for error messages in console/logs
 - Verify server starts manually: `cd /path/to/crypto-skills-mcp && python server.py`
+- Run validation: `python scripts/validate_install.py`
+
+**Installation Validation**:
+Run the comprehensive validation script to check all components:
+```bash
+cd /path/to/crypto-skills-mcp
+python scripts/validate_install.py
+```
+
+This will verify:
+- Package installation
+- FastMCP dependency
+- server.py file
+- .claude.json configuration
+- Server compilation
 
 ## Architecture
 

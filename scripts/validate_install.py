@@ -72,9 +72,9 @@ def check_claude_config() -> Tuple[bool, str]:
 
         mcp_config = config["mcpServers"]["crypto-skills-mcp"]
 
-        # Validate required fields
+        # Validate required fields (type checking)
         required_fields = {
-            "type": "stdio",
+            "type": str,      # Fixed: was "stdio" (value) now str (type)
             "command": str,
             "args": list,
             "cwd": str,
@@ -87,7 +87,7 @@ def check_claude_config() -> Tuple[bool, str]:
         for field, expected_type in required_fields.items():
             if field not in mcp_config:
                 missing.append(field)
-            elif expected_type != str and not isinstance(mcp_config[field], expected_type):
+            elif not isinstance(mcp_config[field], expected_type):
                 invalid.append(f"{field} (expected {expected_type.__name__})")
 
         if missing:
@@ -96,7 +96,7 @@ def check_claude_config() -> Tuple[bool, str]:
         if invalid:
             return False, f"✗ Invalid field types: {', '.join(invalid)}"
 
-        # Check specific values
+        # Validate specific field values
         if mcp_config["type"] != "stdio":
             return False, f"✗ type must be 'stdio', got: {mcp_config['type']}"
 

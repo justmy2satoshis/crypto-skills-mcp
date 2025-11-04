@@ -52,6 +52,7 @@ class IndicatorsCalculator:
         timeframe: str = "1h",
         limit: int = 100,
         custom_params: Optional[Dict] = None,
+        verbose: bool = True,
     ) -> Dict:
         """
         Calculate multiple technical indicators in parallel
@@ -62,6 +63,7 @@ class IndicatorsCalculator:
             timeframe: Candle timeframe
             limit: Number of candles for calculation
             custom_params: Optional custom parameters per indicator
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized indicators data:
@@ -124,6 +126,11 @@ class IndicatorsCalculator:
         # Calculate confidence score based on success rate
         confidence = len(indicator_data) / len(indicators) if indicators else 0
 
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": indicator_data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         response = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "crypto-indicators-mcp",

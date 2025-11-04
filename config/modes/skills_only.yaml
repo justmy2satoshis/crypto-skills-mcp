@@ -24,7 +24,7 @@ skills:
   # Technical Analysis Skills
   technical_analysis:
     - momentum_scoring
-    - volatility_assessment
+    - volatility_analysis
     - pattern_recognition
 
   # Sentiment Analysis Skills

@@ -200,7 +200,7 @@ class TaskRouter:
         if re.search(r"(rsi|macd|momentum|oscillator)", query):
             return "technical_analysis.momentum_scoring"
         if re.search(r"(volatility|atr|bollinger|bands)", query):
-            return "technical_analysis.volatility_assessment"
+            return "technical_analysis.volatility_analysis"
         if re.search(r"(pattern|support|resistance|trend\s+line)", query):
             return "technical_analysis.pattern_recognition"
 

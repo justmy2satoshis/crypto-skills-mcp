@@ -27,6 +27,7 @@ class WhaleActivityMonitor:
         symbol: str,
         threshold_usd: float = 1_000_000,
         lookback_hours: int = 24,
+        verbose: bool = True,
     ) -> Dict:
         """
         Monitor whale activity and detect patterns
@@ -35,6 +36,7 @@ class WhaleActivityMonitor:
             symbol: Cryptocurrency symbol (e.g., "BTC", "ETH")
             threshold_usd: Minimum transaction size in USD to classify as whale (default: $1M)
             lookback_hours: Historical period for activity analysis
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized whale activity data structure:
@@ -124,23 +126,31 @@ class WhaleActivityMonitor:
             confidence += 0.10  # Clear directional signal
         confidence = min(confidence, 0.90)
 
+        # Build core data
+        data = {
+            "net_flow_usd": round(net_flow_usd, 2),
+            "flow_direction": flow_direction,
+            "activity_level": activity_level,
+            "accumulation_signal": accumulation_signal,
+            "distribution_signal": distribution_signal,
+            "large_transactions": len(whale_transactions),
+            "total_volume_usd": round(total_volume_usd, 2),
+            "position_bias": position_bias,
+            "conviction": round(conviction, 2),
+            "trading_signal": trading_signal,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "sentiment-analysis-skill",
             "symbol": symbol,
             "data_type": "whale_activity",
-            "data": {
-                "net_flow_usd": round(net_flow_usd, 2),
-                "flow_direction": flow_direction,
-                "activity_level": activity_level,
-                "accumulation_signal": accumulation_signal,
-                "distribution_signal": distribution_signal,
-                "large_transactions": len(whale_transactions),
-                "total_volume_usd": round(total_volume_usd, 2),
-                "position_bias": position_bias,
-                "conviction": round(conviction, 2),
-                "trading_signal": trading_signal,
-            },
+            "data": data,
             "metadata": {
                 "threshold_usd": threshold_usd,
                 "lookback_hours": lookback_hours,

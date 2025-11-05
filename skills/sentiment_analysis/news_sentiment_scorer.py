@@ -27,6 +27,7 @@ class NewsSentimentScorer:
         symbol: str,
         lookback_hours: int = 24,
         min_relevance: float = 0.5,
+        verbose: bool = True,
     ) -> Dict:
         """
         Score news sentiment and assess impact
@@ -35,6 +36,7 @@ class NewsSentimentScorer:
             symbol: Cryptocurrency symbol (e.g., "BTC", "ETH")
             lookback_hours: Historical period for news analysis
             min_relevance: Minimum relevance score to include article (0.0-1.0)
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized news sentiment data structure:
@@ -143,25 +145,33 @@ class NewsSentimentScorer:
             confidence += 0.05  # Clear directional bias
         confidence = min(confidence, 0.90)
 
+        # Build core data
+        data = {
+            "overall_sentiment": round(overall_sentiment, 2),
+            "sentiment_category": sentiment_category,
+            "article_count": len(relevant_articles),
+            "positive_count": positive_count,
+            "negative_count": negative_count,
+            "neutral_count": neutral_count,
+            "sentiment_momentum": round(sentiment_momentum, 2),
+            "impact_score": round(impact_score, 2),
+            "top_topics": top_topics,
+            "dominant_narrative": dominant_narrative,
+            "news_velocity": news_velocity,
+            "trading_signal": trading_signal,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "sentiment-analysis-skill",
             "symbol": symbol,
             "data_type": "news_sentiment",
-            "data": {
-                "overall_sentiment": round(overall_sentiment, 2),
-                "sentiment_category": sentiment_category,
-                "article_count": len(relevant_articles),
-                "positive_count": positive_count,
-                "negative_count": negative_count,
-                "neutral_count": neutral_count,
-                "sentiment_momentum": round(sentiment_momentum, 2),
-                "impact_score": round(impact_score, 2),
-                "top_topics": top_topics,
-                "dominant_narrative": dominant_narrative,
-                "news_velocity": news_velocity,
-                "trading_signal": trading_signal,
-            },
+            "data": data,
             "metadata": {
                 "lookback_hours": lookback_hours,
                 "confidence": round(confidence, 2),

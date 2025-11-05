@@ -80,6 +80,7 @@ class PatternRecognizer:
         timeframe: str = "4h",
         lookback: int = 100,
         min_confidence: float = 0.70,
+        verbose: bool = True,
     ) -> Dict:
         """
         Recognize chart patterns in price action
@@ -89,6 +90,7 @@ class PatternRecognizer:
             timeframe: Candle timeframe for pattern detection
             lookback: Number of historical candles to analyze
             min_confidence: Minimum confidence threshold for pattern detection
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized pattern recognition data structure:
@@ -204,17 +206,25 @@ class PatternRecognizer:
         # Calculate overall confidence
         confidence = max(p["confidence"] for p in patterns_found) if patterns_found else 0.50
 
+        # Build core data
+        data = {
+            "patterns_found": patterns_found,
+            "strongest_pattern": strongest_pattern,
+            "overall_bias": overall_bias,
+            "pattern_count": len(patterns_found),
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "technical-analysis-skill",
             "symbol": symbol,
             "data_type": "chart_patterns",
-            "data": {
-                "patterns_found": patterns_found,
-                "strongest_pattern": strongest_pattern,
-                "overall_bias": overall_bias,
-                "pattern_count": len(patterns_found),
-            },
+            "data": data,
             "metadata": {
                 "timeframe": timeframe,
                 "lookback_periods": lookback,

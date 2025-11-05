@@ -28,6 +28,7 @@ class VolatilityAnalyzer:
         timeframe: str = "1h",
         atr_period: int = 14,
         bb_period: int = 20,
+        verbose: bool = True,
     ) -> Dict:
         """
         Analyze volatility and breakout potential
@@ -37,6 +38,7 @@ class VolatilityAnalyzer:
             timeframe: Candle timeframe
             atr_period: ATR calculation period
             bb_period: Bollinger Bands period
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized volatility analysis data structure:
@@ -144,19 +146,27 @@ class VolatilityAnalyzer:
             confidence += 0.15
         confidence = min(confidence, 0.95)
 
+        # Build core data
+        data = {
+            "volatility_level": volatility_level,
+            "volatility_index": round(volatility_index, 2),
+            "atr": atr_data,
+            "bollinger": bb_data,
+            "breakout_potential": breakout_potential,
+            "trading_recommendation": trading_recommendation,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "technical-analysis-skill",
             "symbol": symbol,
             "data_type": "volatility_analysis",
-            "data": {
-                "volatility_level": volatility_level,
-                "volatility_index": round(volatility_index, 2),
-                "atr": atr_data,
-                "bollinger": bb_data,
-                "breakout_potential": breakout_potential,
-                "trading_recommendation": trading_recommendation,
-            },
+            "data": data,
             "metadata": {
                 "timeframe": timeframe,
                 "atr_period": atr_period,

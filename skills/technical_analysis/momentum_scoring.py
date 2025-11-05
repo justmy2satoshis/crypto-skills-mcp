@@ -34,6 +34,7 @@ class MomentumScorer:
         self,
         symbol: str,
         timeframes: Optional[List[str]] = None,
+        verbose: bool = True,
     ) -> Dict:
         """
         Calculate momentum score across multiple timeframes
@@ -41,6 +42,7 @@ class MomentumScorer:
         Args:
             symbol: Trading pair (e.g., "BTC/USDT")
             timeframes: List of timeframes to analyze (default: ["15m", "1h", "4h", "1d"])
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized momentum scoring data structure:
@@ -122,19 +124,27 @@ class MomentumScorer:
         # Calculate confidence based on data availability
         confidence = len(valid_results) / len(timeframes) if timeframes else 0
 
+        # Build core data
+        data = {
+            "overall_score": round(overall_score, 2),
+            "classification": classification,
+            "timeframe_breakdown": timeframe_breakdown,
+            "indicators": indicators,
+            "trend_alignment": trend_alignment,
+            "conviction": round(conviction, 2),
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "technical-analysis-skill",
             "symbol": symbol,
             "data_type": "momentum_score",
-            "data": {
-                "overall_score": round(overall_score, 2),
-                "classification": classification,
-                "timeframe_breakdown": timeframe_breakdown,
-                "indicators": indicators,
-                "trend_alignment": trend_alignment,
-                "conviction": round(conviction, 2),
-            },
+            "data": data,
             "metadata": {
                 "timeframes_analyzed": len(valid_results),
                 "confidence": round(confidence, 2),

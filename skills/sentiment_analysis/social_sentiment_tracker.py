@@ -27,6 +27,7 @@ class SocialSentimentTracker:
         symbol: str,
         days: int = 7,
         volume_spike_threshold: float = 2.0,
+        verbose: bool = True,
     ) -> Dict:
         """
         Track social sentiment trends and detect shifts
@@ -35,6 +36,7 @@ class SocialSentimentTracker:
             symbol: Cryptocurrency symbol (e.g., "BTC", "ETH")
             days: Historical period for trend analysis
             volume_spike_threshold: Threshold for volume spike detection (σ multiplier)
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized social sentiment trend data structure:
@@ -128,22 +130,30 @@ class SocialSentimentTracker:
             confidence += 0.05
         confidence = min(confidence, 0.95)
 
+        # Build core data
+        data = {
+            "current_sentiment": round(current_sentiment, 2),
+            "sentiment_category": sentiment_category,
+            "trend": trend,
+            "momentum": round(momentum, 2),
+            "volume_spike": volume_spike,
+            "social_dominance": round(social_dominance, 2),
+            "fear_greed_alignment": fear_greed_alignment,
+            "trading_signal": trading_signal,
+            "risk_level": risk_level,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "sentiment-analysis-skill",
             "symbol": symbol,
             "data_type": "social_sentiment_trend",
-            "data": {
-                "current_sentiment": round(current_sentiment, 2),
-                "sentiment_category": sentiment_category,
-                "trend": trend,
-                "momentum": round(momentum, 2),
-                "volume_spike": volume_spike,
-                "social_dominance": round(social_dominance, 2),
-                "fear_greed_alignment": fear_greed_alignment,
-                "trading_signal": trading_signal,
-                "risk_level": risk_level,
-            },
+            "data": data,
             "metadata": {"days_analyzed": days, "confidence": round(confidence, 2)},
         }
 

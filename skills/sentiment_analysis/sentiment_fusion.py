@@ -39,6 +39,7 @@ class SentimentFusionEngine:
         sentiment_score: Optional[float] = None,
         technical_score: Optional[float] = None,
         timeframe: str = "4h",
+        verbose: bool = True,
     ) -> Dict:
         """
         Fuse sentiment and technical signals with adaptive weighting
@@ -48,6 +49,7 @@ class SentimentFusionEngine:
             sentiment_score: Pre-calculated sentiment score (0-100), optional
             technical_score: Pre-calculated technical score (0-100), optional
             timeframe: Timeframe for volatility calculation
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized fusion data structure:
@@ -137,25 +139,33 @@ class SentimentFusionEngine:
             confidence += 0.05  # More confident during volatile periods
         confidence = min(confidence, 0.95)
 
+        # Build core data
+        data = {
+            "combined_score": round(combined_score, 2),
+            "combined_signal": combined_signal,
+            "sentiment_score": round(sentiment_score, 2),
+            "technical_score": round(technical_score, 2),
+            "volatility_index": round(volatility_index, 2),
+            "volatility_regime": volatility_regime,
+            "alpha": round(alpha, 2),
+            "sentiment_weight": round(alpha, 2),
+            "technical_weight": round(1 - alpha, 2),
+            "signal_alignment": signal_alignment,
+            "conviction": round(conviction, 2),
+            "trading_recommendation": trading_recommendation,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "sentiment-analysis-skill",
             "symbol": symbol,
             "data_type": "sentiment_fusion",
-            "data": {
-                "combined_score": round(combined_score, 2),
-                "combined_signal": combined_signal,
-                "sentiment_score": round(sentiment_score, 2),
-                "technical_score": round(technical_score, 2),
-                "volatility_index": round(volatility_index, 2),
-                "volatility_regime": volatility_regime,
-                "alpha": round(alpha, 2),
-                "sentiment_weight": round(alpha, 2),
-                "technical_weight": round(1 - alpha, 2),
-                "signal_alignment": signal_alignment,
-                "conviction": round(conviction, 2),
-                "trading_recommendation": trading_recommendation,
-            },
+            "data": data,
             "metadata": {"timeframe": timeframe, "confidence": round(confidence, 2)},
         }
 

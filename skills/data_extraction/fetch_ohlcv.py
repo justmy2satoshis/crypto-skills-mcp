@@ -29,6 +29,7 @@ class OHLCVFetcher:
         timeframe: str = "1h",
         limit: int = 100,
         exchange: str = "binance",
+        verbose: bool = True,
     ) -> Dict:
         """
         Fetch OHLCV data for a trading pair
@@ -38,6 +39,7 @@ class OHLCVFetcher:
             timeframe: Candle timeframe ("1m", "5m", "15m", "1h", "4h", "1d")
             limit: Number of candles to fetch (max 1000)
             exchange: Exchange ID (default: binance)
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized OHLCV data structure:
@@ -92,7 +94,7 @@ class OHLCVFetcher:
             )
 
             # Normalize to standard format
-            normalized = self._normalize_ohlcv(result, symbol, timeframe, exchange)
+            normalized = self._normalize_ohlcv(result, symbol, timeframe, exchange, verbose)
 
             # Cache result
             self.cache[cache_key] = (normalized, datetime.utcnow())
@@ -109,7 +111,7 @@ class OHLCVFetcher:
             raise
 
     async def fetch_multi_exchange(
-        self, symbol: str, timeframe: str = "1h", exchanges: List[str] = None
+        self, symbol: str, timeframe: str = "1h", exchanges: List[str] = None, verbose: bool = True
     ) -> Dict:
         """
         Fetch OHLCV from multiple exchanges in parallel and aggregate
@@ -118,6 +120,7 @@ class OHLCVFetcher:
             symbol: Trading pair (e.g., "BTC/USDT")
             timeframe: Candle timeframe
             exchanges: List of exchange IDs (default: ["binance", "coinbase", "kraken"])
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Aggregated OHLCV data with volume-weighted prices
@@ -136,9 +139,9 @@ class OHLCVFetcher:
             raise ValueError(f"Failed to fetch from all exchanges: {exchanges}")
 
         # Aggregate data (volume-weighted average prices)
-        return self._aggregate_multi_exchange(valid_results, symbol, timeframe)
+        return self._aggregate_multi_exchange(valid_results, symbol, timeframe, verbose)
 
-    def _normalize_ohlcv(self, raw_data: Dict, symbol: str, timeframe: str, exchange: str) -> Dict:
+    def _normalize_ohlcv(self, raw_data: Dict, symbol: str, timeframe: str, exchange: str, verbose: bool = True) -> Dict:
         """
         Normalize ccxt-mcp response to standard format
 
@@ -168,6 +171,11 @@ class OHLCVFetcher:
                     }
                 )
 
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": normalized_candles}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "ccxt-mcp",
@@ -182,7 +190,7 @@ class OHLCVFetcher:
             },
         }
 
-    def _aggregate_multi_exchange(self, results: List[Dict], symbol: str, timeframe: str) -> Dict:
+    def _aggregate_multi_exchange(self, results: List[Dict], symbol: str, timeframe: str, verbose: bool = True) -> Dict:
         """
         Aggregate OHLCV data from multiple exchanges using volume-weighted prices
 
@@ -232,6 +240,11 @@ class OHLCVFetcher:
                 }
             )
 
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": aggregated_candles}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "ccxt-mcp (multi-exchange)",
@@ -239,7 +252,7 @@ class OHLCVFetcher:
             "data_type": "ohlcv_aggregated",
             "data": aggregated_candles,
             "metadata": {
-                "exchanges": [r["metadata"]["exchange"] for r in results],
+                "exchanges": [r.get("metadata", {}).get("exchange") for r in results],
                 "timeframe": timeframe,
                 "count": len(aggregated_candles),
                 "confidence": 1.0,

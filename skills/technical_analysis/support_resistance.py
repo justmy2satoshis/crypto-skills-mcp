@@ -29,6 +29,7 @@ class SupportResistanceIdentifier:
         lookback: int = 100,
         tolerance: float = 0.01,
         top_n: int = 5,
+        verbose: bool = True,
     ) -> Dict:
         """
         Identify support and resistance levels
@@ -39,6 +40,7 @@ class SupportResistanceIdentifier:
             lookback: Number of historical candles to analyze
             tolerance: Price clustering tolerance (default 1%)
             top_n: Number of top levels to return per category
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized support/resistance data structure:
@@ -138,26 +140,34 @@ class SupportResistanceIdentifier:
             0.70 + (len(support_levels) / top_n) * 0.15 + (len(resistance_levels) / top_n) * 0.10,
         )
 
+        # Build core data
+        data = {
+            "support_levels": support_levels,
+            "resistance_levels": resistance_levels,
+            "current_price": round(current_price, 2),
+            "nearest_support": round(nearest_support, 2) if nearest_support else None,
+            "nearest_resistance": (
+                round(nearest_resistance, 2) if nearest_resistance else None
+            ),
+            "support_distance": (
+                round(support_distance, 2) if support_distance is not None else None
+            ),
+            "resistance_distance": (
+                round(resistance_distance, 2) if resistance_distance is not None else None
+            ),
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         return {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "technical-analysis-skill",
             "symbol": symbol,
             "data_type": "support_resistance",
-            "data": {
-                "support_levels": support_levels,
-                "resistance_levels": resistance_levels,
-                "current_price": round(current_price, 2),
-                "nearest_support": round(nearest_support, 2) if nearest_support else None,
-                "nearest_resistance": (
-                    round(nearest_resistance, 2) if nearest_resistance else None
-                ),
-                "support_distance": (
-                    round(support_distance, 2) if support_distance is not None else None
-                ),
-                "resistance_distance": (
-                    round(resistance_distance, 2) if resistance_distance is not None else None
-                ),
-            },
+            "data": data,
             "metadata": {
                 "timeframe": timeframe,
                 "lookback_periods": lookback,

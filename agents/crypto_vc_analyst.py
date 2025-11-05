@@ -25,6 +25,8 @@ Strategic Value:
 
 from typing import Dict, Optional, Any
 from enum import Enum
+from skills.data_extraction.development_activity_tracker import DevelopmentActivityTracker
+from skills.data_extraction.risk_calculator import RiskCalculator
 
 
 class RiskLevel(Enum):
@@ -387,45 +389,111 @@ class CryptoVCAnalyst:
             }
 
         Strategy:
-        1. Call analyze_tokenomics() and score risks
-        2. Call assess_technical_health() and score risks
-        3. Call analyze_liquidity() and score risks
-        4. Add regulatory and market risk factors
-        5. Calculate weighted overall risk score
-        6. Provide position sizing recommendation
+        1. Call analyze_tokenomics() and score tokenomics risks
+        2. Call assess_technical_health() and score technical risks
+        3. Call analyze_liquidity() and score liquidity risks
+        4. Use RiskCalculator Skill for market risk (volatility, drawdown)
+        5. Add regulatory risk factor
+        6. Calculate weighted overall risk score
+        7. Use RiskCalculator position sizing recommendation
         """
-        # In production, calls all analysis methods and synthesizes
+        # Call existing analysis methods for fundamental risk factors
         tokenomics = await self.analyze_tokenomics(token_symbol)
         technical = await self.assess_technical_health(token_symbol)
         liquidity = await self.analyze_liquidity(token_symbol)
         flags = await self.identify_red_flags(token_symbol)
 
+        # Use RiskCalculator Skill for market risk analysis
+        risk_calc = RiskCalculator(self.mcp_client)
+        market_risk_result = await risk_calc.calculate(
+            token_symbol, timeframe="1d", verbose=False
+        )
+        market_risk_data = market_risk_result["data"]
+
+        # Map fundamental scores to risk values (0-100, higher = riskier)
+        # Convert scores (0-100, higher = better) to risks (0-100, higher = worse)
+        tokenomics_risk = max(0, 100 - tokenomics["score"])
+        technical_risk = max(0, 100 - technical["score"])
+
+        # Map liquidity rating to risk score
+        liquidity_risk_map = {
+            "exceptional": 5,
+            "high": 15,
+            "moderate": 35,
+            "low": 60,
+            "very_low": 85,
+        }
+        liquidity_risk = liquidity_risk_map.get(
+            liquidity["liquidity_rating"].lower(), 50
+        )
+
+        # Regulatory risk (static for now, would analyze regulatory environment)
+        regulatory_risk = 35  # Moderate uncertainty for crypto
+
+        # Market risk from RiskCalculator Skill
+        # Map volatility regime to risk score
+        volatility_risk_map = {
+            "very_low": 10,
+            "low": 25,
+            "moderate": 45,
+            "high": 70,
+            "very_high": 90,
+        }
+        market_risk = volatility_risk_map.get(
+            market_risk_data["volatility_regime"], 45
+        )
+
+        # Calculate weighted overall risk score
+        # Weights: tokenomics 20%, technical 15%, liquidity 15%, regulatory 20%, market 30%
+        risk_score = (
+            tokenomics_risk * 0.20
+            + technical_risk * 0.15
+            + liquidity_risk * 0.15
+            + regulatory_risk * 0.20
+            + market_risk * 0.30
+        )
+
+        # Classify risk level
+        if risk_score < 25:
+            risk_level = RiskLevel.LOW
+        elif risk_score < 50:
+            risk_level = RiskLevel.MEDIUM
+        else:
+            risk_level = RiskLevel.HIGH
+
+        # Position sizing from RiskCalculator Skill
+        # Use recommended_position_size as percentage of portfolio
+        max_allocation = min(0.25, market_risk_data["recommended_position_size"] * 1.5)
+        recommended_allocation = market_risk_data["recommended_position_size"]
+
         return {
             "symbol": token_symbol,
-            "risk_score": 18,  # Low risk (0-100 scale)
-            "risk_level": RiskLevel.LOW.value,
+            "risk_score": round(risk_score, 1),
+            "risk_level": risk_level.value,
             "risk_breakdown": {
-                "tokenomics_risk": 5,  # Excellent tokenomics
-                "technical_risk": 10,  # Strong technical health
-                "liquidity_risk": 2,  # Exceptional liquidity
-                "regulatory_risk": 35,  # Some uncertainty
-                "market_risk": 40,  # Volatility
+                "tokenomics_risk": round(tokenomics_risk, 1),
+                "technical_risk": round(technical_risk, 1),
+                "liquidity_risk": liquidity_risk,
+                "regulatory_risk": regulatory_risk,
+                "market_risk": market_risk,
             },
             "position_sizing": {
-                "max_allocation": 0.25,  # fraction of portfolio
-                "recommended_allocation": 0.15,
-                "reasoning": "Low overall risk (18/100) supports substantial allocation. "
-                "However, market volatility warrants prudent 15% allocation rather than max 25%. "
-                "Can size up to 25% for high-conviction, long-term holders.",
+                "max_allocation": round(max_allocation, 3),
+                "recommended_allocation": round(recommended_allocation, 3),
+                "reasoning": f"Risk score {risk_score:.1f}/100 ({risk_level.value}). "
+                f"Market volatility ({market_risk_data['volatility_regime']}) "
+                f"suggests {recommended_allocation:.1%} allocation with "
+                f"stop-loss at {market_risk_data['stop_loss_percent']:.1%}. "
+                f"Max allocation capped at {max_allocation:.1%} based on risk tolerance.",
             },
-            "max_allocation": 25.0,  # Exposed from position_sizing
-            "warnings": [],
-            "reasoning": f"Risk score of 18/100 indicates {RiskLevel.LOW.value} risk profile. "
-            f"Tokenomics score of {tokenomics['score']} shows excellent supply dynamics. "
-            f"Technical health score of {technical['score']} demonstrates robust development. "
-            f"Liquidity rating of '{liquidity['liquidity_rating']}' enables easy entry/exit. "
-            f"Primary risks are regulatory uncertainty and market volatility, both manageable. "
-            f"Recommendation: {flags['recommendation']} with 15% suggested allocation.",
+            "max_allocation": round(max_allocation * 100, 1),
+            "warnings": flags.get("red_flags", []),
+            "reasoning": f"Risk score of {risk_score:.1f}/100 indicates {risk_level.value} risk profile. "
+            f"Tokenomics score of {tokenomics['score']} (risk: {tokenomics_risk:.1f}). "
+            f"Technical health score of {technical['score']} (risk: {technical_risk:.1f}). "
+            f"Liquidity rating '{liquidity['liquidity_rating']}' (risk: {liquidity_risk}). "
+            f"Market volatility regime: {market_risk_data['volatility_regime']} (risk: {market_risk}). "
+            f"Recommendation: {flags['recommendation']} with {recommended_allocation:.1%} suggested allocation.",
         }
 
     async def track_development_activity(
@@ -460,39 +528,46 @@ class CryptoVCAnalyst:
             }
 
         Strategy:
-        1. Query GitHub API for repository metrics (if github-manager MCP available)
+        1. Use DevelopmentActivityTracker Skill for GitHub metrics
         2. Query social metrics (if available via MCP)
-        3. Calculate activity score based on recent development pace
-        4. Return comprehensive activity metrics
+        3. Calculate activity score from Skill health_score
+        4. Return comprehensive activity metrics in backward-compatible format
         """
-        # Check if github-manager MCP is available
-        has_github = "github-manager" in self.optional_servers
+        # Use DevelopmentActivityTracker Skill for data extraction
+        tracker = DevelopmentActivityTracker(self.mcp_client)
+        result = await tracker.track(
+            token_symbol, repository=None, period_days=period_days, verbose=False
+        )
+        skill_data = result["data"]
 
-        # Mock data for now (production would query actual MCP servers)
+        # Transform Skill data to Agent return format (backward compatible)
         github_metrics = {
-            "commits": 127 if has_github else 0,
-            "contributors": 23 if has_github else 0,
-            "stars": 15420 if has_github else 0,
-            "forks": 3214 if has_github else 0,
-            "open_issues": 45 if has_github else 0,
-            "closed_issues": 312 if has_github else 0,
+            "commits": skill_data["commit_count"],
+            "contributors": skill_data["contributor_count"],
+            "stars": 0,  # Not provided by Skill, would need separate github-manager call
+            "forks": 0,  # Not provided by Skill
+            "open_issues": 0,  # Not provided by Skill
+            "closed_issues": 0,  # Not provided by Skill
         }
 
+        # Community engagement not provided by DevelopmentActivityTracker
+        # In production, would query separate social metrics APIs
         community_engagement = {
-            "discord_members": 8500,
-            "twitter_followers": 125000,
+            "social_mentions": 0,  # Would use crypto-sentiment-mcp
+            "active_addresses": 0,  # Would use blockchain explorer API
+            "community_growth": 0.0,  # Would calculate from historical data
         }
 
-        # Calculate activity score (0-100) based on metrics
-        activity_score = 85.0  # High activity for established projects
+        # Convert Skill health_score (0-1) to activity_score (0-100)
+        activity_score = skill_data["health_score"] * 100
 
         return {
             "symbol": token_symbol,
             "period_days": period_days,
             "github_metrics": github_metrics,
             "community_engagement": community_engagement,
-            "activity_score": activity_score,
-            "timestamp": "2025-01-26T00:00:00Z",
+            "activity_score": round(activity_score, 1),
+            "timestamp": datetime.utcnow().isoformat() + "Z",
         }
 
     async def generate_due_diligence_report(self, token_symbol: str) -> Dict[str, Any]:

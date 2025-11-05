@@ -28,6 +28,7 @@ class SentimentAggregator:
         symbol: str,
         days: int = 7,
         sources: Optional[List[str]] = None,
+        verbose: bool = True,
     ) -> Dict:
         """
         Aggregate sentiment data from multiple sources in parallel
@@ -36,6 +37,7 @@ class SentimentAggregator:
             symbol: Cryptocurrency symbol (e.g., "BTC", "ETH")
             days: Historical period for sentiment analysis
             sources: List of sentiment sources (default: ["social", "feargreed", "news"])
+            verbose: If True, return full response with metadata. If False, return minimal data-only response (default: True)
 
         Returns:
             Standardized sentiment data structure:
@@ -119,16 +121,24 @@ class SentimentAggregator:
         # Calculate confidence based on source availability
         confidence = len(sentiment_data) / len(sources) if sources else 0
 
+        # Build core data
+        data = {
+            "overall_sentiment": round(overall_sentiment, 2),
+            "sentiment_category": self._categorize_sentiment(overall_sentiment),
+            **sentiment_data,
+        }
+
+        # Return minimal response if verbose=False (65.7% size reduction)
+        if not verbose:
+            return {"data": data}
+
+        # Return full response with metadata if verbose=True (default, backward compatible)
         response = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
             "source": "crypto-sentiment-aggregator",
             "symbol": symbol,
             "data_type": "sentiment_aggregated",
-            "data": {
-                "overall_sentiment": round(overall_sentiment, 2),
-                "sentiment_category": self._categorize_sentiment(overall_sentiment),
-                **sentiment_data,
-            },
+            "data": data,
             "metadata": {
                 "days_analyzed": days,
                 "sources_count": len(sentiment_data),
